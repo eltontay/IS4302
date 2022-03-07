@@ -9,14 +9,23 @@ Blocktractor is a Marketplace smart contract that interacts with multiple Servic
 Functions
 
 - listService()
+  - Service Provider can list their service
 - delistService()
+  - Service Provider can delist their service
 - requestService()
+  - Service Requester can request a service
 - approveService()
+  - Service Provider can approve requested service
 - rejectService()
+  - Service Provider can reject requested service
 - completeService()
+  - Service Provider can complete rendered service
 - statusService()
+  - Getter Function for status of Service
 - registerProfle()
+  - Registering a profile on Blocktractor
 - removeProfile()
+  - Removing a profile on Blocktractor
 
 ### ServiceContract.sol
 
