@@ -27,7 +27,7 @@ Functions
 - removeProfile()
   - Removing a profile on Blocktractor
 
-### ServiceContract.sol
+### Service.sol
 
 ### Profile.sol
 
