@@ -1,10 +1,22 @@
-# BLOCKTRACTOR is a smart-contract service marketplace built on the Ethereum Blockchain.
+# BLOCKTRACTOR is a fully-decentralised smart-contract service marketplace built on the Ethereum Blockchain.
 
 ## 1. Contracts
 
-### Marketplace.sol
+### Blocktractor.sol
 
-Marketplace needs to interact with multiple Service Contracts and Profiles
+Blocktractor is a Marketplace smart contract that interacts with multiple Service and Profile Smart Contracts
+
+Functions
+
+- listService()
+- delistService()
+- requestService()
+- approveService()
+- rejectService()
+- completeService()
+- statusService()
+- registerProfle()
+- removeProfile()
 
 ### ServiceContract.sol
 
