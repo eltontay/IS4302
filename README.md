@@ -4,10 +4,13 @@
 
 ### Blocktractor.sol
 
-Blocktractor is a Marketplace smart contract that interacts with multiple Service and Profile Smart Contracts
+Blocktractor is a Marketplace smart contract that interacts with multiple Service and Profile Smart Contracts.
 
 Functions
 
+- createService(title,description,price)
+  - Service Provider can create a service
+    returns index number of Service created
 - listService()
   - Service Provider can list their service
 - delistService()
@@ -29,7 +32,12 @@ Functions
 
 ### Service.sol
 
+Service smart contract interacts only with the Blocktractor smart contractor.
+
 ### Profile.sol
+
+Profile smart contract interacts only with the Blocktractor smart contractor.
+Each profile can be both a service provider and a service requester.
 
 ## 2. Migrations
 
