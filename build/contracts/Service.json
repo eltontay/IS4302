@@ -1,0 +1,3161 @@
+{
+  "contractName": "Service",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "numServiceProvider",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "createService",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.0+commit.1d4f565a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"numServiceProvider\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"title\",\"type\":\"string\"},{\"name\":\"description\",\"type\":\"string\"},{\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"createService\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Service.sol\":\"Service\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Service.sol\":{\"keccak256\":\"0x1b80ce4580cd4a55288dccff63c0e257a296cf075e0beaf9cbff04b17f64dd96\",\"urls\":[\"bzzr://515b9f2353454667cb7423cfa715343b7a6a4c5abf84b65657f699418e78ee00\"]}},\"version\":1}",
+  "bytecode": "0x6080604052600060025534801561001557600080fd5b506106c5806100256000396000f3fe60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360e3c6c6146100515780637b15f1b61461007c575b600080fd5b34801561005d57600080fd5b506100666101ec565b6040518082815260200191505060405180910390f35b6101d66004803603606081101561009257600080fd5b81019080803590602001906401000000008111156100af57600080fd5b8201836020820111156100c157600080fd5b803590602001918460018302840111640100000000831117156100e357600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561014657600080fd5b82018360208201111561015857600080fd5b8035906020019184600183028401116401000000008311171561017a57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803590602001909291905050506101f2565b6040518082815260200191505060405180910390f35b60025481565b600080845111151561026c576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601b8152602001807f412053657276696365205469746c65206973207265717569726564000000000081525060200191505060405180910390fd5b6000835111151561030b576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260218152602001807f412053657276696365204465736372697074696f6e206973207265717569726581526020017f640000000000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b6000821115156103a9576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260218152602001807f412053657276696365205072696365206d75737420626520737065636966696581526020017f640000000000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b600034111515610447576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001807f41206d696e696d756d206f6620302e303120455448206973206e65656465642081526020017f746f20637265617465206120536572766963650000000000000000000000000081525060400191505060405180910390fd5b61044f61059c565b60c0604051908101604052808681526020018581526020018481526020013373ffffffffffffffffffffffffffffffffffffffff1681526020013481526020016000600681111561049c57fe5b81525090508060016000600254815260200190815260200160002060008201518160000190805190602001906104d39291906105f4565b5060208201518160010190805190602001906104f09291906105f4565b506040820151816002015560608201518160030160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506080820151816004015560a08201518160050160006101000a81548160ff0219169083600681111561057057fe5b021790555090505060026000815480929190600101919050556002819055506002549150509392505050565b60c060405190810160405280606081526020016060815260200160008152602001600073ffffffffffffffffffffffffffffffffffffffff16815260200160008152602001600060068111156105ee57fe5b81525090565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061063557805160ff1916838001178555610663565b82800160010185558215610663579182015b82811115610662578251825591602001919060010190610647565b5b5090506106709190610674565b5090565b61069691905b8082111561069257600081600090555060010161067a565b5090565b9056fea165627a7a723058208b729806b4a465e0ca3acff8a0d2d0ad3464044f35280699f4667a4e36a824110029",
+  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360e3c6c6146100515780637b15f1b61461007c575b600080fd5b34801561005d57600080fd5b506100666101ec565b6040518082815260200191505060405180910390f35b6101d66004803603606081101561009257600080fd5b81019080803590602001906401000000008111156100af57600080fd5b8201836020820111156100c157600080fd5b803590602001918460018302840111640100000000831117156100e357600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561014657600080fd5b82018360208201111561015857600080fd5b8035906020019184600183028401116401000000008311171561017a57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803590602001909291905050506101f2565b6040518082815260200191505060405180910390f35b60025481565b600080845111151561026c576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601b8152602001807f412053657276696365205469746c65206973207265717569726564000000000081525060200191505060405180910390fd5b6000835111151561030b576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260218152602001807f412053657276696365204465736372697074696f6e206973207265717569726581526020017f640000000000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b6000821115156103a9576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260218152602001807f412053657276696365205072696365206d75737420626520737065636966696581526020017f640000000000000000000000000000000000000000000000000000000000000081525060400191505060405180910390fd5b600034111515610447576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260338152602001807f41206d696e696d756d206f6620302e303120455448206973206e65656465642081526020017f746f20637265617465206120536572766963650000000000000000000000000081525060400191505060405180910390fd5b61044f61059c565b60c0604051908101604052808681526020018581526020018481526020013373ffffffffffffffffffffffffffffffffffffffff1681526020013481526020016000600681111561049c57fe5b81525090508060016000600254815260200190815260200160002060008201518160000190805190602001906104d39291906105f4565b5060208201518160010190805190602001906104f09291906105f4565b506040820151816002015560608201518160030160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506080820151816004015560a08201518160050160006101000a81548160ff0219169083600681111561057057fe5b021790555090505060026000815480929190600101919050556002819055506002549150509392505050565b60c060405190810160405280606081526020016060815260200160008152602001600073ffffffffffffffffffffffffffffffffffffffff16815260200160008152602001600060068111156105ee57fe5b81525090565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061063557805160ff1916838001178555610663565b82800160010185558215610663579182015b82811115610662578251825591602001919060010190610647565b5b5090506106709190610674565b5090565b61069691905b8082111561069257600081600090555060010161067a565b5090565b9056fea165627a7a723058208b729806b4a465e0ca3acff8a0d2d0ad3464044f35280699f4667a4e36a824110029",
+  "sourceMap": "66:1159:3:-;;;513:1;477:37;;66:1159;8:9:-1;5:2;;;30:1;27;20:12;5:2;66:1159:3;;;;;;;",
+  "deployedSourceMap": "66:1159:3:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;477:37;;8:9:-1;5:2;;;30:1;27;20:12;5:2;477:37:3;;;;;;;;;;;;;;;;;;;;;;;525:697;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;525:697:3;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;525:697:3;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;525:697:3;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;525:697:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;525:697:3;;;;;;;;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;525:697:3;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;525:697:3;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;525:697:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;525:697:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;477:37;;;;:::o;525:697::-;636:7;685:1;669:5;663:19;:23;655:63;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;764:1;742:11;736:25;:29;728:75;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;829:1;821:5;:9;813:55;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;898:1;886:9;:13;878:77;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;974:25;;:::i;:::-;1002:65;;;;;;;;;1010:5;1002:65;;;;1016:11;1002:65;;;;1028:5;1002:65;;;;1034:10;1002:65;;;;;;1045:9;1002:65;;;;1055:11;1002:65;;;;;;;;;;;974:93;;1119:10;1077:19;:39;1097:18;;1077:39;;;;;;;;;;;:52;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1160:18;;:20;;;;;;;;;;;;1139:18;:41;;;;1197:18;;1190:25;;;525:697;;;;;:::o;66:1159::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ncontract Service {\n\n    enum Status { none, pending, rejected, accepted, started, completd, incomplete}\n\n    struct service {\n        string title;\n        string description;\n        uint256 price;     \n        address serviceProvider;\n        uint256 creationValue;\n        Status status;\n    }\n\n    mapping (address => address) serviceRequesterList;\n    mapping (uint256 => service) serviceProviderList;\n    uint256 public numServiceProvider = 0;\n    \n    function createService (string memory title, string memory description, uint256 price) public payable returns (uint256) {\n        require(bytes(title).length > 0, \"A Service Title is required\");\n        require(bytes(description).length > 0, \"A Service Description is required\");\n        require(price > 0, \"A Service Price must be specified\");\n        require(msg.value > 0, \"A minimum of 0.01 ETH is needed to create a Service\");\n        \n        service memory newService = service(title,description,price,msg.sender,msg.value,Status.none);\n        serviceProviderList[numServiceProvider] = newService;\n        numServiceProvider = numServiceProvider++;\n        return numServiceProvider;\n    }\n\n}",
+  "sourcePath": "/Users/eltontay/Desktop/IS4302/project/contracts/Service.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Service.sol",
+    "exportedSymbols": {
+      "Service": [
+        254
+      ]
+    },
+    "id": 255,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 147,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:3"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 254,
+        "linearizedBaseContracts": [
+          254
+        ],
+        "name": "Service",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "Service.Status",
+            "id": 155,
+            "members": [
+              {
+                "id": 148,
+                "name": "none",
+                "nodeType": "EnumValue",
+                "src": "104:4:3"
+              },
+              {
+                "id": 149,
+                "name": "pending",
+                "nodeType": "EnumValue",
+                "src": "110:7:3"
+              },
+              {
+                "id": 150,
+                "name": "rejected",
+                "nodeType": "EnumValue",
+                "src": "119:8:3"
+              },
+              {
+                "id": 151,
+                "name": "accepted",
+                "nodeType": "EnumValue",
+                "src": "129:8:3"
+              },
+              {
+                "id": 152,
+                "name": "started",
+                "nodeType": "EnumValue",
+                "src": "139:7:3"
+              },
+              {
+                "id": 153,
+                "name": "completd",
+                "nodeType": "EnumValue",
+                "src": "148:8:3"
+              },
+              {
+                "id": 154,
+                "name": "incomplete",
+                "nodeType": "EnumValue",
+                "src": "158:10:3"
+              }
+            ],
+            "name": "Status",
+            "nodeType": "EnumDefinition",
+            "src": "90:79:3"
+          },
+          {
+            "canonicalName": "Service.service",
+            "id": 168,
+            "members": [
+              {
+                "constant": false,
+                "id": 157,
+                "name": "title",
+                "nodeType": "VariableDeclaration",
+                "scope": 168,
+                "src": "200:12:3",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 156,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "200:6:3",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 159,
+                "name": "description",
+                "nodeType": "VariableDeclaration",
+                "scope": 168,
+                "src": "222:18:3",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 158,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "222:6:3",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 161,
+                "name": "price",
+                "nodeType": "VariableDeclaration",
+                "scope": 168,
+                "src": "250:13:3",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 160,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "250:7:3",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 163,
+                "name": "serviceProvider",
+                "nodeType": "VariableDeclaration",
+                "scope": 168,
+                "src": "278:23:3",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 162,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "278:7:3",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 165,
+                "name": "creationValue",
+                "nodeType": "VariableDeclaration",
+                "scope": 168,
+                "src": "311:21:3",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 164,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "311:7:3",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 167,
+                "name": "status",
+                "nodeType": "VariableDeclaration",
+                "scope": 168,
+                "src": "342:13:3",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_Status_$155",
+                  "typeString": "enum Service.Status"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 166,
+                  "name": "Status",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 155,
+                  "src": "342:6:3",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_Status_$155",
+                    "typeString": "enum Service.Status"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "service",
+            "nodeType": "StructDefinition",
+            "scope": 254,
+            "src": "175:187:3",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 172,
+            "name": "serviceRequesterList",
+            "nodeType": "VariableDeclaration",
+            "scope": 254,
+            "src": "368:49:3",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_address_$",
+              "typeString": "mapping(address => address)"
+            },
+            "typeName": {
+              "id": 171,
+              "keyType": {
+                "id": 169,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "377:7:3",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "368:28:3",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_address_$",
+                "typeString": "mapping(address => address)"
+              },
+              "valueType": {
+                "id": 170,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "388:7:3",
+                "stateMutability": "nonpayable",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 176,
+            "name": "serviceProviderList",
+            "nodeType": "VariableDeclaration",
+            "scope": 254,
+            "src": "423:48:3",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_service_$168_storage_$",
+              "typeString": "mapping(uint256 => struct Service.service)"
+            },
+            "typeName": {
+              "id": 175,
+              "keyType": {
+                "id": 173,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "432:7:3",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "423:28:3",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_service_$168_storage_$",
+                "typeString": "mapping(uint256 => struct Service.service)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 174,
+                "name": "service",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 168,
+                "src": "443:7:3",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_service_$168_storage_ptr",
+                  "typeString": "struct Service.service"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 179,
+            "name": "numServiceProvider",
+            "nodeType": "VariableDeclaration",
+            "scope": 254,
+            "src": "477:37:3",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 177,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "477:7:3",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "30",
+              "id": 178,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "513:1:3",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_0_by_1",
+                "typeString": "int_const 0"
+              },
+              "value": "0"
+            },
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 252,
+              "nodeType": "Block",
+              "src": "645:577:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 196,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 192,
+                                "name": "title",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 181,
+                                "src": "669:5:3",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "id": 191,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "663:5:3",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_bytes_storage_ptr_$",
+                                "typeString": "type(bytes storage pointer)"
+                              },
+                              "typeName": "bytes"
+                            },
+                            "id": 193,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "663:12:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            }
+                          },
+                          "id": 194,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "663:19:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 195,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "685:1:3",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "663:23:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "412053657276696365205469746c65206973207265717569726564",
+                        "id": 197,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "688:29:3",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_f227e23c9d64352909ef9eea90b4dbc9f105cd727115bc0ed04fca8750b1e98f",
+                          "typeString": "literal_string \"A Service Title is required\""
+                        },
+                        "value": "A Service Title is required"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_f227e23c9d64352909ef9eea90b4dbc9f105cd727115bc0ed04fca8750b1e98f",
+                          "typeString": "literal_string \"A Service Title is required\""
+                        }
+                      ],
+                      "id": 190,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        272,
+                        273
+                      ],
+                      "referencedDeclaration": 273,
+                      "src": "655:7:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 198,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "655:63:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 199,
+                  "nodeType": "ExpressionStatement",
+                  "src": "655:63:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 206,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 202,
+                                "name": "description",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 183,
+                                "src": "742:11:3",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "id": 201,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "736:5:3",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_bytes_storage_ptr_$",
+                                "typeString": "type(bytes storage pointer)"
+                              },
+                              "typeName": "bytes"
+                            },
+                            "id": 203,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "736:18:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            }
+                          },
+                          "id": 204,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "736:25:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 205,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "764:1:3",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "736:29:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "412053657276696365204465736372697074696f6e206973207265717569726564",
+                        "id": 207,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "767:35:3",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_074f0fb4645d5eca9b32cce91ca244c7698be4eea438a13e9054766642a17bd8",
+                          "typeString": "literal_string \"A Service Description is required\""
+                        },
+                        "value": "A Service Description is required"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_074f0fb4645d5eca9b32cce91ca244c7698be4eea438a13e9054766642a17bd8",
+                          "typeString": "literal_string \"A Service Description is required\""
+                        }
+                      ],
+                      "id": 200,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        272,
+                        273
+                      ],
+                      "referencedDeclaration": 273,
+                      "src": "728:7:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 208,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "728:75:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 209,
+                  "nodeType": "ExpressionStatement",
+                  "src": "728:75:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 213,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 211,
+                          "name": "price",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 185,
+                          "src": "821:5:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 212,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "829:1:3",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "821:9:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "412053657276696365205072696365206d75737420626520737065636966696564",
+                        "id": 214,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "832:35:3",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_4fb16267420a161c0b167589359aef8c63f0ae0afa256fc617e49e5feff89004",
+                          "typeString": "literal_string \"A Service Price must be specified\""
+                        },
+                        "value": "A Service Price must be specified"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_4fb16267420a161c0b167589359aef8c63f0ae0afa256fc617e49e5feff89004",
+                          "typeString": "literal_string \"A Service Price must be specified\""
+                        }
+                      ],
+                      "id": 210,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        272,
+                        273
+                      ],
+                      "referencedDeclaration": 273,
+                      "src": "813:7:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 215,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "813:55:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 216,
+                  "nodeType": "ExpressionStatement",
+                  "src": "813:55:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 221,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 218,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 269,
+                            "src": "886:3:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 219,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "value",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "886:9:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 220,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "898:1:3",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "886:13:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "41206d696e696d756d206f6620302e303120455448206973206e656564656420746f2063726561746520612053657276696365",
+                        "id": 222,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "901:53:3",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_a393747616d79f8449eb5c6cabb8d4e671416b11881bd0c1789a3141ad934e38",
+                          "typeString": "literal_string \"A minimum of 0.01 ETH is needed to create a Service\""
+                        },
+                        "value": "A minimum of 0.01 ETH is needed to create a Service"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_a393747616d79f8449eb5c6cabb8d4e671416b11881bd0c1789a3141ad934e38",
+                          "typeString": "literal_string \"A minimum of 0.01 ETH is needed to create a Service\""
+                        }
+                      ],
+                      "id": 217,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        272,
+                        273
+                      ],
+                      "referencedDeclaration": 273,
+                      "src": "878:7:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 223,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "878:77:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 224,
+                  "nodeType": "ExpressionStatement",
+                  "src": "878:77:3"
+                },
+                {
+                  "assignments": [
+                    226
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 226,
+                      "name": "newService",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 252,
+                      "src": "974:25:3",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_service_$168_memory_ptr",
+                        "typeString": "struct Service.service"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 225,
+                        "name": "service",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 168,
+                        "src": "974:7:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_service_$168_storage_ptr",
+                          "typeString": "struct Service.service"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 238,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 228,
+                        "name": "title",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 181,
+                        "src": "1010:5:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 229,
+                        "name": "description",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 183,
+                        "src": "1016:11:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 230,
+                        "name": "price",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 185,
+                        "src": "1028:5:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 231,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 269,
+                          "src": "1034:3:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 232,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1034:10:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 233,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 269,
+                          "src": "1045:3:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 234,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "value",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1045:9:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 235,
+                          "name": "Status",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 155,
+                          "src": "1055:6:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_enum$_Status_$155_$",
+                            "typeString": "type(enum Service.Status)"
+                          }
+                        },
+                        "id": 236,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "lValueRequested": false,
+                        "memberName": "none",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1055:11:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_enum$_Status_$155",
+                          "typeString": "enum Service.Status"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        },
+                        {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_enum$_Status_$155",
+                          "typeString": "enum Service.Status"
+                        }
+                      ],
+                      "id": 227,
+                      "name": "service",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 168,
+                      "src": "1002:7:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_service_$168_storage_ptr_$",
+                        "typeString": "type(struct Service.service storage pointer)"
+                      }
+                    },
+                    "id": 237,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "structConstructorCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1002:65:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_service_$168_memory",
+                      "typeString": "struct Service.service memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "974:93:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 243,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 239,
+                        "name": "serviceProviderList",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 176,
+                        "src": "1077:19:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_service_$168_storage_$",
+                          "typeString": "mapping(uint256 => struct Service.service storage ref)"
+                        }
+                      },
+                      "id": 241,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "id": 240,
+                        "name": "numServiceProvider",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 179,
+                        "src": "1097:18:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "1077:39:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_service_$168_storage",
+                        "typeString": "struct Service.service storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 242,
+                      "name": "newService",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 226,
+                      "src": "1119:10:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_service_$168_memory_ptr",
+                        "typeString": "struct Service.service memory"
+                      }
+                    },
+                    "src": "1077:52:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_service_$168_storage",
+                      "typeString": "struct Service.service storage ref"
+                    }
+                  },
+                  "id": 244,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1077:52:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 248,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 245,
+                      "name": "numServiceProvider",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 179,
+                      "src": "1139:18:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 247,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "UnaryOperation",
+                      "operator": "++",
+                      "prefix": false,
+                      "src": "1160:20:3",
+                      "subExpression": {
+                        "argumentTypes": null,
+                        "id": 246,
+                        "name": "numServiceProvider",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 179,
+                        "src": "1160:18:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1139:41:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 249,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1139:41:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 250,
+                    "name": "numServiceProvider",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 179,
+                    "src": "1197:18:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 189,
+                  "id": 251,
+                  "nodeType": "Return",
+                  "src": "1190:25:3"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 253,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createService",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 186,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 181,
+                  "name": "title",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 253,
+                  "src": "549:19:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 180,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "549:6:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 183,
+                  "name": "description",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 253,
+                  "src": "570:25:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 182,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "570:6:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 185,
+                  "name": "price",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 253,
+                  "src": "597:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 184,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "597:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "548:63:3"
+            },
+            "returnParameters": {
+              "id": 189,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 188,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 253,
+                  "src": "636:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 187,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "636:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "635:9:3"
+            },
+            "scope": 254,
+            "src": "525:697:3",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 255,
+        "src": "66:1159:3"
+      }
+    ],
+    "src": "32:1193:3"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/Service.sol",
+      "exportedSymbols": {
+        "Service": [
+          254
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            ">=",
+            "0.4",
+            ".22",
+            "<",
+            "0.9",
+            ".0"
+          ]
+        },
+        "id": 147,
+        "name": "PragmaDirective",
+        "src": "32:32:3"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            254
+          ],
+          "name": "Service",
+          "scope": 255
+        },
+        "children": [
+          {
+            "attributes": {
+              "canonicalName": "Service.Status",
+              "name": "Status"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "none"
+                },
+                "id": 148,
+                "name": "EnumValue",
+                "src": "104:4:3"
+              },
+              {
+                "attributes": {
+                  "name": "pending"
+                },
+                "id": 149,
+                "name": "EnumValue",
+                "src": "110:7:3"
+              },
+              {
+                "attributes": {
+                  "name": "rejected"
+                },
+                "id": 150,
+                "name": "EnumValue",
+                "src": "119:8:3"
+              },
+              {
+                "attributes": {
+                  "name": "accepted"
+                },
+                "id": 151,
+                "name": "EnumValue",
+                "src": "129:8:3"
+              },
+              {
+                "attributes": {
+                  "name": "started"
+                },
+                "id": 152,
+                "name": "EnumValue",
+                "src": "139:7:3"
+              },
+              {
+                "attributes": {
+                  "name": "completd"
+                },
+                "id": 153,
+                "name": "EnumValue",
+                "src": "148:8:3"
+              },
+              {
+                "attributes": {
+                  "name": "incomplete"
+                },
+                "id": 154,
+                "name": "EnumValue",
+                "src": "158:10:3"
+              }
+            ],
+            "id": 155,
+            "name": "EnumDefinition",
+            "src": "90:79:3"
+          },
+          {
+            "attributes": {
+              "canonicalName": "Service.service",
+              "name": "service",
+              "scope": 254,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "title",
+                  "scope": 168,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "string",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "string",
+                      "type": "string"
+                    },
+                    "id": 156,
+                    "name": "ElementaryTypeName",
+                    "src": "200:6:3"
+                  }
+                ],
+                "id": 157,
+                "name": "VariableDeclaration",
+                "src": "200:12:3"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "description",
+                  "scope": 168,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "string",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "string",
+                      "type": "string"
+                    },
+                    "id": 158,
+                    "name": "ElementaryTypeName",
+                    "src": "222:6:3"
+                  }
+                ],
+                "id": 159,
+                "name": "VariableDeclaration",
+                "src": "222:18:3"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "price",
+                  "scope": 168,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 160,
+                    "name": "ElementaryTypeName",
+                    "src": "250:7:3"
+                  }
+                ],
+                "id": 161,
+                "name": "VariableDeclaration",
+                "src": "250:13:3"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "serviceProvider",
+                  "scope": 168,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "address",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "stateMutability": "nonpayable",
+                      "type": "address"
+                    },
+                    "id": 162,
+                    "name": "ElementaryTypeName",
+                    "src": "278:7:3"
+                  }
+                ],
+                "id": 163,
+                "name": "VariableDeclaration",
+                "src": "278:23:3"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "creationValue",
+                  "scope": 168,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 164,
+                    "name": "ElementaryTypeName",
+                    "src": "311:7:3"
+                  }
+                ],
+                "id": 165,
+                "name": "VariableDeclaration",
+                "src": "311:21:3"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "status",
+                  "scope": 168,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "enum Service.Status",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "contractScope": null,
+                      "name": "Status",
+                      "referencedDeclaration": 155,
+                      "type": "enum Service.Status"
+                    },
+                    "id": 166,
+                    "name": "UserDefinedTypeName",
+                    "src": "342:6:3"
+                  }
+                ],
+                "id": 167,
+                "name": "VariableDeclaration",
+                "src": "342:13:3"
+              }
+            ],
+            "id": 168,
+            "name": "StructDefinition",
+            "src": "175:187:3"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "serviceRequesterList",
+              "scope": 254,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "mapping(address => address)",
+              "value": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "type": "mapping(address => address)"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "type": "address"
+                    },
+                    "id": 169,
+                    "name": "ElementaryTypeName",
+                    "src": "377:7:3"
+                  },
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "stateMutability": "nonpayable",
+                      "type": "address"
+                    },
+                    "id": 170,
+                    "name": "ElementaryTypeName",
+                    "src": "388:7:3"
+                  }
+                ],
+                "id": 171,
+                "name": "Mapping",
+                "src": "368:28:3"
+              }
+            ],
+            "id": 172,
+            "name": "VariableDeclaration",
+            "src": "368:49:3"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "serviceProviderList",
+              "scope": 254,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "mapping(uint256 => struct Service.service)",
+              "value": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "type": "mapping(uint256 => struct Service.service)"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 173,
+                    "name": "ElementaryTypeName",
+                    "src": "432:7:3"
+                  },
+                  {
+                    "attributes": {
+                      "contractScope": null,
+                      "name": "service",
+                      "referencedDeclaration": 168,
+                      "type": "struct Service.service"
+                    },
+                    "id": 174,
+                    "name": "UserDefinedTypeName",
+                    "src": "443:7:3"
+                  }
+                ],
+                "id": 175,
+                "name": "Mapping",
+                "src": "423:28:3"
+              }
+            ],
+            "id": 176,
+            "name": "VariableDeclaration",
+            "src": "423:48:3"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "numServiceProvider",
+              "scope": 254,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint256",
+                  "type": "uint256"
+                },
+                "id": 177,
+                "name": "ElementaryTypeName",
+                "src": "477:7:3"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "30",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "int_const 0",
+                  "value": "0"
+                },
+                "id": 178,
+                "name": "Literal",
+                "src": "513:1:3"
+              }
+            ],
+            "id": 179,
+            "name": "VariableDeclaration",
+            "src": "477:37:3"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "createService",
+              "scope": 254,
+              "stateMutability": "payable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "title",
+                      "scope": 253,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 180,
+                        "name": "ElementaryTypeName",
+                        "src": "549:6:3"
+                      }
+                    ],
+                    "id": 181,
+                    "name": "VariableDeclaration",
+                    "src": "549:19:3"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "description",
+                      "scope": 253,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 182,
+                        "name": "ElementaryTypeName",
+                        "src": "570:6:3"
+                      }
+                    ],
+                    "id": 183,
+                    "name": "VariableDeclaration",
+                    "src": "570:25:3"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "price",
+                      "scope": 253,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 184,
+                        "name": "ElementaryTypeName",
+                        "src": "597:7:3"
+                      }
+                    ],
+                    "id": 185,
+                    "name": "VariableDeclaration",
+                    "src": "597:13:3"
+                  }
+                ],
+                "id": 186,
+                "name": "ParameterList",
+                "src": "548:63:3"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 253,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 187,
+                        "name": "ElementaryTypeName",
+                        "src": "636:7:3"
+                      }
+                    ],
+                    "id": 188,
+                    "name": "VariableDeclaration",
+                    "src": "636:7:3"
+                  }
+                ],
+                "id": 189,
+                "name": "ParameterList",
+                "src": "635:9:3"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_f227e23c9d64352909ef9eea90b4dbc9f105cd727115bc0ed04fca8750b1e98f",
+                                  "typeString": "literal_string \"A Service Title is required\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                272,
+                                273
+                              ],
+                              "referencedDeclaration": 273,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 190,
+                            "name": "Identifier",
+                            "src": "655:7:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": ">",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "length",
+                                  "referencedDeclaration": null,
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": false,
+                                      "isStructConstructorCall": false,
+                                      "lValueRequested": false,
+                                      "names": [
+                                        null
+                                      ],
+                                      "type": "bytes memory",
+                                      "type_conversion": true
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": [
+                                            {
+                                              "typeIdentifier": "t_string_memory_ptr",
+                                              "typeString": "string memory"
+                                            }
+                                          ],
+                                          "isConstant": false,
+                                          "isLValue": false,
+                                          "isPure": true,
+                                          "lValueRequested": false,
+                                          "type": "type(bytes storage pointer)",
+                                          "value": "bytes"
+                                        },
+                                        "id": 191,
+                                        "name": "ElementaryTypeNameExpression",
+                                        "src": "663:5:3"
+                                      },
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 181,
+                                          "type": "string memory",
+                                          "value": "title"
+                                        },
+                                        "id": 192,
+                                        "name": "Identifier",
+                                        "src": "669:5:3"
+                                      }
+                                    ],
+                                    "id": 193,
+                                    "name": "FunctionCall",
+                                    "src": "663:12:3"
+                                  }
+                                ],
+                                "id": 194,
+                                "name": "MemberAccess",
+                                "src": "663:19:3"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "30",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "number",
+                                  "type": "int_const 0",
+                                  "value": "0"
+                                },
+                                "id": 195,
+                                "name": "Literal",
+                                "src": "685:1:3"
+                              }
+                            ],
+                            "id": 196,
+                            "name": "BinaryOperation",
+                            "src": "663:23:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "412053657276696365205469746c65206973207265717569726564",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"A Service Title is required\"",
+                              "value": "A Service Title is required"
+                            },
+                            "id": 197,
+                            "name": "Literal",
+                            "src": "688:29:3"
+                          }
+                        ],
+                        "id": 198,
+                        "name": "FunctionCall",
+                        "src": "655:63:3"
+                      }
+                    ],
+                    "id": 199,
+                    "name": "ExpressionStatement",
+                    "src": "655:63:3"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_074f0fb4645d5eca9b32cce91ca244c7698be4eea438a13e9054766642a17bd8",
+                                  "typeString": "literal_string \"A Service Description is required\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                272,
+                                273
+                              ],
+                              "referencedDeclaration": 273,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 200,
+                            "name": "Identifier",
+                            "src": "728:7:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": ">",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "length",
+                                  "referencedDeclaration": null,
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": false,
+                                      "isStructConstructorCall": false,
+                                      "lValueRequested": false,
+                                      "names": [
+                                        null
+                                      ],
+                                      "type": "bytes memory",
+                                      "type_conversion": true
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": [
+                                            {
+                                              "typeIdentifier": "t_string_memory_ptr",
+                                              "typeString": "string memory"
+                                            }
+                                          ],
+                                          "isConstant": false,
+                                          "isLValue": false,
+                                          "isPure": true,
+                                          "lValueRequested": false,
+                                          "type": "type(bytes storage pointer)",
+                                          "value": "bytes"
+                                        },
+                                        "id": 201,
+                                        "name": "ElementaryTypeNameExpression",
+                                        "src": "736:5:3"
+                                      },
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 183,
+                                          "type": "string memory",
+                                          "value": "description"
+                                        },
+                                        "id": 202,
+                                        "name": "Identifier",
+                                        "src": "742:11:3"
+                                      }
+                                    ],
+                                    "id": 203,
+                                    "name": "FunctionCall",
+                                    "src": "736:18:3"
+                                  }
+                                ],
+                                "id": 204,
+                                "name": "MemberAccess",
+                                "src": "736:25:3"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "30",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "number",
+                                  "type": "int_const 0",
+                                  "value": "0"
+                                },
+                                "id": 205,
+                                "name": "Literal",
+                                "src": "764:1:3"
+                              }
+                            ],
+                            "id": 206,
+                            "name": "BinaryOperation",
+                            "src": "736:29:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "412053657276696365204465736372697074696f6e206973207265717569726564",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"A Service Description is required\"",
+                              "value": "A Service Description is required"
+                            },
+                            "id": 207,
+                            "name": "Literal",
+                            "src": "767:35:3"
+                          }
+                        ],
+                        "id": 208,
+                        "name": "FunctionCall",
+                        "src": "728:75:3"
+                      }
+                    ],
+                    "id": 209,
+                    "name": "ExpressionStatement",
+                    "src": "728:75:3"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_4fb16267420a161c0b167589359aef8c63f0ae0afa256fc617e49e5feff89004",
+                                  "typeString": "literal_string \"A Service Price must be specified\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                272,
+                                273
+                              ],
+                              "referencedDeclaration": 273,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 210,
+                            "name": "Identifier",
+                            "src": "813:7:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": ">",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 185,
+                                  "type": "uint256",
+                                  "value": "price"
+                                },
+                                "id": 211,
+                                "name": "Identifier",
+                                "src": "821:5:3"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "30",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "number",
+                                  "type": "int_const 0",
+                                  "value": "0"
+                                },
+                                "id": 212,
+                                "name": "Literal",
+                                "src": "829:1:3"
+                              }
+                            ],
+                            "id": 213,
+                            "name": "BinaryOperation",
+                            "src": "821:9:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "412053657276696365205072696365206d75737420626520737065636966696564",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"A Service Price must be specified\"",
+                              "value": "A Service Price must be specified"
+                            },
+                            "id": 214,
+                            "name": "Literal",
+                            "src": "832:35:3"
+                          }
+                        ],
+                        "id": 215,
+                        "name": "FunctionCall",
+                        "src": "813:55:3"
+                      }
+                    ],
+                    "id": 216,
+                    "name": "ExpressionStatement",
+                    "src": "813:55:3"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_a393747616d79f8449eb5c6cabb8d4e671416b11881bd0c1789a3141ad934e38",
+                                  "typeString": "literal_string \"A minimum of 0.01 ETH is needed to create a Service\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                272,
+                                273
+                              ],
+                              "referencedDeclaration": 273,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 217,
+                            "name": "Identifier",
+                            "src": "878:7:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": ">",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "value",
+                                  "referencedDeclaration": null,
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 269,
+                                      "type": "msg",
+                                      "value": "msg"
+                                    },
+                                    "id": 218,
+                                    "name": "Identifier",
+                                    "src": "886:3:3"
+                                  }
+                                ],
+                                "id": 219,
+                                "name": "MemberAccess",
+                                "src": "886:9:3"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "30",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "number",
+                                  "type": "int_const 0",
+                                  "value": "0"
+                                },
+                                "id": 220,
+                                "name": "Literal",
+                                "src": "898:1:3"
+                              }
+                            ],
+                            "id": 221,
+                            "name": "BinaryOperation",
+                            "src": "886:13:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "41206d696e696d756d206f6620302e303120455448206973206e656564656420746f2063726561746520612053657276696365",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"A minimum of 0.01 ETH is needed to create a Service\"",
+                              "value": "A minimum of 0.01 ETH is needed to create a Service"
+                            },
+                            "id": 222,
+                            "name": "Literal",
+                            "src": "901:53:3"
+                          }
+                        ],
+                        "id": 223,
+                        "name": "FunctionCall",
+                        "src": "878:77:3"
+                      }
+                    ],
+                    "id": 224,
+                    "name": "ExpressionStatement",
+                    "src": "878:77:3"
+                  },
+                  {
+                    "attributes": {
+                      "assignments": [
+                        226
+                      ]
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "constant": false,
+                          "name": "newService",
+                          "scope": 252,
+                          "stateVariable": false,
+                          "storageLocation": "memory",
+                          "type": "struct Service.service",
+                          "value": null,
+                          "visibility": "internal"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "contractScope": null,
+                              "name": "service",
+                              "referencedDeclaration": 168,
+                              "type": "struct Service.service"
+                            },
+                            "id": 225,
+                            "name": "UserDefinedTypeName",
+                            "src": "974:7:3"
+                          }
+                        ],
+                        "id": 226,
+                        "name": "VariableDeclaration",
+                        "src": "974:25:3"
+                      },
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": true,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "struct Service.service memory",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                },
+                                {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_address_payable",
+                                  "typeString": "address payable"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_enum$_Status_$155",
+                                  "typeString": "enum Service.Status"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 168,
+                              "type": "type(struct Service.service storage pointer)",
+                              "value": "service"
+                            },
+                            "id": 227,
+                            "name": "Identifier",
+                            "src": "1002:7:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 181,
+                              "type": "string memory",
+                              "value": "title"
+                            },
+                            "id": 228,
+                            "name": "Identifier",
+                            "src": "1010:5:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 183,
+                              "type": "string memory",
+                              "value": "description"
+                            },
+                            "id": 229,
+                            "name": "Identifier",
+                            "src": "1016:11:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 185,
+                              "type": "uint256",
+                              "value": "price"
+                            },
+                            "id": 230,
+                            "name": "Identifier",
+                            "src": "1028:5:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "sender",
+                              "referencedDeclaration": null,
+                              "type": "address payable"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 269,
+                                  "type": "msg",
+                                  "value": "msg"
+                                },
+                                "id": 231,
+                                "name": "Identifier",
+                                "src": "1034:3:3"
+                              }
+                            ],
+                            "id": 232,
+                            "name": "MemberAccess",
+                            "src": "1034:10:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "value",
+                              "referencedDeclaration": null,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 269,
+                                  "type": "msg",
+                                  "value": "msg"
+                                },
+                                "id": 233,
+                                "name": "Identifier",
+                                "src": "1045:3:3"
+                              }
+                            ],
+                            "id": 234,
+                            "name": "MemberAccess",
+                            "src": "1045:9:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "member_name": "none",
+                              "referencedDeclaration": null,
+                              "type": "enum Service.Status"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 155,
+                                  "type": "type(enum Service.Status)",
+                                  "value": "Status"
+                                },
+                                "id": 235,
+                                "name": "Identifier",
+                                "src": "1055:6:3"
+                              }
+                            ],
+                            "id": 236,
+                            "name": "MemberAccess",
+                            "src": "1055:11:3"
+                          }
+                        ],
+                        "id": 237,
+                        "name": "FunctionCall",
+                        "src": "1002:65:3"
+                      }
+                    ],
+                    "id": 238,
+                    "name": "VariableDeclarationStatement",
+                    "src": "974:93:3"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "struct Service.service storage ref"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": true,
+                              "type": "struct Service.service storage ref"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 176,
+                                  "type": "mapping(uint256 => struct Service.service storage ref)",
+                                  "value": "serviceProviderList"
+                                },
+                                "id": 239,
+                                "name": "Identifier",
+                                "src": "1077:19:3"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 179,
+                                  "type": "uint256",
+                                  "value": "numServiceProvider"
+                                },
+                                "id": 240,
+                                "name": "Identifier",
+                                "src": "1097:18:3"
+                              }
+                            ],
+                            "id": 241,
+                            "name": "IndexAccess",
+                            "src": "1077:39:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 226,
+                              "type": "struct Service.service memory",
+                              "value": "newService"
+                            },
+                            "id": 242,
+                            "name": "Identifier",
+                            "src": "1119:10:3"
+                          }
+                        ],
+                        "id": 243,
+                        "name": "Assignment",
+                        "src": "1077:52:3"
+                      }
+                    ],
+                    "id": 244,
+                    "name": "ExpressionStatement",
+                    "src": "1077:52:3"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "uint256"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 179,
+                              "type": "uint256",
+                              "value": "numServiceProvider"
+                            },
+                            "id": 245,
+                            "name": "Identifier",
+                            "src": "1139:18:3"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "++",
+                              "prefix": false,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 179,
+                                  "type": "uint256",
+                                  "value": "numServiceProvider"
+                                },
+                                "id": 246,
+                                "name": "Identifier",
+                                "src": "1160:18:3"
+                              }
+                            ],
+                            "id": 247,
+                            "name": "UnaryOperation",
+                            "src": "1160:20:3"
+                          }
+                        ],
+                        "id": 248,
+                        "name": "Assignment",
+                        "src": "1139:41:3"
+                      }
+                    ],
+                    "id": 249,
+                    "name": "ExpressionStatement",
+                    "src": "1139:41:3"
+                  },
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 189
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "overloadedDeclarations": [
+                            null
+                          ],
+                          "referencedDeclaration": 179,
+                          "type": "uint256",
+                          "value": "numServiceProvider"
+                        },
+                        "id": 250,
+                        "name": "Identifier",
+                        "src": "1197:18:3"
+                      }
+                    ],
+                    "id": 251,
+                    "name": "Return",
+                    "src": "1190:25:3"
+                  }
+                ],
+                "id": 252,
+                "name": "Block",
+                "src": "645:577:3"
+              }
+            ],
+            "id": 253,
+            "name": "FunctionDefinition",
+            "src": "525:697:3"
+          }
+        ],
+        "id": 254,
+        "name": "ContractDefinition",
+        "src": "66:1159:3"
+      }
+    ],
+    "id": 255,
+    "name": "SourceUnit",
+    "src": "32:1193:3"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x2630Aa717B4D0671b80e34863179A237C4519333",
+      "transactionHash": "0xf862a1d699c3fecd4af15bfa0fe676bd0939039b61dcaf23faf603a964aacfea"
+    }
+  },
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-03-08T01:18:03.261Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

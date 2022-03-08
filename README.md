@@ -34,3 +34,10 @@ Functions
 ## 2. Migrations
 
 ## 3. Test
+
+To compile and test Blocktractor smart contracts, run the following codes.
+
+```bash
+truffle compile
+truffle migrate
+```

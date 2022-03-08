@@ -3,16 +3,23 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Service.sol";
 
-
 contract Blocktractor {
+
+    Profile profileContract;
+    Service serviceContract;
 
     address _owner = msg.sender;
     uint256 public comissionFee;
-    mapping (string => string) profileList;
-    mapping (uint256 => uint256) serviceContractList;
 
-    constructor(uint256 fee) {
+    constructor(Profile profileAddress, Service serviceAddress, uint256 fee) public {
         comissionFee = fee;
+        profileContract = profileAddress;
+        serviceContract = serviceAddress;
+    }
+
+    // Verified Profiles are allowed to create service
+    function createService(string memory title, string memory description, uint256 price) public payable { 
+        serviceContract.createService(title,description,price);
     }
 
     // Verified Profiles are allowed to list service
