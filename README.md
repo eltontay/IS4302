@@ -39,6 +39,15 @@ Service smart contract interacts only with the Blocktractor smart contractor.
 Profile smart contract interacts only with the Blocktractor smart contractor.
 Each profile can be both a service provider and a service requester.
 
+Functions
+
+- createProfile(name,username,password)
+
+  - Creation of Profile
+
+- getName()
+  - Returns name of Profile
+
 ## 2. Migrations
 
 ## 3. Test

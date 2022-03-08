@@ -8,6 +8,7 @@ contract Profile {
         string username;
         string password;
         address owner;
+        bool created;
     }
 
     mapping (address => profile) profileList; // list of profiles created in profile smart contract
@@ -17,13 +18,18 @@ contract Profile {
     uint256 public numProfile = 0;
 
     function createProfile(string memory name, string memory username, string memory password) public returns (uint256) {
-        profile memory newProfile = profile(name,username,password,msg.sender);
+        profile memory newProfile = profile(name,username,password,msg.sender,true);
         profileList[msg.sender] = newProfile;
         numProfile = numProfile ++;
         return numProfile;
     }
 
-    function getName() public view returns ( string memory ) {
+    modifier validProfile() {
+        require(profileList[msg.sender].created);
+        _;
+    }
+
+    function getName() public validProfile() view returns ( string memory ) {
         return profileList[msg.sender].name;
     }
 
