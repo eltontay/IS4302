@@ -18,10 +18,9 @@ contract('TestBlocktractor', function (accounts) {
     let createService1 = await blocktractorInstance.createService(
       'Cleaning of House',
       'I can clean your house very thoroughly for 1 hour',
-      1,
+      100,
       {
         from: accounts[1],
-        value: 1000000000000000000,
       }
     );
 

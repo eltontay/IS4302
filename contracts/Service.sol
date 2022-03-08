@@ -22,7 +22,7 @@ contract Service {
         require(bytes(title).length > 0, "A Service Title is required");
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
-        require(msg.value > 0, "A minimum of 0.01 ETH is needed to create a Service");
+        // require(msg.value > 0.01 ether, "A minimum of 0.01 ETH is needed to create a Service");
         
         service memory newService = service(title,description,price,msg.sender,msg.value,Status.none);
         serviceProviderList[numServiceProvider] = newService;

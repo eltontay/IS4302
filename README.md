@@ -40,4 +40,5 @@ To compile and test Blocktractor smart contracts, run the following codes.
 ```bash
 truffle compile
 truffle migrate
+truffle test
 ```
