@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
+import "./Profile.sol";
+import "./Service.sol";
+
 
 contract Blocktractor {
 
@@ -8,7 +11,7 @@ contract Blocktractor {
     mapping (string => string) profileList;
     mapping (uint256 => uint256) serviceContractList;
 
-    constructor(uint256 fee) public {
+    constructor(uint256 fee) {
         comissionFee = fee;
     }
 
