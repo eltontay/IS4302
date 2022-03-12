@@ -5,17 +5,28 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Service {
 
-    enum Status { none, pending, approved, started, completd, incomplete }
+    enum Status { none, pending, approved, started, completed, incomplete }
+    enum Review { none, satisfied, disatisfied }
 
+    struct milestone {
+        uint256 milestoneNumber;
+        string milestoneTitle;
+        string milestoneDescription;
+        Review review; // Defaults at none
+    }
+    
     struct service {
         string title;
         string description;
         uint256 price;
+        uint256 totalMilestones; // Defaults to 1 milestone
+        uint256 currentMilestone; // Defaults to 0 milestone
         uint256 serviceNumber; // index number of the service
-        address serviceProvider; 
+        address serviceProvider; // msg.sender
         address serviceRequester; // defaults to address(0)
-        Status status;
-        bool listed; 
+        Status status; // Defaults at none
+        bool listed;  // Defaults at false
+        Review review; // Overall review of services, defaults at none
     }
 
     event serviceCreated(uint256 serviceNumber);
@@ -28,6 +39,7 @@ contract Service {
     event serviceRejected(Status status);
     event serviceStarted(Status status);
 
+    mapping (uint256 => mapping(uint256 => milestone)) milestones; // indexed mapping of services to multiple milestones
     mapping (uint256 => service) services; // indexed mapping of all services 
     
     uint256 public numService = 0;
@@ -38,7 +50,7 @@ contract Service {
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
-        service memory newService = service(title,description,price,numService,msg.sender,address(0),Status.none,false);
+        service memory newService = service(title,description,price,1,0,numService,msg.sender,address(0),Status.none,false,Review.none);
         services[numService] = newService;
         emit serviceCreated(numService);
         numService = numService++;
@@ -108,6 +120,8 @@ contract Service {
     }
 
 
+
+
     // Getter for services created by service provider
     function viewMyServices() public view returns (string memory) {
         string memory s = "";
@@ -129,10 +143,12 @@ contract Service {
         return services[serviceNumber];
     }
 
+    // Getter for service price
     function getServicePrice(uint256 serviceNumber) public view returns (uint256) {
         return services[serviceNumber].price;
     }
 
+    // Getter for boolean if service is approved
     function isServiceApproved(uint256 serviceNumber) public view returns (bool) {
         return services[serviceNumber].status == Status.approved;
     }
