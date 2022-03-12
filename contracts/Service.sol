@@ -67,13 +67,14 @@ contract Service {
     }
 
     // Getter for services created by service provider
-    function viewMyServices () public view {
+    function viewMyServices () public view returns (string memory) {
         string memory services = "";
         for (uint i = 0; i < numService; i++) {
             if (serviceProviderList[i].serviceProvider == msg.sender) {
-                string(abi.encodePacked(services, ' ', Strings.toString(numService)));
+                services = string(abi.encodePacked(services, ' ', Strings.toString(numService)));
             }
         }
+        return services;
     }
 
 }

@@ -13,10 +13,12 @@ Functions
     returns index number of Service created
 - deleteService(serviceNumber)
   - Service Provider can delete a service
-- listService()
+- listService(serviceNumber)
   - Service Provider can list their service
-- delistService()
+- delistService(serviceNumber)
   - Service Provider can delist their service
+- viewMyServices()
+  - Getter Function for services provided by service provider
 - requestService()
   - Service Requester can request a service
 - approveService()
