@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Service {
 
-    enum Status { none, pending, accepted, started, completd, incomplete }
+    enum Status { none, pending, approved, started, completd, incomplete }
 
     struct service {
         string title;
@@ -26,6 +26,7 @@ contract Service {
     event serviceCancelRequest(Status status);
     event serviceApproved(Status status);
     event serviceRejected(Status status);
+    event serviceStarted(Status status);
 
     mapping (uint256 => service) services; // indexed mapping of all services 
     
@@ -88,8 +89,8 @@ contract Service {
     // Service provider approving pending service request
     function approveServiceRequest(uint256 serviceNumber) public {
         require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised approval of service request");
-        services[serviceNumber].status = Status.accepted; // Changing state to accepted
-        emit serviceApproved(Status.accepted);
+        services[serviceNumber].status = Status.approved; // Changing state to accepted
+        emit serviceApproved(Status.approved);
     }
 
     // Service provider rejecting pending service request
@@ -98,6 +99,14 @@ contract Service {
         services[serviceNumber].status = Status.none; // reverting back to original status state
         emit serviceRejected(Status.none);
     }
+
+    // Service requester can now start the requested service
+    function startRequestedService(uint256 serviceNumber) public {
+        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
+        services[serviceNumber].status = Status.started;
+        emit serviceStarted(Status.started);
+    }
+
 
     // Getter for services created by service provider
     function viewMyServices() public view returns (string memory) {

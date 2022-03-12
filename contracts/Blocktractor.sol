@@ -36,19 +36,24 @@ contract Blocktractor {
         serviceContract.delistService(serviceNumber);
     } 
     
-    // Function that request listed Service
-    function requestService() public {
-
+    // Requesting for a service
+    function requestService(uint256 serviceNumber) public {
+        serviceContract.requestService(serviceNumber);
     }
 
-    // Function that approves requested listed service
-    function approveService() public {
-
+    // Cancelling requested service
+    function cancelRequestService(uint256 serviceNumber) public {
+        serviceContract.cancelRequestService(serviceNumber);
     }
 
-    // Function that rejects requested listed service
-    function rejectService() public {
+    // Approving requested service request
+    function approveService(uint256 serviceNumber) public {
+        serviceContract.approveServiceRequest(serviceNumber);
+    }
 
+    // Reject requested service request
+    function rejectService(uint256 serviceNumber) public {
+        serviceContract.rejectServiceRequest(serviceNumber);
     }
 
     // Function that completes listed Service
