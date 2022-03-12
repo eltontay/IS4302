@@ -42,9 +42,11 @@ contract Service {
     event serviceRejected(Status status);
     event serviceStarted(Status status);
     event serviceCompleted(Status status);
+    event serviceReview(Review review);
     event milestoneAdded(uint256 serviceNumber, uint256 milestoneNumber, string milestoneTitle, string milestoneDescription);
     event milestoneDeleted(uint256 serviceNumber, uint256 milestoneNumber);
     event milestoneCompleted(uint256 serviceNumber, uint256 milestoneNumber);
+    event milestoneReview(Review review);
 
     mapping (uint256 => mapping(uint256 => milestone)) milestones; // indexed mapping of services to multiple milestones
     mapping (uint256 => service) services; // indexed mapping of all services 
@@ -161,9 +163,27 @@ contract Service {
 
     // Service requester can now start the requested service
     function startRequestedService(uint256 serviceNumber) public {
-        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
+        require(services[serviceNumber].serviceRequester == msg.sender, "Unauthorised starting of service request");
         services[serviceNumber].status = Status.started;
         emit serviceStarted(Status.started);
+    }
+
+    // Review of service takes in a a boolean, true = satisfied, false = dissatisfied
+    function reviewMilestone(uint256 serviceNumber, uint256 milestoneNumber, bool satisfied) public {
+        require(services[serviceNumber].serviceRequester == msg.sender, "Unauthorised review of service");
+        if (satisfied) {
+            milestones[serviceNumber][milestoneNumber].review = Review.satisfied;
+            emit milestoneReview(Review.satisfied);
+        } else {
+            milestones[serviceNumber][milestoneNumber].review = Review.disatisfied;
+            emit milestoneReview(Review.disatisfied);
+        }
+    }
+
+    // Review of service takes in a boolean, true = satisfied , false = dissatisfied
+    function reviewService(uint256 serviceNumber, bool satisfied) public {
+        require(services[serviceNumber].serviceRequester == msg.sender, "Unauthorised review of service");
+        satisfied ? services[serviceNumber].review = Review.satisfied : services[serviceNumber].review = Review.disatisfied;
     }
 
 /*
