@@ -17,6 +17,16 @@ Functions
   - Service Provider can list their service
 - delistService(serviceNumber)
   - Service Provider can delist their service
+- requestService(serviceNumber)
+  - Service Requester requesting service
+- cancelRequestService(serviceNumber)
+  - Service Requester cancelling requested service
+- approveServiceRequest(serviceNumber)
+  - Service Provider approving requested service
+- rejectServiceRequest(serviceNumber)
+
+  - Service Provider rejecting requested service
+
 - viewMyServices()
   - Getter Function for services provided by service provider
 - requestService()
