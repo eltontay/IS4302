@@ -12,7 +12,8 @@ contract Service {
         string description;
         uint256 price;
         uint256 serviceNumber; // index number of the service
-        address serviceProvider;
+        address serviceProvider; 
+        address serviceRequester; // defaults to address(0)
         Status status;
         bool listed;
     }
@@ -22,8 +23,6 @@ contract Service {
     event serviceListed(uint256 serviceNumber);
     event serviceDelisted(uint256 serviceNumber);
 
-
-    mapping (address => address) serviceRequesterList; // mapping of service requester addresses to each service provider address
     mapping (uint256 => service) serviceProviderList; // indexed mapping of all service providers
     
     uint256 public numService = 0;
@@ -34,7 +33,7 @@ contract Service {
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
-        service memory newService = service(title,description,price,numService,msg.sender,Status.none,false);
+        service memory newService = service(title,description,price,numService,msg.sender,address(0),Status.none,false);
         serviceProviderList[numService] = newService;
         emit serviceCreated(numService);
         numService = numService++;
@@ -68,7 +67,7 @@ contract Service {
 
     // Service requester requesting of service
     function requestService (uint256 serviceNumber) public {
-
+        
     }
 
     // Service
