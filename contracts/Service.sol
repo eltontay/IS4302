@@ -17,11 +17,13 @@ contract Service {
     event serviceListed(uint256 serviceNumber);
     event serviceDelisted(uint256 serviceNumber);
 
-    mapping (address => address) serviceRequesterList;
-    mapping (uint256 => service) serviceProviderList;
-
+    mapping (address => address) serviceRequesterList; // mapping of service requester addresses to each service provider address
+    mapping (uint256 => service) serviceProviderList; // indexed mapping of all service providers
+    mapping (address => uint256) serviceProviderServices; // mapping of all services provided by service provider
+    
     uint256 public numService = 0;
     
+    // Creation of service
     function createService (string memory title, string memory description, uint256 price) public returns (uint256) {
         require(bytes(title).length > 0, "A Service Title is required");
         require(bytes(description).length > 0, "A Service Description is required");
@@ -31,6 +33,13 @@ contract Service {
         serviceProviderList[numService] = newService;
         numService = numService++;
         return numService;
+    }
+
+    // Deletion of service 
+    function deleteService (uint256 serviceNumber) public {
+        require(msg.sender == serviceProviderList[serviceNumber].serviceProvider, "Unauthorised service provider");
+        delete serviceProviderList[serviceNumber];
+        numService -= 1; 
     }
 
     // Service provider listing created service
@@ -45,6 +54,11 @@ contract Service {
         require(msg.sender == serviceProviderList[serviceNumber].serviceProvider, "Unauthorised service provider");
         serviceProviderList[serviceNumber].listed = false; 
         emit serviceDelisted(serviceNumber);
+    }
+
+    // Getter for services created by service provider
+    function viewMyServices () public view returns (uint256) {
+        return serviceProviderServices[msg.sender];
     }
 
 }

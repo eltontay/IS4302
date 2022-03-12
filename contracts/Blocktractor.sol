@@ -20,17 +20,20 @@ contract Blocktractor {
     // Verified Profiles are allowed to create service
     function createService(string memory title, string memory description, uint256 price) public payable { 
         require(profileContract.checkValidProfile(),'Your profile is not yet created');
-        serviceContract.createService(title,description,price);
+        uint256 serviceNumber = serviceContract.createService(title,description,price);
+        profileContract.putService(serviceNumber);
     }
 
     // Verified Profiles are allowed to list service
-    function listService() public {
-        
+    function listService(uint256 serviceNumber) public {
+        require(profileContract.checkValidProfile(),'Your profile is not yet created'); 
+        serviceContract.listService(serviceNumber);
     }
 
     // Verified Profiles are allowed to delist service
-    function delistService() public {
-
+    function delistService(uint256 serviceNumber) public {
+        require(profileContract.checkValidProfile(),'Your profile is not yet created'); 
+        serviceContract.delistService(serviceNumber);
     } 
     
     // Function that request listed Service
