@@ -4,7 +4,7 @@
 
 ### Blocktractor.sol
 
-Blocktractor is a Marketplace smart contract that interacts with multiple Service and Profile Smart Contracts.
+Blocktractor is a Marketplace smart contract that interacts with Service and Profile Smart Contracts.
 
 Functions
 

@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Service {
 
-    enum Status { none, pending, rejected, accepted, started, completd, incomplete }
+    enum Status { none, pending, accepted, started, completd, incomplete }
 
     struct service {
         string title;
@@ -24,6 +24,8 @@ contract Service {
     event serviceDelisted(uint256 serviceNumber);
     event serviceRequested(Status status);
     event serviceCancelRequest(Status status);
+    event serviceApproved(Status status);
+    event serviceRejected(Status status);
 
     mapping (uint256 => service) services; // indexed mapping of all services 
     
@@ -71,7 +73,7 @@ contract Service {
     function requestService (uint256 serviceNumber) public {
         require(services[serviceNumber].serviceRequester == address(0), "This service has been requested already.");
         services[serviceNumber].serviceRequester = msg.sender;
-        services[serviceNumber].status = Status.pending; // signify pending request
+        services[serviceNumber].status = Status.pending; // signify pending service request
         emit serviceRequested(Status.pending);
     }
 
@@ -79,8 +81,22 @@ contract Service {
     function cancelRequestService (uint256 serviceNumber) public {
         require(services[serviceNumber].serviceRequester == msg.sender, "Unauthorised cancel of service request");
         services[serviceNumber].serviceRequester = address(0);
-        services[serviceNumber].status = Status.none;
+        services[serviceNumber].status = Status.none; // reverting back to original status state
         emit serviceCancelRequest(Status.none);
+    }
+
+    // Service provider approving pending service request
+    function approveServiceRequest(uint256 serviceNumber) public {
+        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised approval of service request");
+        services[serviceNumber].status = Status.accepted; // Changing state to accepted
+        emit serviceApproved(Status.accepted);
+    }
+
+    // Service provider rejecting pending service request
+    function rejectServiceRequest(uint256 serviceNumber) public {
+        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised rejection of service request");
+        services[serviceNumber].status = Status.none; // reverting back to original status state
+        emit serviceRejected(Status.none);
     }
 
     // Getter for services created by service provider
