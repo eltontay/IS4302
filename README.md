@@ -8,27 +8,6 @@ Blocktractor is a Marketplace smart contract that interacts with Service and Pro
 
 Functions
 
-- createService(title,description,price)
-  - Service Provider can create a service
-    returns index number of Service created
-- deleteService(serviceNumber)
-  - Service Provider can delete a service
-- addMilestone(serviceNumber,milestoneTitle,milestoneDescription)
-  - Service Provider can add a milestone from a service
-- deleteMilestone(serviceNumber, milestoneNumber)
-  - Service Provider can delete a milestone from a service
-- listService(serviceNumber)
-  - Service Provider can list their service
-- delistService(serviceNumber)
-  - Service Provider can delist their service
-- requestService(serviceNumber)
-  - Service Requester requesting service
-- cancelRequestService(serviceNumber)
-  - Service Requester cancelling requested service
-- approveServiceRequest(serviceNumber)
-  - Service Provider approving requested service
-- rejectServiceRequest(serviceNumber)
-  - Service Provider rejecting requested service
 - viewMyServices()
   - Getter Function for services provided by service provider
 - requestService()
@@ -49,6 +28,50 @@ Functions
 ### Service.sol
 
 Service smart contract interacts only with the Blocktractor smart contractor.
+
+#### Service Provider Functions
+
+- createService(title,description,price)
+  - Service Provider can create a service
+    returns index number of Service created
+- deleteService(serviceNumber)
+  - Service Provider can delete a service
+- addMilestone(serviceNumber,milestoneTitle,milestoneDescription)
+  - Service Provider can add a milestone from a service
+- deleteMilestone(serviceNumber, milestoneNumber)
+  - Service Provider can delete a milestone from a service
+- listService(serviceNumber)
+  - Service Provider can list their service
+- delistService(serviceNumber)
+  - Service Provider can delist their service
+- approveServiceRequest(serviceNumber)
+  - Service Provider approving requested service
+- rejectServiceRequest(serviceNumber)
+  - Service Provider rejecting requested service
+
+#### Service Requester Functions
+
+- requestService(serviceNumber)
+  - Service Requester requesting service
+- cancelRequestService(serviceNumber)
+  - Service Requester cancelling requested service
+
+#### Getter helper functions
+
+- viewMyServices()
+  - Return indexed services
+- getMilestones(serviceNumber)
+  - Return indexed miletones
+- getTotalMilestones(serviceNumber)
+  - Return total number of milestones
+- getNumServices()
+  - Return total number of services
+- getServiceDetails(serviceNumber)
+  - Return struct of serviceNumber
+- getServicePrice(serviceNumber)
+  - Return price of service
+- isServiceApproved(serviceNumber)
+  - Return boolean if status == approved
 
 ### Profile.sol
 

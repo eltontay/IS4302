@@ -47,7 +47,12 @@ contract Service {
     mapping (uint256 => service) services; // indexed mapping of all services 
     
     uint256 public numService = 0;
-    
+
+
+/*
+    Service Provider Functions
+*/
+
     // Creation of service , defaults at 1 milestone. To add more milestones, use AddMilestones function
     function createService (string memory title, string memory description, uint256 price) public returns (uint256) {
         require(bytes(title).length > 0, "A Service Title is required");
@@ -101,22 +106,6 @@ contract Service {
         emit serviceDelisted(serviceNumber);
     }
 
-    // Service requester requesting service
-    function requestService (uint256 serviceNumber) public {
-        require(services[serviceNumber].serviceRequester == address(0), "This service has been requested already.");
-        services[serviceNumber].serviceRequester = msg.sender;
-        services[serviceNumber].status = Status.pending; // signify pending service request
-        emit serviceRequested(Status.pending);
-    }
-
-    // Service requester cancelling service request
-    function cancelRequestService (uint256 serviceNumber) public {
-        require(services[serviceNumber].serviceRequester == msg.sender, "Unauthorised cancel of service request");
-        services[serviceNumber].serviceRequester = address(0);
-        services[serviceNumber].status = Status.none; // reverting back to original status state
-        emit serviceCancelRequest(Status.none);
-    }
-
     // Service provider approving pending service request
     function approveServiceRequest(uint256 serviceNumber) public {
         require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised approval of service request");
@@ -138,8 +127,29 @@ contract Service {
         emit serviceStarted(Status.started);
     }
 
+/*
+    Service Requester Functions
+*/
 
+    // Service requester requesting service
+    function requestService (uint256 serviceNumber) public {
+        require(services[serviceNumber].serviceRequester == address(0), "This service has been requested already.");
+        services[serviceNumber].serviceRequester = msg.sender;
+        services[serviceNumber].status = Status.pending; // signify pending service request
+        emit serviceRequested(Status.pending);
+    }
 
+    // Service requester cancelling service request
+    function cancelRequestService (uint256 serviceNumber) public {
+        require(services[serviceNumber].serviceRequester == msg.sender, "Unauthorised cancel of service request");
+        services[serviceNumber].serviceRequester = address(0);
+        services[serviceNumber].status = Status.none; // reverting back to original status state
+        emit serviceCancelRequest(Status.none);
+    }
+
+/*
+    Getter Helper Functions
+*/
 
     // Getter for services created by service provider
     function viewMyServices() public view returns (string memory) {
