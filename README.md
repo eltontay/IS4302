@@ -60,6 +60,11 @@ Service smart contract interacts only with the Blocktractor smart contractor.
 - cancelRequestService(serviceNumber)
   - Service Requester cancelling requested service
 - startRequestedService(serviceNumber)
+  - Service Requester starting requested service
+- reviewMilestone(serviceNumber, milestoneNumber)
+  - Service Requester reviewing completed milestone
+- reviewService(serviceNumber)
+  - Service Requester reviewing completed service
 
 #### Getter helper functions
 
