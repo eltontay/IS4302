@@ -11,6 +11,8 @@ Functions
 - createService(title,description,price)
   - Service Provider can create a service
     returns index number of Service created
+- deleteService(serviceNumber)
+  - Service Provider can delete a service
 - listService()
   - Service Provider can list their service
 - delistService()
@@ -55,6 +57,7 @@ Functions
 To compile and test Blocktractor smart contracts, run the following codes.
 
 ```bash
+npm install
 truffle compile
 truffle migrate
 truffle test
