@@ -23,7 +23,7 @@ contract Service {
     event serviceListed(uint256 serviceNumber);
     event serviceDelisted(uint256 serviceNumber);
 
-    mapping (uint256 => service) serviceProviderList; // indexed mapping of all service providers
+    mapping (uint256 => service) services; // indexed mapping of all services 
     
     uint256 public numService = 0;
     
@@ -34,7 +34,7 @@ contract Service {
         require(price > 0, "A Service Price must be specified");
         
         service memory newService = service(title,description,price,numService,msg.sender,address(0),Status.none,false);
-        serviceProviderList[numService] = newService;
+        services[numService] = newService;
         emit serviceCreated(numService);
         numService = numService++;
         return numService;
@@ -42,32 +42,32 @@ contract Service {
 
     // Deletion of service 
     function deleteService (uint256 serviceNumber) public {
-        require(msg.sender == serviceProviderList[serviceNumber].serviceProvider, "Unauthorised service provider");
+        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         // replacing deleted spot with the last element in the list
-        serviceProviderList[serviceNumber] = serviceProviderList[numService-1];
+        services[serviceNumber] = services[numService-1];
         // deleting the last element in the list
-        delete serviceProviderList[numService-1];
+        delete services[numService-1];
         emit serviceDeleted(serviceNumber);
         numService -= 1; 
     }
 
     // Service provider listing created service
     function listService (uint256 serviceNumber) public {
-        require(msg.sender == serviceProviderList[serviceNumber].serviceProvider, "Unauthorised service provider");
-        serviceProviderList[serviceNumber].listed = true;
+        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+        services[serviceNumber].listed = true;
         emit serviceListed(serviceNumber);
     }
 
     // Service provider delisting created service
     function delistService (uint256 serviceNumber) public {
-        require(msg.sender == serviceProviderList[serviceNumber].serviceProvider, "Unauthorised service provider");
-        serviceProviderList[serviceNumber].listed = false; 
+        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+        services[serviceNumber].listed = false; 
         emit serviceDelisted(serviceNumber);
     }
 
     // Service requester requesting of service
     function requestService (uint256 serviceNumber) public {
-        
+
     }
 
     // Service
@@ -79,7 +79,7 @@ contract Service {
     function viewMyServices() public view returns (string memory) {
         string memory services = "";
         for (uint i = 0; i < numService; i++) {
-            if (serviceProviderList[i].serviceProvider == msg.sender) {
+            if (services[i].serviceProvider == msg.sender) {
                 services = string(abi.encodePacked(services, ' ', Strings.toString(numService)));
             }
         }
@@ -93,7 +93,7 @@ contract Service {
 
     // Getter for service details
     function getServiceDetails(uint256 serviceNumber) public view returns (service memory) {
-        return serviceProviderList[serviceNumber];
+        return services[serviceNumber];
     }
 
 }
