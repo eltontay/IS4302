@@ -9,10 +9,10 @@ contract Service {
     enum Review { none, satisfied, disatisfied }
 
     struct milestone {
-        uint256 milestoneNumber;
         string milestoneTitle;
         string milestoneDescription;
         Review review; // Defaults at none
+        bool exist; // allowing updates such as soft delete of milestone 
     }
     
     struct service {
@@ -27,6 +27,7 @@ contract Service {
         Status status; // Defaults at none
         bool listed;  // Defaults at false
         Review review; // Overall review of services, defaults at none
+        bool exist; // allowing update such as soft delete of service
     }
 
     event serviceCreated(uint256 serviceNumber);
@@ -38,34 +39,47 @@ contract Service {
     event serviceApproved(Status status);
     event serviceRejected(Status status);
     event serviceStarted(Status status);
+    event milestoneAdded(uint256 serviceNumber, uint256 milestoneNumber, string milestoneTitle, string milestoneDescription);
+    event milestoneDeleted(uint256 serviceNumber, uint256 milestoneNumber);
 
     mapping (uint256 => mapping(uint256 => milestone)) milestones; // indexed mapping of services to multiple milestones
     mapping (uint256 => service) services; // indexed mapping of all services 
     
     uint256 public numService = 0;
     
-    // Creation of service
+    // Creation of service , defaults at 1 milestone. To add more milestones, use AddMilestones function
     function createService (string memory title, string memory description, uint256 price) public returns (uint256) {
         require(bytes(title).length > 0, "A Service Title is required");
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
-        service memory newService = service(title,description,price,1,0,numService,msg.sender,address(0),Status.none,false,Review.none);
+        service memory newService = service(title,description,price,1,0,numService,msg.sender,address(0),Status.none,false,Review.none,true);
         services[numService] = newService;
         emit serviceCreated(numService);
         numService = numService++;
         return numService;
     }
 
-    // Deletion of service 
+    // Deletion of service
     function deleteService (uint256 serviceNumber) public {
         require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
-        // replacing deleted spot with the last element in the list
-        services[serviceNumber] = services[numService-1];
-        // deleting the last element in the list
-        delete services[numService-1];
+        services[serviceNumber].exist = false;
         emit serviceDeleted(serviceNumber);
         numService -= 1; 
+    }
+
+    // Adding milestone 
+    function addMilestone (uint256 serviceNumber, uint256 milestoneNumber, string memory milestoneTitle, string memory milestoneDescription ) public {
+        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+        milestones[serviceNumber][milestoneNumber] = milestone(milestoneTitle,milestoneDescription,Review.none,true);
+        emit milestoneAdded(serviceNumber, milestoneNumber, milestoneTitle, milestoneDescription);
+    }
+
+    // Deleting milestone
+    function deleteMilestone (uint256 serviceNumber, uint256 milestoneNumber) public {
+        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider"); 
+        milestones[serviceNumber][milestoneNumber].exist = false;
+        emit milestoneDeleted(serviceNumber, milestoneNumber);
     }
 
     // Service provider listing created service
