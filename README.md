@@ -83,7 +83,7 @@ Service smart contract interacts only with the Blocktractor smart contractor.
 - isServiceApproved(serviceNumber)
   - Return boolean if status == approved
 
-### Profile.sol
+### Profile.sol (putting on hold, maybe using backend if got time for frontend)
 
 Profile smart contract interacts only with the Blocktractor smart contractor.
 Each profile can be both a service provider and a service requester.

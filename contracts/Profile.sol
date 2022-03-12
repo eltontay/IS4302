@@ -3,7 +3,6 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Profile {
 
-
     // The main structure of the profile
     struct profile {
         string name;
@@ -21,11 +20,10 @@ contract Profile {
 
     uint256 public numProfile = 0; // To keep count of the number of profiles existing
 
-    function createProfile(string memory name, string memory username, string memory password) public returns (uint256) {
+    function createProfile(string memory name, string memory username, string memory password) public {
         profile memory newProfile = profile(name,username,password,msg.sender,true);
         profileList[msg.sender] = newProfile;
         numProfile = numProfile ++;
-        return numProfile;
     }
 
     modifier validProfile() {
