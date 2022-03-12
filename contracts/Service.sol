@@ -129,4 +129,11 @@ contract Service {
         return services[serviceNumber];
     }
 
+    function getServicePrice(uint256 serviceNumber) public view returns (uint256) {
+        return services[serviceNumber].price;
+    }
+
+    function isServiceApproved(uint256 serviceNumber) public view returns (bool) {
+        return services[serviceNumber].status == Status.approved;
+    }
 }

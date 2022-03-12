@@ -8,7 +8,8 @@ contract Blocktractor {
     Profile profileContract;
     Service serviceContract;
 
-    address _owner = msg.sender;
+    address payable escrow_wallet = payable(msg.sender);
+    address payable revenue_wallet = payable(msg.sender);
     uint256 public comissionFee;
 
     constructor(Profile profileAddress, Service serviceAddress, uint256 fee) public {
@@ -54,6 +55,15 @@ contract Blocktractor {
     // Reject requested service request
     function rejectService(uint256 serviceNumber) public {
         serviceContract.rejectServiceRequest(serviceNumber);
+    }
+
+    // 
+    function startRequestedService(uint256 serviceNumber) public payable {
+        require(msg.value >= (serviceContract.getServicePrice(serviceNumber) + comissionFee), "Insufficient gas provided");
+        require(serviceContract.isServiceApproved(serviceNumber),"Service is not approved");
+        revenue_wallet.transfer(comissionFee);
+        escrow_wallet.transfer(msg.value-comissionFee);
+        serviceContract.startRequestedService(serviceNumber);
     }
 
     // Function that completes listed Service
