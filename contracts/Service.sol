@@ -11,7 +11,11 @@ contract Service {
         uint256 price;     
         address serviceProvider;
         Status status;
+        bool listed;
     }
+
+    event serviceListed(uint256 serviceNumber);
+    event serviceDelisted(uint256 serviceNumber);
 
     mapping (address => address) serviceRequesterList;
     mapping (uint256 => service) serviceProviderList;
@@ -23,12 +27,24 @@ contract Service {
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
-        service memory newService = service(title,description,price,msg.sender,Status.none);
+        service memory newService = service(title,description,price,msg.sender,Status.none,false);
         serviceProviderList[numService] = newService;
         numService = numService++;
         return numService;
     }
 
-    function listService ()
+    // Service provider listing created service
+    function listService (uint256 serviceNumber) public {
+        require(msg.sender == serviceProviderList[serviceNumber].serviceProvider, "Unauthorised service provider");
+        serviceProviderList[serviceNumber].listed = true;
+        emit serviceListed(serviceNumber);
+    }
+
+    // Service provider delisting created service
+    function delistService (uint256 serviceNumber) public {
+        require(msg.sender == serviceProviderList[serviceNumber].serviceProvider, "Unauthorised service provider");
+        serviceProviderList[serviceNumber].listed = false; 
+        emit serviceDelisted(serviceNumber);
+    }
 
 }
