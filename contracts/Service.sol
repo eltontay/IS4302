@@ -15,13 +15,15 @@ contract Service {
         address serviceProvider; 
         address serviceRequester; // defaults to address(0)
         Status status;
-        bool listed;
+        bool listed; 
     }
 
     event serviceCreated(uint256 serviceNumber);
     event serviceDeleted(uint256 serviceNumber);
     event serviceListed(uint256 serviceNumber);
     event serviceDelisted(uint256 serviceNumber);
+    event serviceRequested(Status status);
+    event serviceCancelRequest(Status status);
 
     mapping (uint256 => service) services; // indexed mapping of all services 
     
@@ -65,25 +67,31 @@ contract Service {
         emit serviceDelisted(serviceNumber);
     }
 
-    // Service requester requesting of service
+    // Service requester requesting service
     function requestService (uint256 serviceNumber) public {
-
+        require(services[serviceNumber].serviceRequester == address(0), "This service has been requested already.");
+        services[serviceNumber].serviceRequester = msg.sender;
+        services[serviceNumber].status = Status.pending; // signify pending request
+        emit serviceRequested(Status.pending);
     }
 
-    // Service
+    // Service requester cancelling service request
     function cancelRequestService (uint256 serviceNumber) public {
-
+        require(services[serviceNumber].serviceRequester == msg.sender, "Unauthorised cancel of service request");
+        services[serviceNumber].serviceRequester = address(0);
+        services[serviceNumber].status = Status.none;
+        emit serviceCancelRequest(Status.none);
     }
 
     // Getter for services created by service provider
     function viewMyServices() public view returns (string memory) {
-        string memory services = "";
+        string memory s = "";
         for (uint i = 0; i < numService; i++) {
             if (services[i].serviceProvider == msg.sender) {
-                services = string(abi.encodePacked(services, ' ', Strings.toString(numService)));
+                s = string(abi.encodePacked(s, ' ', Strings.toString(numService)));
             }
         }
-        return services;
+        return s;
     }
 
     // Getter for total number of services listed
