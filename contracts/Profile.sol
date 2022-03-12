@@ -12,7 +12,7 @@ contract Profile {
     }
 
     mapping (address => profile) profileList; // list of profiles created in profile smart contract
-    mapping (address => mapping(uint256 => uint256)) services; // list of profile addresses that contains a list of services provided
+    mapping (address => mapping(uint256 => bool)) services; // list of profile addresses that contains a list of services provided
     mapping (address => mapping(uint256 => uint256)) servicesRequested; // list of profile addresses that contains a list of services requested
 
     uint256 public numProfile = 0;
@@ -29,8 +29,20 @@ contract Profile {
         _;
     }
 
-    function getName() public validProfile() view returns ( string memory ) {
+    function getName() public validProfile() view returns ( string memory) {
         return profileList[msg.sender].name;
     }
 
+    function checkValidProfile() public view returns (bool) {
+        return profileList[msg.sender].created ? true : false;
+    }
+
+    function putService(uint256 serviceNumber) public returns (string memory) {
+        if (services[msg.sender][serviceNumber] == false) {
+            services[msg.sender][serviceNumber] = true;
+            return "Your service has been stored successfully";
+        } else {
+            return "Your service has already been stored";
+        }
+    }
 }
