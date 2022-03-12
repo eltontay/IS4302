@@ -48,6 +48,10 @@ Service smart contract interacts only with the Blocktractor smart contractor.
   - Service Provider approving requested service
 - rejectServiceRequest(serviceNumber)
   - Service Provider rejecting requested service
+- completeMilestone(serviceNumber,milestoneNumber)
+  - Service Provider completing milestone
+- completeService(serviceNumber)
+  - Service Provider completing service
 
 #### Service Requester Functions
 
@@ -55,6 +59,7 @@ Service smart contract interacts only with the Blocktractor smart contractor.
   - Service Requester requesting service
 - cancelRequestService(serviceNumber)
   - Service Requester cancelling requested service
+- startRequestedService(serviceNumber)
 
 #### Getter helper functions
 

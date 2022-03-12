@@ -5,14 +5,15 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Service {
 
-    enum Status { none, pending, approved, started, completed, incomplete }
+    enum Status { none, pending, approved, started, completed }
     enum Review { none, satisfied, disatisfied }
 
     struct milestone {
         string milestoneTitle;
         string milestoneDescription;
+        bool exist; // allowing updates such as soft delete of milestone   
+        Status status; // Defaults at none
         Review review; // Defaults at none
-        bool exist; // allowing updates such as soft delete of milestone
     }
     
     struct service {
@@ -25,10 +26,10 @@ contract Service {
         uint256 serviceNumber; // index number of the service
         address serviceProvider; // msg.sender
         address serviceRequester; // defaults to address(0)
-        Status status; // Defaults at none
         bool listed;  // Defaults at false
-        Review review; // Overall review of services, defaults at none
         bool exist; // allowing update such as soft delete of service
+        Status status; // Defaults at none
+        Review review; // Overall review of services, defaults at none
     }
 
     event serviceCreated(uint256 serviceNumber);
@@ -40,8 +41,10 @@ contract Service {
     event serviceApproved(Status status);
     event serviceRejected(Status status);
     event serviceStarted(Status status);
+    event serviceCompleted(Status status);
     event milestoneAdded(uint256 serviceNumber, uint256 milestoneNumber, string milestoneTitle, string milestoneDescription);
     event milestoneDeleted(uint256 serviceNumber, uint256 milestoneNumber);
+    event milestoneCompleted(uint256 serviceNumber, uint256 milestoneNumber);
 
     mapping (uint256 => mapping(uint256 => milestone)) milestones; // indexed mapping of services to multiple milestones
     mapping (uint256 => service) services; // indexed mapping of all services 
@@ -59,7 +62,7 @@ contract Service {
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
-        service memory newService = service(title,description,price,0,0,0,numService,msg.sender,address(0),Status.none,false,Review.none,true);
+        service memory newService = service(title,description,price,0,0,0,numService,msg.sender,address(0),false,true,Status.none,Review.none);
         addMilestone(numService, title, description); // Defaults first milestone to equivalent to original title and description
         services[numService] = newService;
         emit serviceCreated(numService);
@@ -80,7 +83,7 @@ contract Service {
         services[serviceNumber].totalMilestones += 1; // Real tally of total milestones
         services[serviceNumber].milestoneCounter += 1; // A counter that only increments
         uint256 serviceMilestone = services[serviceNumber].totalMilestones;
-        milestones[serviceNumber][serviceMilestone] = milestone(milestoneTitle,milestoneDescription,Review.none,true);
+        milestones[serviceNumber][serviceMilestone] = milestone(milestoneTitle,milestoneDescription,true,Status.none,Review.none);
         emit milestoneAdded(serviceNumber, serviceMilestone, milestoneTitle, milestoneDescription);
     }
 
@@ -120,11 +123,20 @@ contract Service {
         emit serviceRejected(Status.none);
     }
 
-    // Service requester can now start the requested service
-    function startRequestedService(uint256 serviceNumber) public {
+    function completeMilestone(uint256 serviceNumber, uint256 milestoneNumber) public {
         require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
-        services[serviceNumber].status = Status.started;
-        emit serviceStarted(Status.started);
+        milestones[serviceNumber][milestoneNumber].status = Status.completed;
+        emit milestoneCompleted(serviceNumber, milestoneNumber);
+        services[serviceNumber].currentMilestone += 1;
+        completeService(serviceNumber); // complete service if all milestones are finished
+    }
+
+    function completeService(uint256 serviceNumber) public {
+        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
+        if (services[serviceNumber].currentMilestone == services[serviceNumber].totalMilestones) {
+            services[serviceNumber].status = Status.completed;
+            emit serviceCompleted(Status.completed);
+        }      
     }
 
 /*
@@ -145,6 +157,13 @@ contract Service {
         services[serviceNumber].serviceRequester = address(0);
         services[serviceNumber].status = Status.none; // reverting back to original status state
         emit serviceCancelRequest(Status.none);
+    }
+
+    // Service requester can now start the requested service
+    function startRequestedService(uint256 serviceNumber) public {
+        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
+        services[serviceNumber].status = Status.started;
+        emit serviceStarted(Status.started);
     }
 
 /*
