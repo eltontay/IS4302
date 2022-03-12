@@ -13,6 +13,10 @@ Functions
     returns index number of Service created
 - deleteService(serviceNumber)
   - Service Provider can delete a service
+- addMilestone(serviceNumber,milestoneTitle,milestoneDescription)
+  - Service Provider can add a milestone from a service
+- deleteMilestone(serviceNumber, milestoneNumber)
+  - Service Provider can delete a milestone from a service
 - listService(serviceNumber)
   - Service Provider can list their service
 - delistService(serviceNumber)
@@ -24,9 +28,7 @@ Functions
 - approveServiceRequest(serviceNumber)
   - Service Provider approving requested service
 - rejectServiceRequest(serviceNumber)
-
   - Service Provider rejecting requested service
-
 - viewMyServices()
   - Getter Function for services provided by service provider
 - requestService()

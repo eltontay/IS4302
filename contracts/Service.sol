@@ -12,7 +12,7 @@ contract Service {
         string milestoneTitle;
         string milestoneDescription;
         Review review; // Defaults at none
-        bool exist; // allowing updates such as soft delete of milestone 
+        bool exist; // allowing updates such as soft delete of milestone
     }
     
     struct service {
@@ -21,6 +21,7 @@ contract Service {
         uint256 price;
         uint256 totalMilestones; // Defaults to 1 milestone
         uint256 currentMilestone; // Defaults to 0 milestone
+        uint256 milestoneCounter; // Counter to keep track of milestones that exist
         uint256 serviceNumber; // index number of the service
         address serviceProvider; // msg.sender
         address serviceRequester; // defaults to address(0)
@@ -53,7 +54,8 @@ contract Service {
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
-        service memory newService = service(title,description,price,1,0,numService,msg.sender,address(0),Status.none,false,Review.none,true);
+        service memory newService = service(title,description,price,0,0,0,numService,msg.sender,address(0),Status.none,false,Review.none,true);
+        addMilestone(numService, title, description); // Defaults first milestone to equivalent to original title and description
         services[numService] = newService;
         emit serviceCreated(numService);
         numService = numService++;
@@ -65,20 +67,23 @@ contract Service {
         require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].exist = false;
         emit serviceDeleted(serviceNumber);
-        numService -= 1; 
     }
 
-    // Adding milestone 
-    function addMilestone (uint256 serviceNumber, uint256 milestoneNumber, string memory milestoneTitle, string memory milestoneDescription ) public {
+    // Adding milestone , starts from 2nd milestone (index 2)
+    function addMilestone (uint256 serviceNumber, string memory milestoneTitle, string memory milestoneDescription ) public {
         require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
-        milestones[serviceNumber][milestoneNumber] = milestone(milestoneTitle,milestoneDescription,Review.none,true);
-        emit milestoneAdded(serviceNumber, milestoneNumber, milestoneTitle, milestoneDescription);
+        services[serviceNumber].totalMilestones += 1; // Real tally of total milestones
+        services[serviceNumber].milestoneCounter += 1; // A counter that only increments
+        uint256 serviceMilestone = services[serviceNumber].totalMilestones;
+        milestones[serviceNumber][serviceMilestone] = milestone(milestoneTitle,milestoneDescription,Review.none,true);
+        emit milestoneAdded(serviceNumber, serviceMilestone, milestoneTitle, milestoneDescription);
     }
 
-    // Deleting milestone
+    // Deleting milestone , soft delete with a boolean function
     function deleteMilestone (uint256 serviceNumber, uint256 milestoneNumber) public {
         require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider"); 
         milestones[serviceNumber][milestoneNumber].exist = false;
+        services[serviceNumber].totalMilestones -= 1; // Real tally of total milestones
         emit milestoneDeleted(serviceNumber, milestoneNumber);
     }
 
@@ -141,15 +146,35 @@ contract Service {
         string memory s = "";
         for (uint i = 0; i < numService; i++) {
             if (services[i].serviceProvider == msg.sender) {
-                s = string(abi.encodePacked(s, ' ', Strings.toString(numService)));
+                s = string(abi.encodePacked(s, ' ', Strings.toString(i)));
             }
         }
         return s;
     }
 
+    // Getter for index milestones in the service
+    function getMilestones(uint256 serviceNumber) public view returns (string memory) {
+        string memory s = "";
+        for (uint i = 0; i < services[serviceNumber].milestoneCounter; i++) {
+            if (milestones[serviceNumber][i].exist == true) {
+                s = string(abi.encodePacked(s,' ', Strings.toString(i)));
+            }
+        }
+        return s;
+    }
+
+    // Getter for total milestones in the service
+    function getTotalMilestones(uint256 serviceNumber) public view returns (uint256) {
+        return services[serviceNumber].totalMilestones;
+    }
+    
     // Getter for total number of services listed
     function getNumServices() public view returns (uint256) {
-        return numService;
+        uint sum = 0;
+        for (uint i = 0 ; i < numService; i ++) {
+            services[i].exist == true ? sum += 1 : sum += 0;
+        }
+        return sum;
     }
 
     // Getter for service details
