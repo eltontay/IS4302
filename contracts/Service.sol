@@ -66,8 +66,18 @@ contract Service {
         emit serviceDelisted(serviceNumber);
     }
 
+    // Service requester requesting of service
+    function requestService (uint256 serviceNumber) public {
+
+    }
+
+    // Service
+    function cancelRequestService (uint256 serviceNumber) public {
+
+    }
+
     // Getter for services created by service provider
-    function viewMyServices () public view returns (string memory) {
+    function viewMyServices() public view returns (string memory) {
         string memory services = "";
         for (uint i = 0; i < numService; i++) {
             if (serviceProviderList[i].serviceProvider == msg.sender) {
@@ -75,6 +85,16 @@ contract Service {
             }
         }
         return services;
+    }
+
+    // Getter for total number of services listed
+    function getNumServices() public view returns (uint256) {
+        return numService;
+    }
+
+    // Getter for service details
+    function getServiceDetails(uint256 serviceNumber) public view returns (service memory) {
+        return serviceProviderList[serviceNumber];
     }
 
 }
