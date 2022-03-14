@@ -8,22 +8,24 @@ contract Blocktractor {
     Profile profileContract;
     Service serviceContract;
 
-    address payable escrow_wallet; // = payable(msg.sender);
-    address payable revenue_wallet; // = payable(msg.sender);
+    address payable escrow_wallet = payable(msg.sender);
+    address payable revenue_wallet = payable(msg.sender);
     uint256 public comissionFee;
 
     constructor(Profile profileAddress, Service serviceAddress, uint256 fee) public {
         comissionFee = fee;
         profileContract = profileAddress;
         serviceContract = serviceAddress;
-        escrow_wallet = payable(msg.sender);
-        revenue_wallet = payable(msg.sender);
     }
 
     // Verified Profiles are allowed to create service
-    function createService(string memory title, string memory description, uint256 price) public payable { 
-        serviceContract.create(title,description,price);
+    /*function createService(string memory title, string memory description, uint256 price) public payable { 
+        serviceContract.createService(title,description,price);
     }
+
+    function deleteService(uint256 serviceNumber) public{
+        serviceContract.deleteService(serviceNumber);
+    }*/
 
     // Verified Profiles are allowed to list service
     function listService(uint256 serviceNumber) public {

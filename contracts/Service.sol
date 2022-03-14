@@ -65,7 +65,7 @@ contract Service {
     }
 
     // Creation of service , defaults at 1 milestone. To add more milestones, use AddMilestones function
-    function create(string memory title, string memory description, uint256 price) public returns (uint256) {
+    function createService(string memory title, string memory description, uint256 price) public returns (uint256) {
         require(bytes(title).length > 0, "A Service Title is required");
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
@@ -74,14 +74,14 @@ contract Service {
         services[numService] = newService;
         addMilestone(numService, title, description); // Defaults first milestone to equivalent to original title and description
         emit serviceCreated(numService);
-        numService = numService++;
+        numService++;
         
         return numService;
     }
 
-    // Deletion of service
-    function deleteService (uint256 serviceNumber) public onlyServiceProvider(serviceNumber) {
-        // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+    // Deletion of service (soft deletion)
+    function deleteService(uint256 serviceNumber) public onlyServiceProvider(serviceNumber) {
+        //require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].exist = false;
         emit serviceDeleted(serviceNumber);
     }
@@ -246,5 +246,10 @@ contract Service {
     // Getter for boolean if service is approved
     function isServiceApproved(uint256 serviceNumber) public view returns (bool) {
         return services[serviceNumber].status == Status.approved;
+    }
+
+    // Getter for boolean if service exists
+    function doesServiceExist(uint256 serviceNumber) public view returns (bool){
+        return services[serviceNumber].exist;
     }
 }
