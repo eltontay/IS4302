@@ -114,7 +114,7 @@ contract('TestBlocktractor', function (accounts) {
       await blocktractorInstance.isListed(0),
       true,
       "Failed to List"
-    )
+    );
     // Check that event is emitted
     truffleAssert.eventEmitted(listService1, 'serviceListed');
   });
@@ -125,6 +125,34 @@ contract('TestBlocktractor', function (accounts) {
       blocktractorInstance.listService(0, {from: accounts[1]}),
       "Service is already listed"
     );
-  })
+  });
+
+  // Check that only ServiceProvider can list
+  it("Only Service Provider can Delist", async() => {
+    await truffleAssert.reverts(
+      blocktractorInstance.delistService(0, {from: accounts[2]}),
+      "Only Service Providers can perform this action"
+    );
+  });
+
+  // Check that Service can be delisted
+  it("Delist Service", async() =>{
+    let delistService1 = await blocktractorInstance.delistService(0, {from: accounts[1]});
+    assert.strictEqual(
+      await blocktractorInstance.isListed(0),
+      false,
+      "Failed to Delist"
+    );
+    // Check that event is emitted
+    truffleAssert.eventEmitted(delistService1, 'serviceDelisted');
+  });
+
+  // Check that Service cannot be delisted if it is not already listed
+  it("Can only delist listed Services", async() => {
+    await truffleAssert.reverts(
+      blocktractorInstance.delistService(0, {from: accounts[1]}),
+      "Service is not listed"
+    );
+  });
 
 });

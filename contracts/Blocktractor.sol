@@ -73,6 +73,7 @@ contract Blocktractor {
         }
         listedServices.pop(); // the last element is not supposed to be there
 
+        emit serviceDelisted(serviceNumber);
     } 
     
     // Requesting for a service
