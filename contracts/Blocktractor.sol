@@ -1,26 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-// import "./Profile.sol";
+import "./Profile.sol";
 import "./Service.sol";
 
 contract Blocktractor {
 
-    // Profile profileContract;
+    Profile profileContract;
     Service serviceContract;
 
-    address payable escrow_wallet = payable(msg.sender);
-    address payable revenue_wallet = payable(msg.sender);
+    address payable escrow_wallet; // = payable(msg.sender);
+    address payable revenue_wallet; // = payable(msg.sender);
     uint256 public comissionFee;
 
-    constructor(Service serviceAddress, uint256 fee) public {
+    constructor(Profile profileAddress, Service serviceAddress, uint256 fee) public {
         comissionFee = fee;
-        // profileContract = profileAddress;
+        profileContract = profileAddress;
         serviceContract = serviceAddress;
+        escrow_wallet = payable(msg.sender);
+        revenue_wallet = payable(msg.sender);
     }
 
     // Verified Profiles are allowed to create service
     function createService(string memory title, string memory description, uint256 price) public payable { 
-        serviceContract.createService(title,description,price);
+        serviceContract.create(title,description,price);
     }
 
     // Verified Profiles are allowed to list service

@@ -58,22 +58,24 @@ contract Service {
     Service Provider Functions
 */
     modifier onlyServiceProvider(uint256 serviceNumber){
+        // Only allow ServiceProviders to access these functions
         require(msg.sender == services[serviceNumber].serviceProvider, 
                 "Unauthorised access to service, only service provider can access");
         _;
     }
 
     // Creation of service , defaults at 1 milestone. To add more milestones, use AddMilestones function
-    function createService (string memory title, string memory description, uint256 price) public returns (uint256) {
+    function create(string memory title, string memory description, uint256 price) public returns (uint256) {
         require(bytes(title).length > 0, "A Service Title is required");
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
         service memory newService = service(title,description,price,0,0,0,numService,msg.sender,address(0),false,true,Status.none,Review.none);
-        addMilestone(numService, title, description); // Defaults first milestone to equivalent to original title and description
         services[numService] = newService;
+        addMilestone(numService, title, description); // Defaults first milestone to equivalent to original title and description
         emit serviceCreated(numService);
         numService = numService++;
+        
         return numService;
     }
 
