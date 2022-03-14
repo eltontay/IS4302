@@ -26,7 +26,7 @@ contract Service {
         uint256 serviceNumber; // index number of the service
         address serviceProvider; // msg.sender
         address serviceRequester; // defaults to address(0)
-        bool listed;  // Defaults at false
+        //bool listed;  // Defaults at false
         bool exist; // allowing update such as soft delete of service
         Status status; // Defaults at none
         Review review; // Overall review of services, defaults at none
@@ -34,8 +34,8 @@ contract Service {
 
     event serviceCreated(uint256 serviceNumber);
     event serviceDeleted(uint256 serviceNumber);
-    event serviceListed(uint256 serviceNumber);
-    event serviceDelisted(uint256 serviceNumber);
+    //event serviceListed(uint256 serviceNumber);
+    //event serviceDelisted(uint256 serviceNumber);
     event serviceRequested(Status status);
     event serviceCancelRequest(Status status);
     event serviceApproved(Status status);
@@ -70,7 +70,7 @@ contract Service {
         require(bytes(description).length > 0, "A Service Description is required");
         require(price > 0, "A Service Price must be specified");
         
-        service memory newService = service(title,description,price,0,0,0,numService,msg.sender,address(0),false,true,Status.none,Review.none);
+        service memory newService = service(title,description,price,0,0,0,numService,msg.sender,address(0),true,Status.none,Review.none);
         services[numService] = newService;
         addMilestone(numService, title, description); // Defaults first milestone to equivalent to original title and description
         emit serviceCreated(numService);
@@ -105,7 +105,7 @@ contract Service {
     }
 
     // Service provider listing created service
-    function listService (uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
+    /*function listService (uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
         // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].listed = true;
         emit serviceListed(serviceNumber);
@@ -116,7 +116,7 @@ contract Service {
         // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].listed = false; 
         emit serviceDelisted(serviceNumber);
-    }
+    }*/
 
     // Service provider approving pending service request
     function approveServiceRequest(uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
@@ -251,5 +251,15 @@ contract Service {
     // Getter for boolean if service exists
     function doesServiceExist(uint256 serviceNumber) public view returns (bool){
         return services[serviceNumber].exist;
+    }
+
+    // Getter for Service provider
+    function getServiceProvider(uint256 serviceNumber) public view returns (address){
+        return services[serviceNumber].serviceProvider;
+    }
+
+    // Getter for Service requester
+    function getServiceRequester(uint256 serviceNumber) public view returns (address){
+        return services[serviceNumber].serviceRequester;
     }
 }

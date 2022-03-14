@@ -84,9 +84,4 @@ contract('TestBlocktractor', function (accounts) {
     truffleAssert.eventEmitted(deleteService1, 'serviceDeleted');
   });
 
-
-
 });
-
-
-

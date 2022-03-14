@@ -5,8 +5,13 @@ import "./Service.sol";
 
 contract Blocktractor {
 
+    event serviceListed(uint256 serviceNumber);
+    event serviceDelisted(uint256 serviceNumber);
+
     Profile profileContract;
     Service serviceContract;
+
+    uint256[] listedServices; // list of listed services (by serviceNumber)
 
     address payable escrow_wallet = payable(msg.sender);
     address payable revenue_wallet = payable(msg.sender);
@@ -16,6 +21,36 @@ contract Blocktractor {
         comissionFee = fee;
         profileContract = profileAddress;
         serviceContract = serviceAddress;
+    }
+
+    modifier onlyServiceProvider(uint256 serviceNumber){
+        // only allow service providers to perform the action
+        require(msg.sender == serviceContract.getServiceProvider(serviceNumber));
+        _;
+    }
+
+    modifier listedService(uint256 serviceNumber){
+        bool listed = false;
+        for(uint256 i = 0; i < listedServices.length; i++){
+            if (listedServices[i] == serviceNumber){
+                listed=true;
+                break;
+            }
+        }
+        require(listed == false,"Service is not listed");
+        _;
+    }
+
+    modifier notListedService(uint256 serviceNumber){
+        bool listed = false;
+        for(uint256 i = 0; i < listedServices.length; i++){
+            if (listedServices[i] == serviceNumber){
+                listed=true;
+                break;
+            }
+        }
+        require(listed == true,"Service is already listed");
+        _;
     }
 
     // Verified Profiles are allowed to create service
@@ -28,13 +63,30 @@ contract Blocktractor {
     }*/
 
     // Verified Profiles are allowed to list service
-    function listService(uint256 serviceNumber) public {
-        serviceContract.listService(serviceNumber);
+    function listService(uint256 serviceNumber) public onlyServiceProvider(serviceNumber) notListedService(serviceNumber) {
+        //serviceContract.listService(serviceNumber);
+
+        listedServices.push(serviceNumber);
+        emit serviceListed(serviceNumber);
     }
 
     // Verified Profiles are allowed to delist service
-    function delistService(uint256 serviceNumber) public {
-        serviceContract.delistService(serviceNumber);
+    function delistService(uint256 serviceNumber) public onlyServiceProvider(serviceNumber) listedService(serviceNumber) {
+        //serviceContract.delistService(serviceNumber);
+        // Ensure that service is listed
+        uint256 i;
+        for(i = 0; i < listedServices.length; i++){
+            if (listedServices[i] == serviceNumber){
+                break;
+            }
+        }
+
+        // Remove element from listedServices array
+        for(uint256 j = i; j < listedServices.length-1; j++){
+            listedServices[j] = listedServices[j+1]; //decrement the index
+        }
+        listedServices.pop(); // the last element is not supposed to be there
+
     } 
     
     // Requesting for a service
