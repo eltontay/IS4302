@@ -28,9 +28,22 @@ contract('TestBlocktractor', function (accounts) {
         from: accounts[1],
       }
     );
+    let createService2 = await serviceInstance.createService(
+      'Providing Super Beautiful NFT Minting Services at Cheap Prices',
+      'I will help mint 10,000 NFTs for you for 1 Eth',
+      100,
+      {
+        from: accounts[2],
+      }
+    );
 
     assert.notStrictEqual(
       createService1,
+      undefined,
+      'Failed to create service'
+    );
+    assert.notStrictEqual(
+      createService2,
       undefined,
       'Failed to create service'
     );
@@ -44,6 +57,7 @@ contract('TestBlocktractor', function (accounts) {
     //await expectEvent.inTransaction(createService1.tx, Service, 'serviceCreated');
 
     truffleAssert.eventEmitted(createService1, 'serviceCreated');
+    truffleAssert.eventEmitted(createService2, 'serviceCreated');
     
   });
 
@@ -71,11 +85,12 @@ contract('TestBlocktractor', function (accounts) {
   });
 
   // Check if Service deletion is executed properly
+  // Need to check that service must be delisted before it is deleted?
   it("Delete Service", async () => {
-    let deleteService1 = await(serviceInstance.deleteService(0, {from: accounts[1]}));
+    let deleteService1 = await serviceInstance.deleteService(1, {from: accounts[2]});
     
     assert.strictEqual(
-      await serviceInstance.doesServiceExist(0),
+      await serviceInstance.doesServiceExist(1),
       false,
       'Failed to soft delete service'
     );
@@ -83,5 +98,33 @@ contract('TestBlocktractor', function (accounts) {
     //await expectEvent.inTransaction(deleteService1.tx, Service,"serviceDeleted")
     truffleAssert.eventEmitted(deleteService1, 'serviceDeleted');
   });
+
+  // Check that only ServiceProvider can list
+  it("Only Service Provider can List", async() => {
+    await truffleAssert.reverts(
+      blocktractorInstance.listService(0, {from: accounts[2]}),
+      "Only Service Providers can perform this action"
+    );
+  });
+
+  // Check that Service Listing is executed properly. 
+  it("List Service", async() => {
+    let listService1 = await blocktractorInstance.listService(0, {from: accounts[1]});
+    assert.strictEqual(
+      await blocktractorInstance.isListed(0),
+      true,
+      "Failed to List"
+    )
+    // Check that event is emitted
+    truffleAssert.eventEmitted(listService1, 'serviceListed');
+  });
+
+  // Check that Service cannot be double-listed
+  it("Double Listing Service", async() => {
+    await truffleAssert.reverts(
+      blocktractorInstance.listService(0, {from: accounts[1]}),
+      "Service is already listed"
+    );
+  })
 
 });

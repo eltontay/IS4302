@@ -25,31 +25,17 @@ contract Blocktractor {
 
     modifier onlyServiceProvider(uint256 serviceNumber){
         // only allow service providers to perform the action
-        require(msg.sender == serviceContract.getServiceProvider(serviceNumber));
+        require(msg.sender == serviceContract.getServiceProvider(serviceNumber), "Only Service Providers can perform this action");
         _;
     }
 
     modifier listedService(uint256 serviceNumber){
-        bool listed = false;
-        for(uint256 i = 0; i < listedServices.length; i++){
-            if (listedServices[i] == serviceNumber){
-                listed=true;
-                break;
-            }
-        }
-        require(listed == false,"Service is not listed");
+        require(isListed(serviceNumber) == true,"Service is not listed");
         _;
     }
 
     modifier notListedService(uint256 serviceNumber){
-        bool listed = false;
-        for(uint256 i = 0; i < listedServices.length; i++){
-            if (listedServices[i] == serviceNumber){
-                listed=true;
-                break;
-            }
-        }
-        require(listed == true,"Service is already listed");
+        require(isListed(serviceNumber) == false,"Service is already listed");
         _;
     }
 
@@ -138,5 +124,17 @@ contract Blocktractor {
 
     }
 
+    /* Getter Functions */
+
+    function isListed(uint256 serviceNumber) public view returns (bool){
+        bool listed = false;
+        for(uint256 i = 0; i < listedServices.length; i++){
+            if (listedServices[i] == serviceNumber){
+                listed=true;
+                break;
+            }
+        }
+        return listed;
+    }
 
 }
