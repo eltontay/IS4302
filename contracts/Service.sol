@@ -57,6 +57,11 @@ contract Service {
 /*
     Service Provider Functions
 */
+    modifier onlyServiceProvider(uint256 serviceNumber){
+        require(msg.sender == services[serviceNumber].serviceProvider, 
+                "Unauthorised access to service, only service provider can access");
+        _;
+    }
 
     // Creation of service , defaults at 1 milestone. To add more milestones, use AddMilestones function
     function createService (string memory title, string memory description, uint256 price) public returns (uint256) {
@@ -73,15 +78,15 @@ contract Service {
     }
 
     // Deletion of service
-    function deleteService (uint256 serviceNumber) public {
-        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+    function deleteService (uint256 serviceNumber) public onlyServiceProvider(serviceNumber) {
+        // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].exist = false;
         emit serviceDeleted(serviceNumber);
     }
 
     // Adding milestone , starts from 2nd milestone (index 2)
-    function addMilestone (uint256 serviceNumber, string memory milestoneTitle, string memory milestoneDescription ) public {
-        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+    function addMilestone (uint256 serviceNumber, string memory milestoneTitle, string memory milestoneDescription ) public onlyServiceProvider(serviceNumber){
+        // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].totalMilestones += 1; // Real tally of total milestones
         services[serviceNumber].milestoneCounter += 1; // A counter that only increments
         uint256 serviceMilestone = services[serviceNumber].totalMilestones;
@@ -90,51 +95,51 @@ contract Service {
     }
 
     // Deleting milestone , soft delete with a boolean function
-    function deleteMilestone (uint256 serviceNumber, uint256 milestoneNumber) public {
-        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider"); 
+    function deleteMilestone (uint256 serviceNumber, uint256 milestoneNumber) public onlyServiceProvider(serviceNumber){
+        // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider"); 
         milestones[serviceNumber][milestoneNumber].exist = false;
         services[serviceNumber].totalMilestones -= 1; // Real tally of total milestones
         emit milestoneDeleted(serviceNumber, milestoneNumber);
     }
 
     // Service provider listing created service
-    function listService (uint256 serviceNumber) public {
-        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+    function listService (uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
+        // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].listed = true;
         emit serviceListed(serviceNumber);
     }
 
     // Service provider delisting created service
-    function delistService (uint256 serviceNumber) public {
-        require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
+    function delistService (uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
+        // require(msg.sender == services[serviceNumber].serviceProvider, "Unauthorised service provider");
         services[serviceNumber].listed = false; 
         emit serviceDelisted(serviceNumber);
     }
 
     // Service provider approving pending service request
-    function approveServiceRequest(uint256 serviceNumber) public {
-        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised approval of service request");
+    function approveServiceRequest(uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
+        // require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised approval of service request");
         services[serviceNumber].status = Status.approved; // Changing state to accepted
         emit serviceApproved(Status.approved);
     }
 
     // Service provider rejecting pending service request
-    function rejectServiceRequest(uint256 serviceNumber) public {
-        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised rejection of service request");
+    function rejectServiceRequest(uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
+        // require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised rejection of service request");
         services[serviceNumber].status = Status.none; // reverting back to original status state
         emit serviceRejected(Status.none);
     }
 
-    function completeMilestone(uint256 serviceNumber, uint256 milestoneNumber) public {
-        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
+    function completeMilestone(uint256 serviceNumber, uint256 milestoneNumber) public onlyServiceProvider(serviceNumber){
+        // require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
         milestones[serviceNumber][milestoneNumber].status = Status.completed;
         emit milestoneCompleted(serviceNumber, milestoneNumber);
         services[serviceNumber].currentMilestone += 1;
         completeService(serviceNumber); // complete service if all milestones are finished
     }
 
-    function completeService(uint256 serviceNumber) public {
-        require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
+    function completeService(uint256 serviceNumber) public onlyServiceProvider(serviceNumber){
+        // require(services[serviceNumber].serviceProvider == msg.sender, "Unauthorised starting of service request");
         if (services[serviceNumber].currentMilestone == services[serviceNumber].totalMilestones) {
             services[serviceNumber].status = Status.completed;
             emit serviceCompleted(Status.completed);

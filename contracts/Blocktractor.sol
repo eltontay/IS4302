@@ -63,8 +63,9 @@ contract Blocktractor {
     }
 
     // Function that completes listed Service
-    function completeService() public {
-
+    function completeService(uint256 serviceNumber) public {
+        // Service provider completes service
+        serviceContract.completeService(serviceNumber);
     }
 
     // Getter for service status
