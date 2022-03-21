@@ -76,7 +76,7 @@ contract Service {
     modifier onlyServiceRequester(uint256 serviceNumber){
         // Only allow Service Requesters to access these functions
         require(msg.sender == services[serviceNumber].serviceRequester, 
-                "Unauthorised access to service, only service provider can access");
+                "Unauthorised access to service, only service requester can access");
         _;
     }
 
@@ -294,7 +294,6 @@ contract Service {
 */
     // Service requester requesting service. Service must have a status of none
     function requestService (uint256 serviceNumber) public 
-            onlyServiceRequester(serviceNumber)          /// Only Service Requesters can Request Service
             hasServiceStatus(serviceNumber, Status.none) /// Only Services that are newly created can be requested. i.e not approved by any other provider.
         {
         require(services[serviceNumber].serviceRequester == address(0), "This service has been requested already.");
