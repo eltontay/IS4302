@@ -340,6 +340,7 @@ contract Service {
     // Service requester to approve milestones set by service provider. 
     function approveMilestone(uint256 serviceNumber, uint256 milestoneNumber) public 
             onlyServiceRequester(serviceNumber)                                /// Only Service Requesters can approve Milestones
+            hasServiceStatus(serviceNumber, Status.approved)
             hasMilestoneStatus(serviceNumber, milestoneNumber, Status.pending) /// Only milestones that are pending can be approved
         {
         milestoneContract.updateMilestoneApproved(serviceNumber, milestoneNumber);
