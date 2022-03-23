@@ -7,7 +7,6 @@ contract Blocktractor {
 
     event serviceListed(uint256 serviceNumber);
     event serviceDelisted(uint256 serviceNumber);
-    event requestedServiceStarted(uint256 serviceNumber);
 
     Profile profileContract;
     Service serviceContract;
@@ -78,7 +77,7 @@ contract Blocktractor {
     } 
     
     // Requesting for a service
-    /*function requestService(uint256 serviceNumber) public {
+    function requestService(uint256 serviceNumber) public {
         serviceContract.requestService(serviceNumber);
     }
 
@@ -95,27 +94,18 @@ contract Blocktractor {
     // Reject requested service request
     function rejectService(uint256 serviceNumber) public {
         serviceContract.rejectServiceRequest(serviceNumber);
-    }*/
+    }
 
-    function startRequestedService(uint256 serviceNumber) public payable listedService(serviceNumber) {
-        // 1. Service Requester starts service
-        // 2. Service Requester transfer money to Blocktractor contract
-        require(serviceContract.getServiceRequester(serviceNumber) == msg.sender, "Only Service Requesters can start service");
+    // 
+    function startRequestedService(uint256 serviceNumber) public payable {
         require(msg.value >= (serviceContract.getServicePrice(serviceNumber) + comissionFee), "Insufficient gas provided");
         require(serviceContract.isServiceApproved(serviceNumber),"Service is not approved");
-        // Start the service
-        serviceContract.startRequestedService(serviceNumber);
-
-        // Transfer relevant money
         revenue_wallet.transfer(comissionFee);
-        escrow_wallet.transfer(msg.value-comissionFee); 
-
-        // emit an event
-        emit requestedServiceStarted(serviceNumber);
+        escrow_wallet.transfer(msg.value-comissionFee);
+        serviceContract.startRequestedService(serviceNumber);
     }
 
     // Function that completes listed Service
-    // TODO: logic for service completion
     function completeService(uint256 serviceNumber) public {
         // Service provider completes service
         serviceContract.completeService(serviceNumber);
