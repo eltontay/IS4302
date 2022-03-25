@@ -1,19 +1,23 @@
-const Profile = artifacts.require('Profile');
-const Service = artifacts.require('Service');
-const Blocktractor = artifacts.require('Blocktractor');
+const Profile = artifacts.require("Profile");
+const Service = artifacts.require("Service");
+const Blocktractor = artifacts.require("Blocktractor");
+const Milestones = artifacts.require("Milestones");
 
 module.exports = (deployer, network, accounts) => {
   deployer
     .deploy(Profile)
-    .then(function () {
-      return deployer.deploy(Service);
+    .then(() => {
+      return deployer.deploy(Milestones);
     })
-    .then(function () {
+    .then(() => {
+      return deployer.deploy(Service, Milestones.address);
+    })
+    .then(() => {
       return deployer.deploy(
         Blocktractor,
         Profile.address,
         Service.address,
-        10000
+        1000000
       );
     });
 };
