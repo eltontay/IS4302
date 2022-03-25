@@ -39,7 +39,7 @@ contract ProfileReview {
         uint star_rating;
     }
 
-    constructor(Profile profcontract, Service servContract) public {
+    constructor(Profile profcontract, Service servContract) {
         profileContract = profcontract;
         serviceContract = servContract;
     }

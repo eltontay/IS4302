@@ -8,7 +8,7 @@ contract Service {
     
     Milestones milestoneContract;    
 
-    constructor(Milestones milestoneAddress) public {
+    constructor(Milestones milestoneAddress) {
         milestoneContract = milestoneAddress;
     }
 
