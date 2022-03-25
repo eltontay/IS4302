@@ -17,7 +17,7 @@ contract Blocktractor {
     address payable revenue_wallet = payable(msg.sender);
     uint256 public comissionFee;
 
-    constructor(Profile profileAddress, Service serviceAddress, uint256 fee) public {
+    constructor(Profile profileAddress, Service serviceAddress, uint256 fee) {
         comissionFee = fee;
         profileContract = profileAddress;
         serviceContract = serviceAddress;
