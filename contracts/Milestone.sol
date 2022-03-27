@@ -119,19 +119,34 @@ contract Milestones {
     Getter Functions 
 */
 
-    // Get Milestone status 
-    function getMilestoneStatus(uint256 serviceNumber, uint256 milestoneNumber) public view doMilestonesExist(serviceNumber) doSpecificMilestoneExist(serviceNumber, milestoneNumber) returns (Status) {
-        return milestones[serviceNumber][milestoneNumber].status;
-    }
-
     // Get All Milestone 
     function getAllMilestone(uint256 serviceNumber) public view doMilestonesExist(serviceNumber) returns (milestone[] memory) {
         return milestones[serviceNumber];
     }
 
+       // Get selected Milestone 
+    function getMilestone(uint256 serviceNumber, uint256 milestoneNumber) public view doMilestonesExist(serviceNumber) returns (milestone memory) {
+        return milestones[serviceNumber][milestoneNumber];
+    }
+
     // Get Total Milestones Number
     function getTotalNumMilestones(uint256 serviceNumber) public view doMilestonesExist(serviceNumber) returns (uint256) {
         return milestones[serviceNumber].length;
+    }
+
+    //get title for particular milestone 
+    function getMilestoneTitle(uint256 serviceNumber, uint256 milestoneNumber) public view doSpecificMilestoneExist(serviceNumber, milestoneNumber) returns (string memory) {
+        return getMilestone(serviceNumber, milestoneNumber).milestoneTitle;
+    }
+
+        //get description for particular milestone 
+    function getMilestoneDescription(uint256 serviceNumber, uint256 milestoneNumber) public view doSpecificMilestoneExist(serviceNumber, milestoneNumber) returns (string memory) {
+        return getMilestone(serviceNumber, milestoneNumber).milestoneDescription;
+    }
+
+    // Get Milestone status 
+    function getMilestoneStatus(uint256 serviceNumber, uint256 milestoneNumber) public view doMilestonesExist(serviceNumber) doSpecificMilestoneExist(serviceNumber, milestoneNumber) returns (Status) {
+        return milestones[serviceNumber][milestoneNumber].status;
     }
 
 
