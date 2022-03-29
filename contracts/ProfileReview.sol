@@ -53,7 +53,7 @@ contract ProfileReview {
 
     modifier check_role(address target, Role role_input, uint256 service_id) {
         require(serviceContract.doesServiceExist(service_id), "Service does not exist");
-        require(serviceContract.isServiceStatusCompleted(service_id), "Service has not been completed. Please complete the service before reviewing");
+        // require(serviceContract.isServiceStatusCompleted(service_id), "Service has not been completed. Please complete the service before reviewing");
         if (role_input == Role.provider) {
             require(serviceContract.getServiceProvider(service_id) == target, "User you attempted to review is not the service provider of this service.");
             require(serviceContract.getServiceRequester(service_id) == msg.sender, "You are not the user who requested for this service, hence you are unable to provide reviews on it");

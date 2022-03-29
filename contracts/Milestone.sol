@@ -5,7 +5,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Milestones {
 
-    enum Status { none, pending, approved, started, completed, verified }
+    enum Status { none, pending, approved, started, completed, verified, conflict}
 
     struct milestone {
         string milestoneTitle;
@@ -31,7 +31,6 @@ contract Milestones {
         require(numMilestone < milestones[serviceNumber].length, "Milestone number out of range");
         _;
     }
-
 
 
 
@@ -113,6 +112,11 @@ contract Milestones {
         updateMilestoneStatus(serviceNumber, milestoneNum, Status.verified);
     }
 
+    // Updating Milestone status to conflict
+    function updateMilestoneConflict(uint256 serviceNumber, uint256 milestoneNum) external doMilestonesExist(serviceNumber) {
+        updateMilestoneStatus(serviceNumber, milestoneNum, Status.conflict);
+    }
+
 
 
 /*
@@ -135,11 +139,12 @@ contract Milestones {
     }
 
 
+
 /*
     Checker Functions 
 */
 
-    // Chekc if all Milestone status matches
+    // Check if all Milestone status matches
     function checkAllMilestoneStatusMatch(uint256 serviceNumber, Status state) internal view returns (bool) {
         for (uint256 i = 0; i < milestones[serviceNumber].length; i++) {
             if (milestones[serviceNumber][i].status != state) {
@@ -174,6 +179,20 @@ contract Milestones {
         return checkAllMilestoneStatusMatch(serviceNumber, Status.verified);
     }
 
+    // Check if any Milestone status matches conflict
+    function checkAnyMilestoneStatusMatch(uint256 serviceNumber, Status state) internal view returns (bool) {
+        for (uint256 i = 0; i < milestones[serviceNumber].length; i++) {
+            if (milestones[serviceNumber][i].status == state) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //Check if any Milestones status are conflict
+    function checkAnyMilestoneConflict(uint256 serviceNumber) public view returns (bool) {
+        return checkAnyMilestoneStatusMatch(serviceNumber, Status.conflict);
+    }
 
 
 }
