@@ -12,7 +12,7 @@ contract Service {
     ConflictResolution conflictContract;  
     Project projectContract;  
 
-    constructor(Milestones milestoneAddress, ConflictResolution conflictAddress, Project projectContract) public {
+    constructor(Milestones milestoneAddress, ConflictResolution conflictAddress, Project projectAddress) public {
         milestoneContract = milestoneAddress;
         conflictContract = conflictAddress;
         projectContract = projectAddress;
@@ -136,12 +136,19 @@ contract Service {
 /*
     Service Provider Service Functions
 */
+
     // Creation of service , defaults at 1 milestone. To add more milestones, use AddMilestones function
-    function createService(uint256 projectid, string memory title, string memory description, uint256 price) public requiredString(title) requiredString(description) returns (uint256) {        
+    function createService(string memory title, string memory description, uint256 price) public requiredString(title) requiredString(description) returns (uint256) {        
         require(price > 0, "A Service Price must be specified");
-        
-        service memory newService = service(projectid, title,description,price,0,numService,msg.sender,address(0),true,Status.none);
-        services[numService] = newService;
+
+        service storage newService = services[numService];
+        newService.title = title;
+        newService.description = description;
+        newService.price = price;
+        newService.serviceNumber = numService;
+        newService.serviceProvider = msg.sender;
+        newService.exist = true;
+        newService.status = Status.none;
 
         emit serviceCreated(numService, newService);
         numService++;
@@ -370,12 +377,12 @@ contract Service {
     }
 
         // Service requester can raise conflict on milestone
-    function rejectMilestone(uint256 serviceNumber, uint milestoneNumber) public
+    function rejectMilestone(uint256 serviceNumber, uint256 milestoneNumber) public
         onlyServiceRequester(serviceNumber)
         hasMilestoneStatusCompleted(serviceNumber, milestoneNumber)
         {
-            conflictContract.createConflict(services[serviceNumber].projectid, serviceNumber, milestoneNumber);
-            milestoneContract.updateMilestoneConflict(serviceNumber, milestoneNum);
+            conflictContract.createConflict(services[serviceNumber].projectid, serviceNumber, milestoneNumber, services[serviceNumber].serviceProvider, projectContract.getNumProviders(services[serviceNumber].projectid) - 1);
+            milestoneContract.updateMilestoneConflict(serviceNumber, milestoneNumber);
 
             services[serviceNumber].status = Status.conflict;
         }

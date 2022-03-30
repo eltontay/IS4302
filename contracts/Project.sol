@@ -21,7 +21,7 @@ contract Project {
         uint256[] services;
     }
 
-    uint256 public numProject = 1;
+    uint256 public numProject;
     mapping(uint256 => project) projects;
 
     event projectCreated(uint256 projectid, string title, address serviceRequester);
@@ -33,11 +33,11 @@ contract Project {
     }
 
     modifier onlyOwner(uint256 projectid, address user) {
-        require (project[projectid].serviceRequester == user, "You are not authorized to edit this project as you are not the creator");
+        require (projects[projectid].serviceRequester == user, "You are not authorized to edit this project as you are not the creator");
         _;
     }
 
-    function createProject(string memory title, string memory description) {
+    function createProject(string memory title, string memory description) public {
                 
         project storage newProject = projects[numProject];
         newProject.title = title;
@@ -46,20 +46,25 @@ contract Project {
         newProject.exist = true;
         newProject.projectstatus = ProjectStatus.active;
 
+        emit projectCreated(numProject, title, msg.sender);
+        
         numProject++; 
-        emit projectCreated(projectid, title, serviceRequester);
     }
 
     function addService(uint256 serviceid, uint256 projectid) public 
             checkValidProject(projectid) 
-            onlyOwner(projectid, msg.sender)
+            // onlyOwner(projectid, msg.sender)
         {
-        require(project[projectid].serviceRequester == msg.sender, "You are not authorized to edit this project as you are not the creator");
+        // require(projects[projectid].serviceRequester == msg.sender, "You are not authorized to edit this project as you are not the creator");
 
-        project[projectid].services.push(serviceid);
+        projects[projectid].services.push(serviceid);
     }
 
-    function getRequester(uint256 projectid) public returns (address){
-        return project[projectid].serviceRequester;
+    function getRequester(uint256 projectid) public view returns (address){
+        return projects[projectid].serviceRequester;
+    }
+
+    function getNumProviders(uint256 projectid) public view returns (uint256){
+        return projects[projectid].services.length;
     }
 }
