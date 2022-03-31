@@ -3,6 +3,10 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Milestone {
 
+    constructor () public {
+
+    }
+
     enum Status { none, pending, approved, started, completed, verified, conflict}
 
     struct milestone {

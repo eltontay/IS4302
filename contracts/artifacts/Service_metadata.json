@@ -309,11 +309,11 @@
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0xd46c517ebb014b8726aa11bce78b7be4b5c2edb2fe8b28f8bab36b1a230f1f6b",
+			"keccak256": "0x8fb44c31f1ca6de31c2ad6c32014b3c9eeca2b38d68dbc8418da7db3eabea5ee",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://48bd133934ce2db40eaf60d54911c4a502832a7256efb14eb8c97ed025456d92",
-				"dweb:/ipfs/QmbZvf1kHcJTg44HAPWJ6RSuKVsLL2osqR6zc9HULypBzJ"
+				"bzz-raw://b3639886eab0b3bf4df6499abf8ea4c006a2ddc3987b0b72389a2715586e3fdf",
+				"dweb:/ipfs/QmXNU6ZKjuPkfyykmnuoiADUJufwaGR127dXqhnMrvkunQ"
 			]
 		},
 		"contracts/Service.sol": {

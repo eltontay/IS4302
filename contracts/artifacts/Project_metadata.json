@@ -50,6 +50,34 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "titleMilestone",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "descriptionMilestone",
+						"type": "string"
+					}
+				],
+				"name": "createMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "string",
 						"name": "title",
 						"type": "string"
@@ -76,9 +104,32 @@
 						"internalType": "uint256",
 						"name": "serviceNumber",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
 					}
 				],
-				"name": "deleteRequestService",
+				"name": "deleteMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteService",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -142,6 +193,72 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "titleMilestone",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "descriptionMilestone",
+						"type": "string"
+					}
+				],
+				"name": "updateMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					}
+				],
+				"name": "updateService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -180,27 +297,27 @@
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0xc1233ae6c8fd16bc687d0a35078cd8eefb7a8ed5f48cdf28b81758980d9bb6e3",
+			"keccak256": "0x8fb44c31f1ca6de31c2ad6c32014b3c9eeca2b38d68dbc8418da7db3eabea5ee",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://76871a6c7e09a4b8c85f2b6fd73cf839b6f8bd9748755d1bed397b70d24187cd",
-				"dweb:/ipfs/QmPgbMQT68SkZtXJjxkSsvqqEK69dxFquhszGC47ViPrkc"
+				"bzz-raw://b3639886eab0b3bf4df6499abf8ea4c006a2ddc3987b0b72389a2715586e3fdf",
+				"dweb:/ipfs/QmXNU6ZKjuPkfyykmnuoiADUJufwaGR127dXqhnMrvkunQ"
 			]
 		},
 		"contracts/Project.sol": {
-			"keccak256": "0x718ab15cc8223a25692e52af81be001218629858aaf28f7b4f54815ff4ff96c4",
+			"keccak256": "0xce244c58ba5096c2c000ca81bc3171323306b9458a8459de204ec10ace12a1ed",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d2a74063b4680cdd13aec83af63da3d3d19a1d8ce1e16dfde088735bb85a9427",
-				"dweb:/ipfs/QmVhaCysX5qdbrf8SZCcunRiwPU23xdTo2evPoBp55iCKP"
+				"bzz-raw://a10f45fed8a8ee3c36d504c6ae198e924a2bf003b9978cfa9ee4eeb873d9a761",
+				"dweb:/ipfs/QmNmb7gZNonaJyZWpU8z7pzbMVps3yFLsEZBDy94HYgGKN"
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0xd648fd19158299bb54f1ad2aac0b0d2b4edd5e78529f01c54e0b76a6139051fd",
+			"keccak256": "0x02080c23e382f333a972d84beda9d0f94f65c674d07a127fc42bf05c7bde38d7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8fe1910768a4557b906c035a8e92892125a945e53f888ee39b3581d26135b94c",
-				"dweb:/ipfs/QmenZ1RAA1r8s1spmXKMp3dBcb5VEGZPUW11SwPJ5UosUd"
+				"bzz-raw://3e12ceb3a2ce619d08cc42b73bf135c18afcad6a8c2aacc2c38982d404b9f711",
+				"dweb:/ipfs/QmUBxoUaVB1nytq5vTXkULsv5ooJFb3K4erDCDQhnDmq5u"
 			]
 		}
 	},

@@ -16,7 +16,7 @@ contract Project {
     enum ProjectStatus { none, active, inactive, terminated }
 
     struct project {
-        uint256 projectId; 
+        uint256 projectNumber; 
         string title;
         string description;
         address projectOwner; // defaults to address(0)
@@ -32,14 +32,14 @@ contract Project {
 /*
     Modifiers
 */
-    modifier checkValidProject(uint256 projectid) {
-        require(projects[projectid].exist, "This project has not been created yet. Please create project first");
-        require(projects[projectid].projectstatus == ProjectStatus.active, "This project is no longer active.");
+    modifier checkValidProject(uint256 projectNumber) {
+        require(projects[projectNumber].exist, "This project has not been created yet. Please create project first");
+        require(projects[projectNumber].projectstatus == ProjectStatus.active, "This project is no longer active.");
         _;
     }
 
-    modifier onlyOwner(uint256 projectid, address user) {
-        require (projects[projectid].projectOwner == user, "You are not authorized to edit this project as you are not the creator");
+    modifier onlyOwner(uint256 projectNumber, address user) {
+        require (projects[projectNumber].projectOwner == user, "You are not authorized to edit this project as you are not the creator");
         _;
     }
 
@@ -49,13 +49,13 @@ contract Project {
 */
 
     /*
-        Create Project
+        Project - Create 
     */
     
     function createProject(string memory title, string memory description) public {
                 
         project storage newProject = projects[numProject];
-        newProject.projectId = numProject;
+        newProject.projectNumber = numProject;
         newProject.title = title;
         newProject.description = description;
         newProject.projectOwner = msg.sender;
@@ -67,7 +67,7 @@ contract Project {
     }
 
     /*
-        Request Service for Project 
+        Service - Request
     */
 
     function requestService(uint256 projectNumber, string memory title, string memory description, uint256 price) public onlyOwner(projectNumber,msg.sender) {
@@ -75,14 +75,41 @@ contract Project {
     }
 
     /*
-        Delete Request Service for Project 
+        Service - Update
     */
 
-    function deleteRequestService(uint256 projectNumber, uint256 serviceNumber) public onlyOwner(projectNumber, msg.sender) {
-        service.deleteRequestService(projectNumber,serviceNumber);
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) public onlyOwner(projectNumber,msg.sender) {
+        service.updateService(projectNumber,serviceNumber,title,description,price);
     }
 
+    /*
+        Service - Delete
+    */
 
+    function deleteService(uint256 projectNumber, uint256 serviceNumber) public onlyOwner(projectNumber, msg.sender) {
+        service.deleteService(projectNumber,serviceNumber);
+    }
+
+/*
+        Milestone - Create
+    */
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public onlyOwner(projectNumber, msg.sender) {
+        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+    }
+
+    /*
+        Milestone - Update
+    */
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public onlyOwner(projectNumber, msg.sender) {
+        service.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
+    }
+
+    /*
+        Milestone - Delete
+    */ 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public onlyOwner(projectNumber, msg.sender) {
+        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }    
 
 /*
     Getter Helper Functions
