@@ -2,69 +2,94 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Service.sol";
 
+/*
+    Service Requester (Project Owner)
+*/
 contract Project {
     
-    // Service serviceContract; 
+    Service service; 
 
-    // constructor(Service serviceContract) public {
-    //     serviceContract = serviceAddress;
-    // }
+    constructor(Service serviceContract) public {
+        service = serviceContract;
+    }
     
     enum ProjectStatus { none, active, inactive, terminated }
 
     struct project {
+        uint256 projectId; 
         string title;
         string description;
-        address serviceRequester; // defaults to address(0)
-        bool exist; // allowing update such as soft delete of service
+        address projectOwner; // defaults to address(0)
+        bool exist; // allowing update such as soft delete of project
         ProjectStatus projectstatus;
-        uint256[] services;
     }
 
     uint256 public numProject;
     mapping(uint256 => project) projects;
 
-    event projectCreated(uint256 projectid, string title, address serviceRequester);
+    event projectCreated(uint256 projectid, string title, string description, address projectOwner);
 
+/*
+    Modifiers
+*/
     modifier checkValidProject(uint256 projectid) {
         require(projects[projectid].exist, "This project has not been created yet. Please create project first");
-        require(projects[projectid].projectstatus == ProjectStatus.active, "This project is no longer active, please activate it first");
+        require(projects[projectid].projectstatus == ProjectStatus.active, "This project is no longer active.");
         _;
     }
 
     modifier onlyOwner(uint256 projectid, address user) {
-        require (projects[projectid].serviceRequester == user, "You are not authorized to edit this project as you are not the creator");
+        require (projects[projectid].projectOwner == user, "You are not authorized to edit this project as you are not the creator");
         _;
     }
 
+
+/*
+    Project Owner Functions
+*/
+
+    /*
+        Create Project
+    */
+    
     function createProject(string memory title, string memory description) public {
                 
         project storage newProject = projects[numProject];
+        newProject.projectId = numProject;
         newProject.title = title;
         newProject.description = description;
-        newProject.serviceRequester = msg.sender;
+        newProject.projectOwner = msg.sender;
         newProject.exist = true;
         newProject.projectstatus = ProjectStatus.active;
 
-        emit projectCreated(numProject, title, msg.sender);
-        
+        emit projectCreated(numProject, title, description, msg.sender);
         numProject++; 
     }
 
-    function addService(uint256 serviceid, uint256 projectid) public 
-            checkValidProject(projectid) 
-            // onlyOwner(projectid, msg.sender)
-        {
-        // require(projects[projectid].serviceRequester == msg.sender, "You are not authorized to edit this project as you are not the creator");
+    /*
+        Request Service for Project 
+    */
 
-        projects[projectid].services.push(serviceid);
+    function requestService(uint256 projectNumber, string memory title, string memory description, uint256 price) public onlyOwner(projectNumber,msg.sender) {
+        service.requestService(projectNumber,title,description,price);
     }
 
-    function getRequester(uint256 projectid) public view returns (address){
-        return projects[projectid].serviceRequester;
+    /*
+        Delete Request Service for Project 
+    */
+
+    function deleteRequestService(uint256 projectNumber, uint256 serviceNumber) public onlyOwner(projectNumber, msg.sender) {
+        service.deleteRequestService(projectNumber,serviceNumber);
     }
 
-    function getNumProviders(uint256 projectid) public view returns (uint256){
-        return projects[projectid].services.length;
+
+
+/*
+    Getter Helper Functions
+*/
+
+    function getProjectOwner(uint256 projectId) public view returns(address) {
+        return projects[projectId].projectOwner;
     }
+    
 }
