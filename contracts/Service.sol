@@ -1,15 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 import "./Milestone.sol";
+import "./ConflictResolution.sol";
+import "./Project.sol";
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Service {
     
-    Milestones milestoneContract;    
+    Milestones milestoneContract;  
+    ConflictResolution conflictContract;  
+    Project projectContract;  
 
-    constructor(Milestones milestoneAddress) public {
+    constructor(Milestones milestoneAddress, ConflictResolution conflictAddress, Project projectAddress) public {
         milestoneContract = milestoneAddress;
+        conflictContract = conflictAddress;
+        projectContract = projectAddress;
     }
 
     /**
@@ -19,37 +25,23 @@ contract Service {
      |_________|
     */
 
-    enum Status { none, pending, approved, started, completed }
-    enum Review { none, satisfied, disatisfied }
-
-    // struct milestone {
-    //     string milestoneTitle;
-    //     string milestoneDescription;
-    //     bool exist; // allowing updates such as soft delete of milestone   
-    //     Status status; // Defaults at none
-    //     Review review; // Defaults at none
-    // }
+    enum Status { none, pending, approved, started, completed, conflict }
     
     struct service {
+        uint256 projectid;
         string title;
         string description;
         uint256 price;
-        // uint256 totalMilestones; // Defaults to 1 milestone
         uint256 currentMilestone; // Defaults to 0 milestone
-        // uint256 milestoneCounter; // Counter to keep track of milestones that exist
         uint256 serviceNumber; // index number of the service
         address serviceProvider; // msg.sender
         address serviceRequester; // defaults to address(0)
-        //bool listed;  // Defaults at false
         bool exist; // allowing update such as soft delete of service
         Status status; // Defaults at none
-        // Review review; // Overall review of services, defaults at none
     }
 
     event serviceCreated(uint256 serviceNumber, service newService);
     event serviceDeleted(uint256 serviceNumber);
-    //event serviceListed(uint256 serviceNumber);
-    //event serviceDelisted(uint256 serviceNumber);
     event serviceStatusChanged(uint256 serviceNumber, Status statusBefore, Status statusAfter);
 
     event serviceRequested(Status status, uint256 serviceNumber);
@@ -58,15 +50,7 @@ contract Service {
     event serviceRejected(Status status);
     event serviceStarted(Status status);
     event serviceCompleted(Status status);
-    event serviceReview(Review review);
-    // event milestoneStatusChanged(uint256 serviceNumber, uint256 milestoneNumber, Status statusBefore, Status statusAfter);
-    // event milestoneCreated(milestone newMilestone);
-    // event milestoneAdded(uint256 serviceNumber, uint256 milestoneNumber, milestone newMilestone);
-    // event milestoneDeleted(uint256 serviceNumber, uint256 milestoneNumber);
-    // event milestoneCompleted(uint256 serviceNumber, uint256 milestoneNumber);
-    // event milestoneReview(Review review);
 
-    // mapping (uint256 => mapping(uint256 => milestone)) milestones; // indexed mapping of services to multiple milestones
     mapping (uint256 => service) services; // indexed mapping of all services   
 
     uint256 public numService = 0;
@@ -152,12 +136,19 @@ contract Service {
 /*
     Service Provider Service Functions
 */
+
     // Creation of service , defaults at 1 milestone. To add more milestones, use AddMilestones function
     function createService(string memory title, string memory description, uint256 price) public requiredString(title) requiredString(description) returns (uint256) {        
         require(price > 0, "A Service Price must be specified");
-        
-        service memory newService = service(title,description,price,0,numService,msg.sender,address(0),true,Status.none);
-        services[numService] = newService;
+
+        service storage newService = services[numService];
+        newService.title = title;
+        newService.description = description;
+        newService.price = price;
+        newService.serviceNumber = numService;
+        newService.serviceProvider = msg.sender;
+        newService.exist = true;
+        newService.status = Status.none;
 
         emit serviceCreated(numService, newService);
         numService++;
@@ -174,7 +165,6 @@ contract Service {
         services[serviceNumber].exist = false;
         emit serviceDeleted(serviceNumber);
     }
-
 
 
 /*
@@ -227,15 +217,26 @@ contract Service {
     }*/
 
 
+
 /*
     Service Provider Acceptance Functions
 */    
+
+    // Assigning Service to Project (Each service can only have 1 project, while a project can engage in multiple services)
+    function assignToProject(uint256 serviceid, uint256 projectid) public {
+        projectContract.addService(serviceid, projectid);
+    }
+
+
     // Approving pending service request done by Service Provider 
     function approveServiceRequest(uint256 serviceNumber) public 
             onlyServiceProvider(serviceNumber)              /// Only Service Providers can approve service request
             activeService(serviceNumber)                    /// Only existing services can be approved
             hasServiceStatus(serviceNumber, Status.pending) /// Only Services that are Pending can be approved
-        {
+        {    
+        
+        assignToProject(serviceNumber, services[serviceNumber].projectid);
+
         Status before = services[serviceNumber].status;
         services[serviceNumber].status = Status.approved;   // Changing state to accepted
         emit serviceStatusChanged(serviceNumber, before, Status.approved);
@@ -246,7 +247,11 @@ contract Service {
             onlyServiceProvider(serviceNumber)              /// Only Service Providers can Reject Service Request
             activeService(serviceNumber)                    /// Only existing services can be rejected
             hasServiceStatus(serviceNumber, Status.pending) /// Only Services that are Pending can be Rejected
-        {
+        {                
+        // Change the serviceRequester back to none
+        services[serviceNumber].serviceRequester = address(0);        
+        services[serviceNumber].projectid = 0;
+
         Status before = services[serviceNumber].status;
         services[serviceNumber].status = Status.none; // reverting back to original status state
         emit serviceStatusChanged(serviceNumber, before, Status.none);
@@ -292,20 +297,21 @@ contract Service {
 
 
 
-
 /*
     Service Requester Pre Start Functions
 */
     // Service requester requesting service. Service must have a status of none
-    function requestService (uint256 serviceNumber) public 
+    function requestService (uint256 serviceNumber, uint256 projectid) public 
             onlyNonServiceProvider(serviceNumber)                 /// Only Service Requesters can request for service
             hasServiceStatus(serviceNumber, Status.none)        /// Only Services that are newly created can be requested. i.e not approved by any other provider.           
             activeService(serviceNumber)                        /// Only existing services can be requested
         {
-        require(services[serviceNumber].serviceRequester == address(0), "This service has been requested by another user.");
-        
+        require(services[serviceNumber].serviceRequester == address(0), "This service has been requested by another user.");   
+        require(projectContract.getRequester(projectid) == msg.sender, "You are not authorised to assign services to this project as you are not the requester");
+
         // Change the serviceRequester to the sender
         services[serviceNumber].serviceRequester = msg.sender;
+        services[serviceNumber].projectid = projectid;
 
         //  Change the service status to pending
         Status before = services[serviceNumber].status;
@@ -340,7 +346,6 @@ contract Service {
     // Service requester to approve milestones set by service provider. 
     function approveMilestone(uint256 serviceNumber, uint256 milestoneNumber) public 
             onlyServiceRequester(serviceNumber)                                /// Only Service Requesters can approve Milestones
-            hasServiceStatus(serviceNumber, Status.approved)
             hasMilestoneStatus(serviceNumber, milestoneNumber, Status.pending) /// Only milestones that are pending can be approved
         {
         milestoneContract.updateMilestoneApproved(serviceNumber, milestoneNumber);
@@ -370,6 +375,17 @@ contract Service {
         }
 
     }
+
+        // Service requester can raise conflict on milestone
+    function rejectMilestone(uint256 serviceNumber, uint256 milestoneNumber) public
+        onlyServiceRequester(serviceNumber)
+        hasMilestoneStatusCompleted(serviceNumber, milestoneNumber)
+        {
+            conflictContract.createConflict(services[serviceNumber].projectid, serviceNumber, milestoneNumber, services[serviceNumber].serviceProvider, projectContract.getNumProviders(services[serviceNumber].projectid) - 1);
+            milestoneContract.updateMilestoneConflict(serviceNumber, milestoneNumber);
+
+            services[serviceNumber].status = Status.conflict;
+        }
 
 
 /*
