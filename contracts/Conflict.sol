@@ -9,66 +9,91 @@ contract Conflict {
     enum ConflictStatus { none, pending, completed }
 
     struct conflict {
-        address serviceRequester;
-        address serviceProvider;
-        uint256 milestoneid;
-        uint256 serviceid;
-        uint256 projectid;
+        uint256 projectNumber;
+        uint256 serviceNumber;
+        uint256 milestoneNumber;
+        address serviceRequester; // Project Owner
+        address serviceProvider; 
         ConflictStatus conflictstatus;
-        uint256 votestotal;
-        uint256 votescollected;
-        uint256 votesforRequester;
-        uint256 votesforProvider;
+        uint256 voters;
+        uint256 votesCollected;
+        uint256 requesterVotes;
+        uint256 providerVotes;
         bool exists;
         uint8 result;
         mapping(address => uint8) votes;
     }
 
-    mapping (uint256 => mapping( uint256 => mapping (uint256 => conflict))) conflicts; //project id => service id => milestone id
+    mapping (uint256 => mapping( uint256 => mapping (uint256 => conflict))) conflicts; // [projectNumber][serviceNumber][milestoneNumber] -> conflict
 
-    event conflictRaised(uint256 projectid, uint256 serviceid, uint256 milestoneid, address serviceProvider);
-    event conflictVoted(uint256 projectid, uint256 serviceid, uint256 milestoneid, address voter, uint8 vote);
-    event conflictResult(uint256 projectid, uint256 serviceid, uint256 milestoneid, uint8 result);
 
-    function createConflict(uint256 projectid, uint256 serviceid, uint256 milestoneid, address serviceProvider,  uint256 tot_voters) public {
-        require(conflicts[projectid][serviceid][milestoneid].exists != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
+    event conflictCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceRequester, address serviceProvider, uint256 totalVoters);
 
-        conflict storage newConflict = conflicts[projectid][serviceid][milestoneid];
-        newConflict.serviceRequester = msg.sender;
+    event conflictRaised(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceProvider);
+    event conflictVoted(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address voter, uint8 vote);
+    event conflictResult(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 result);
+
+    /*
+        Conflict - Create
+    */
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceRequester, address serviceProvider,  uint256 totalVoters) public {
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].exists != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
+
+        conflict storage newConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
+        newConflict.projectNumber = projectNumber;     
+        newConflict.serviceNumber = serviceNumber;        
+        newConflict.milestoneNumber = milestoneNumber;
+        newConflict.serviceRequester = serviceRequester;
         newConflict.serviceProvider = serviceProvider;
-        newConflict.milestoneid = milestoneid;
-        newConflict.serviceid = serviceid;
-        newConflict.projectid = projectid;
-        newConflict.exists = true;
         newConflict.conflictstatus = ConflictStatus.pending;
-        newConflict.votestotal = tot_voters;
+        newConflict.voters = totalVoters;
+        newConflict.votesCollected = 0;
+        newConflict.requesterVotes = 0;
+        newConflict.providerVotes = 0;    
+        newConflict.exists = true;
+        newConflict.result = 0;
 
-        emit conflictRaised(projectid, serviceid, milestoneid, serviceProvider);
+        emit conflictCreated(projectNumber, serviceNumber, milestoneNumber, serviceRequester, serviceProvider, totalVoters);
     }
 
-    function voteConflict(uint256 projectid, uint256 serviceid, uint256 milestoneid, uint8 vote) public {
-        require(conflicts[projectid][serviceid][milestoneid].serviceRequester != msg.sender , "You raised this conflict. You cannot vote on it.");
-        require(conflicts[projectid][serviceid][milestoneid].serviceProvider != msg.sender, "You are involved in this conflict. You cannot vote on it.");
+    /*
+        Conflict - Read
+    */
+
+    /*
+        Conflict - Update
+    */
+
+
+
+    /*
+        Conflict - Delete
+    */
+
+
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) public {
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceRequester != sender , "You raised this conflict. You cannot vote on it.");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceProvider != sender, "You are involved in this conflict. You cannot vote on it.");
         
-        require(conflicts[projectid][serviceid][milestoneid].votescollected < conflicts[projectid][serviceid][milestoneid].votestotal, "Enough votes have been collected");
-        require(conflicts[projectid][serviceid][milestoneid].votes[msg.sender] == 0 , "You have already voted, you cannot vote again");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].votesCollected < conflicts[projectNumber][serviceNumber][milestoneNumber].voters, "Enough votes have been collected");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].votes[sender] == 0 , "You have already voted, you cannot vote again");
         require(vote == 1 || vote == 2, "You have not input a right vote. You can either vote 1 for Requester or 2 for Provider.");
 
-        conflict storage C = conflicts[projectid][serviceid][milestoneid];
-        C.votes[msg.sender] = vote;
+        conflict storage C = conflicts[projectNumber][serviceNumber][milestoneNumber];
+        C.votes[sender] = vote;
 
-        if (vote == 1) { C.votesforRequester++; }
-        if (vote == 2) { C.votesforProvider++; }
-        C.votescollected++;
+        if (vote == 1) { C.requesterVotes++; }
+        if (vote == 2) { C.providerVotes++; }
+        C.votesCollected++;
 
-        emit conflictVoted(projectid, serviceid, milestoneid, msg.sender, vote);
+        emit conflictVoted(projectNumber, serviceNumber, milestoneNumber, msg.sender, vote);
 
-        if (C.votescollected == C.votestotal) {
-            if (C.votesforProvider > C.votesforRequester) {C.result = 2; }
+        if (C.votesCollected == C.voters) {
+            if (C.providerVotes > C.requesterVotes) {C.result = 2; }
             else {C.result = 1;} //if there is tie vote, service Requester will win the vote
             C.conflictstatus = ConflictStatus.completed;
 
-            emit conflictResult(projectid, serviceid, milestoneid, C.result);
+            emit conflictResult(projectNumber, serviceNumber, milestoneNumber, C.result);
         }
     }
 
@@ -79,27 +104,27 @@ contract Conflict {
 
 */
 
-    function getResults(uint256 projectid, uint256 serviceid, uint256 milestoneid) public view returns (uint) {
-        require(conflicts[projectid][serviceid][milestoneid].votescollected == conflicts[projectid][serviceid][milestoneid].votestotal, "Not everyone has voted, please prompt all other members of project to vote");
-        require(conflicts[projectid][serviceid][milestoneid].conflictstatus == ConflictStatus.completed, "Voting has not been completed yet. Please wait for it to end.");
+    function getResults(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint) {
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].votesCollected == conflicts[projectNumber][serviceNumber][milestoneNumber].voters, "Not everyone has voted, please prompt all other members of project to vote");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus == ConflictStatus.completed, "Voting has not been completed yet. Please wait for it to end.");
 
-        return conflicts[projectid][serviceid][milestoneid].result;
+        return conflicts[projectNumber][serviceNumber][milestoneNumber].result;
     }
 
-    function getConflictStatus(uint256 projectid, uint256 serviceid, uint256 milestoneid) public view returns (ConflictStatus) {
-        return conflicts[projectid][serviceid][milestoneid].conflictstatus;
+    function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (ConflictStatus) {
+        return conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus;
     }
 
-    function getVotesCollected(uint256 projectid, uint256 serviceid, uint256 milestoneid) public view returns (uint256) {
-        return conflicts[projectid][serviceid][milestoneid].votescollected;
+    function getVotesCollected(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflicts[projectNumber][serviceNumber][milestoneNumber].votesCollected;
     }
 
-    function getVotesforRequester(uint256 projectid, uint256 serviceid, uint256 milestoneid) public view returns (uint256) {
-        return conflicts[projectid][serviceid][milestoneid].votesforRequester;
+    function getVotesforRequester(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflicts[projectNumber][serviceNumber][milestoneNumber].requesterVotes;
     }
 
-    function getVotesforProvider(uint256 projectid, uint256 serviceid, uint256 milestoneid) public view returns (uint256) {
-        return conflicts[projectid][serviceid][milestoneid].votesforProvider;
+    function getVotesforProvider(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflicts[projectNumber][serviceNumber][milestoneNumber].providerVotes;
     }
 
 }

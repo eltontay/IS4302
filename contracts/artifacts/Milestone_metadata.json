@@ -6,7 +6,13 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "contract Conflict",
+						"name": "conflictContract",
+						"type": "address"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -34,13 +40,13 @@
 					{
 						"indexed": false,
 						"internalType": "string",
-						"name": "titleMilestone",
+						"name": "title",
 						"type": "string"
 					},
 					{
 						"indexed": false,
 						"internalType": "string",
-						"name": "descriptionMilestone",
+						"name": "description",
 						"type": "string"
 					}
 				],
@@ -96,13 +102,13 @@
 					{
 						"indexed": false,
 						"internalType": "string",
-						"name": "titleMilestone",
+						"name": "title",
 						"type": "string"
 					},
 					{
 						"indexed": false,
 						"internalType": "string",
-						"name": "descriptionMilestone",
+						"name": "description",
 						"type": "string"
 					}
 				],
@@ -123,12 +129,12 @@
 					},
 					{
 						"internalType": "string",
-						"name": "titleMilestone",
+						"name": "title",
 						"type": "string"
 					},
 					{
 						"internalType": "string",
-						"name": "descriptionMilestone",
+						"name": "description",
 						"type": "string"
 					}
 				],
@@ -176,15 +182,49 @@
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
-					},
+					}
+				],
+				"name": "readMilestone",
+				"outputs": [
 					{
 						"internalType": "string",
-						"name": "titleMilestone",
+						"name": "",
 						"type": "string"
 					},
 					{
 						"internalType": "string",
-						"name": "descriptionMilestone",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
 						"type": "string"
 					}
 				],
@@ -221,12 +261,20 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Milestone.sol": {
-			"keccak256": "0x6af815ded6d33361c74017d15ea3215524d0dcee29ccc20a99a487f916d3ec7e",
+		"contracts/Conflict.sol": {
+			"keccak256": "0xe211fe28d6b30bc047cd6855827326278ca9f806cf9423f5b890e5859bbcae52",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9c2efd139474608c51a6cb8493d8b1ee0b55e117b6b5bb1fb00ba75b0e3980ee",
-				"dweb:/ipfs/QmcStKiMpTFzqSKYV71n4SGNu5kMa28iDH7cxv9GQ77r1F"
+				"bzz-raw://e3f9933221ce84a104883f81b81bc32e7e617057994ae9dd1347c484fda06443",
+				"dweb:/ipfs/Qmc4Swqjve6jiVYHaAt8RfcXF6vkM9WoJ82N56YLcCY2jS"
+			]
+		},
+		"contracts/Milestone.sol": {
+			"keccak256": "0x91b35040bdab97382814313dae794a0688ed1de837f37f144ded52071dafb30d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://63f46ccb26f2b5e3fecfb04fa4e023fa8ac4bb8cacffff6c6ccf9173cdc52542",
+				"dweb:/ipfs/QmYh7ntAoWLMbXrQWkUVmRfQNk8bugyUPUUJbBUon67LK4"
 			]
 		}
 	},

@@ -36,7 +36,7 @@ contract Service {
 /*
     Events - Service Requester (Project Owner)
 */
-    event serviceRequested(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
+    event serviceCreated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
     event serviceUpdated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
     event serviceDeleted(uint256 projectNumber, uint256 serviceNumber);
 
@@ -66,15 +66,28 @@ contract Service {
 */
 
     /*
-        Service - Request
+        Service - Create
     */
 
-    function requestService(uint256 projectNumber, string memory title, string memory description, uint256 price) public requiredString(title) requiredString(description) {        
+    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public requiredString(title) requiredString(description) {        
         require(price > 0, "A Service Price must be specified");
         uint256 serviceNumber = projectServices[projectNumber].length + 1;     
         service memory newService = service(projectNumber,serviceNumber,title,description,price,0,msg.sender,address(0),true,Status.none);
         projectServices[projectNumber].push(newService);    
-        emit serviceRequested(projectNumber, serviceNumber, title, description, price);
+        emit serviceCreated(projectNumber, serviceNumber, title, description, price);
+    }
+
+    /*
+        Service - Read 
+    */
+
+    function readService(uint256 projectNumber, uint256 serviceNumber) public view returns (string memory , string memory, uint256 , uint256 ) {
+        return (
+            projectServices[projectNumber][serviceNumber].title,
+            projectServices[projectNumber][serviceNumber].description,
+            projectServices[projectNumber][serviceNumber].price,
+            projectServices[projectNumber][serviceNumber].currentMilestone
+        );
     }
 
     /*
@@ -97,12 +110,19 @@ contract Service {
     }
 
     /*
-        Milestone - Add
+        Milestone - Create
     */
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
         milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
     }
 
+    /*
+        Milestone - Read
+    */   
+    function readMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (string memory , string memory ) {
+        milestone.readMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }
+    
     /*
         Milestone - Update
     */
