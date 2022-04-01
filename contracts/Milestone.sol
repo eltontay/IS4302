@@ -19,7 +19,7 @@ contract Milestone {
         Status status; // Defaults at none
     }
 
-    mapping (uint256 => milestone[][]) servicesMilestones; // [projectNumber][serviceNumber][milestoneNumber]
+    mapping (uint256 => mapping(uint256 => milestone[])) servicesMilestones; // [projectNumber][serviceNumber][milestoneNumber]
 
     event milestoneCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string titleMilestone, string descriptionMilestone);
     event milestoneUpdated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string titleMilestone, string descriptionMilestone);

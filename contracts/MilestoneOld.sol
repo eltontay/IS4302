@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 // import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract Milestone {
+contract MilestoneOld {
 
     enum Status { none, pending, approved, started, completed, verified, conflict}
 
