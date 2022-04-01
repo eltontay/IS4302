@@ -75,7 +75,10 @@ contract Project {
     */
 
     function readProject(uint256 projectNumber) public view returns (string memory , string memory) {
-        return (projects[projectNumber].title, projects[projectNumber].description);
+        return (
+            projects[projectNumber].title, 
+            projects[projectNumber].description
+        );
     }
 
     /*
@@ -102,13 +105,12 @@ contract Project {
         emit projectDeleted(projectNumber, msg.sender);
     }
 
-
     /*
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public onlyOwner(projectNumber,msg.sender) {
-        service.createService(projectNumber,title,description,price);
+    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public {
+        service.createService(projectNumber,title,description,price,payable(msg.sender));
     }
 
     /*
@@ -123,7 +125,7 @@ contract Project {
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) public onlyOwner(projectNumber,msg.sender) {
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) public {
         service.updateService(projectNumber,serviceNumber,title,description,price);
     }
 
@@ -131,7 +133,7 @@ contract Project {
         Service - Delete
     */
 
-    function deleteService(uint256 projectNumber, uint256 serviceNumber) public onlyOwner(projectNumber, msg.sender) {
+    function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
         service.deleteService(projectNumber,serviceNumber);
     }
 
@@ -139,7 +141,7 @@ contract Project {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public onlyOwner(projectNumber, msg.sender) {
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
         service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
     }
 
@@ -155,15 +157,15 @@ contract Project {
         Milestone - Update
     */
 
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public onlyOwner(projectNumber, msg.sender) {
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public {
         service.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
     }
 
     /*
         Milestone - Delete
     */ 
-    
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public onlyOwner(projectNumber, msg.sender) {
+
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
         service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
     }    
 

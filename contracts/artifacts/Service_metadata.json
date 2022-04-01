@@ -158,6 +158,11 @@
 						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "projectOwner",
+						"type": "address"
 					}
 				],
 				"name": "createService",
@@ -280,6 +285,32 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "serviceNum",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "serviceTotal",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -382,11 +413,11 @@
 			]
 		},
 		"contracts/Conflict.sol": {
-			"keccak256": "0xe211fe28d6b30bc047cd6855827326278ca9f806cf9423f5b890e5859bbcae52",
+			"keccak256": "0x3564d44be2fcbf285287a0e769e82ce931c108e32c934244666e92fd5df06a8c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e3f9933221ce84a104883f81b81bc32e7e617057994ae9dd1347c484fda06443",
-				"dweb:/ipfs/Qmc4Swqjve6jiVYHaAt8RfcXF6vkM9WoJ82N56YLcCY2jS"
+				"bzz-raw://202649c07e0cdc02cebc1630df931f6b7d53891f43d802b6fb7f0fac8b197fa4",
+				"dweb:/ipfs/QmdoJevLyCe3D7JpoxQ4Avs8R76LjGkz8obFX58UnNk3N8"
 			]
 		},
 		"contracts/Milestone.sol": {
@@ -398,11 +429,11 @@
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0x5d7e8ca3a63187ea0c11a553d89209bfeb85b1e9382525e76525453e228c88ce",
+			"keccak256": "0x3b5e3e82bfdeca29e065d091d460219d8d31b149667a3a08cdd100cbe9a41416",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fdf802723e9111903da0848ef767c0dd2febae0c6eae0d991e58f3f87fbf9d0f",
-				"dweb:/ipfs/QmaFxvFhaCiXR9i7LaHNDJ1hmkqNpFweQYCnupjkeKcCSC"
+				"bzz-raw://e0de2c1b951ce971bceeb22b91af4fc5048571036650d3e7f42855383a185b84",
+				"dweb:/ipfs/QmNVVVrXxocG2zbXwVHEoiEYzijLtXC29cxyptozYYj5Fy"
 			]
 		}
 	},

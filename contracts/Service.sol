@@ -27,8 +27,8 @@ contract Service {
         string description;
         uint256 price;
         uint256 currentMilestone; // Defaults to 0 milestone
-        address serviceRequester; // msg.sender
-        address serviceProvider; // defaults to address(0)
+        address payable serviceRequester; // msg.sender
+        address payable serviceProvider; // defaults to address(0)
         bool exist; // allowing update such as soft delete of service
         Status status; // Defaults at none
     }
@@ -40,7 +40,11 @@ contract Service {
     event serviceUpdated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
     event serviceDeleted(uint256 projectNumber, uint256 serviceNumber);
 
-    mapping (uint256 => service[]) projectServices; // [projectNumber][serviceNumber]
+
+    uint256 public serviceTotal = 0; // Counts of number of services existing , only true exist bool
+    uint256 public serviceNum = 0; // Project Number/ID , value only goes up, includes both true and false exist bool
+    mapping (uint256 => mapping (uint256 => service)) projectServices; // [projectNumber][serviceNumber] 
+
 
 /*
     Modifiers
@@ -69,19 +73,32 @@ contract Service {
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public requiredString(title) requiredString(description) {        
+    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price, address payable projectOwner) external requiredString(title) requiredString(description) {        
         require(price > 0, "A Service Price must be specified");
-        uint256 serviceNumber = projectServices[projectNumber].length + 1;     
-        service memory newService = service(projectNumber,serviceNumber,title,description,price,0,msg.sender,address(0),true,Status.none);
-        projectServices[projectNumber].push(newService);    
-        emit serviceCreated(projectNumber, serviceNumber, title, description, price);
+
+        service storage newService = projectServices[projectNumber][serviceNum];
+        newService.projectNumber = projectNumber;
+        newService.serviceNumber = serviceNum;
+        newService.title = title;
+        newService.description = description;
+        newService.price = price;
+        newService.currentMilestone = 0;
+        newService.serviceRequester = projectOwner;
+        newService.serviceProvider = payable(address(0));
+        newService.exist = true;
+        newService.status = Status.none;
+
+        emit serviceCreated(projectNumber, serviceNum, title, description, price);
+
+        serviceTotal++;
+        serviceNum++;
     }
 
     /*
         Service - Read 
     */
 
-    function readService(uint256 projectNumber, uint256 serviceNumber) public view returns (string memory , string memory, uint256 , uint256 ) {
+    function readService(uint256 projectNumber, uint256 serviceNumber) external view returns (string memory , string memory , uint256 , uint256 ) {
         return (
             projectServices[projectNumber][serviceNumber].title,
             projectServices[projectNumber][serviceNumber].description,
@@ -94,9 +111,11 @@ contract Service {
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) public {
-        service memory newService = service(projectNumber,serviceNumber,title,description,price,0,msg.sender,address(0),true,Status.none);
-        projectServices[projectNumber][serviceNumber] = newService;
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) external {
+
+        projectServices[projectNumber][serviceNum].title = title;
+        projectServices[projectNumber][serviceNum].description = description;
+        projectServices[projectNumber][serviceNum].price = price;
 
         emit serviceUpdated(projectNumber, serviceNumber, title, description, price);
     }
@@ -104,36 +123,38 @@ contract Service {
     /*
         Service - Delete
     */
-    function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
+    function deleteService(uint256 projectNumber, uint256 serviceNumber) external {
         projectServices[projectNumber][serviceNumber].exist = false;
+
+        serviceTotal--;
         emit serviceDeleted(projectNumber,serviceNumber);
     }
 
     /*
         Milestone - Create
     */
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) external {
         milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
     }
 
     /*
         Milestone - Read
     */   
-    function readMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (string memory , string memory ) {
+    function readMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (string memory , string memory ) {
         milestone.readMilestone(projectNumber,serviceNumber,milestoneNumber);
     }
     
     /*
         Milestone - Update
     */
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public {
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) external {
         milestone.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
     }
 
     /*
         Milestone - Delete
     */
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {        
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {        
         milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
     }
 
