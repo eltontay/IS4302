@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-// import "./Service.sol";
+import "./States.sol";
 
 // Vote 1 for Service Requester, Vote 2 for Service Provider 
 // Each milestone can hold one conflict
 
 contract Conflict {
-
-    enum ConflictStatus { none, pending, completed }
 
     struct conflict {
         uint256 projectNumber;
@@ -17,7 +15,7 @@ contract Conflict {
         string description;
         address serviceRequester; // Project Owner
         address serviceProvider; 
-        ConflictStatus conflictstatus;
+        States.ConflictStatus conflictStatus;
         uint256 voters;
         uint256 votesCollected;
         uint256 requesterVotes;
@@ -51,7 +49,7 @@ contract Conflict {
         newConflict.description = description;
         newConflict.serviceRequester = serviceRequester;
         newConflict.serviceProvider = serviceProvider;
-        newConflict.conflictstatus = ConflictStatus.pending;
+        newConflict.conflictStatus = States.ConflictStatus.pending;
         newConflict.voters = totalVoters;
         newConflict.votesCollected = 0;
         newConflict.requesterVotes = 0;
@@ -61,7 +59,7 @@ contract Conflict {
 
         emit conflictCreated(projectNumber, serviceNumber, milestoneNumber, serviceRequester, serviceProvider, totalVoters);
     }
-    
+
     /*
         Conflict - Update
     */
@@ -103,7 +101,7 @@ contract Conflict {
         if (C.votesCollected == C.voters) {
             if (C.providerVotes > C.requesterVotes) {C.result = 2; }
             else {C.result = 1;} //if there is tie vote, service Requester will win the vote
-            C.conflictstatus = ConflictStatus.completed;
+            C.conflictStatus = States.ConflictStatus.completed;
 
             emit conflictResult(projectNumber, serviceNumber, milestoneNumber, C.result);
         }
@@ -118,13 +116,13 @@ contract Conflict {
 
     function getResults(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint) {
         require(conflicts[projectNumber][serviceNumber][milestoneNumber].votesCollected == conflicts[projectNumber][serviceNumber][milestoneNumber].voters, "Not everyone has voted, please prompt all other members of project to vote");
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus == ConflictStatus.completed, "Voting has not been completed yet. Please wait for it to end.");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus == States.ConflictStatus.completed, "Voting has not been completed yet. Please wait for it to end.");
 
         return conflicts[projectNumber][serviceNumber][milestoneNumber].result;
     }
 
-    function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (ConflictStatus) {
-        return conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus;
+    function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (States.ConflictStatus) {
+        return conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus;
     }
 
     function getVotesCollected(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {

@@ -239,7 +239,7 @@
 				"name": "getConflictStatus",
 				"outputs": [
 					{
-						"internalType": "enum Conflict.ConflictStatus",
+						"internalType": "enum States.ConflictStatus",
 						"name": "",
 						"type": "uint8"
 					}
@@ -458,11 +458,19 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0xb135254f48bc99bdf59a62fa71af178ff8bdf56d2873180c3ac12ba39aef00bb",
+			"keccak256": "0xa4f3b4f87575e451e90f5dcdadf6b729dc65ee7c6db4292034c0f2c4d2a242af",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e9f6c3f337ce97f857ba3fbc1768102c9edc2c7a3eb6319d60152004b4ac2970",
-				"dweb:/ipfs/QmSwnxc9KUWYqWPFiKKpFhTKc8mcrfQd9xAHkxmRXx5mgA"
+				"bzz-raw://d744fca72c1e2df80b9506dd96df0ed67c3c34ac55a70d9d4796fb4b6704bf75",
+				"dweb:/ipfs/Qmcf2NAUNrSwYK9wJA3Qr25gzZLyUehA6TVQp8JxNLxPUq"
+			]
+		},
+		"contracts/States.sol": {
+			"keccak256": "0x0f04e3b703dbf6b4fd03e30aad9e3ddf9ad75ecced73fe97cd5662cbe1a6b5de",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6709c83014008e352fb619f51be0cf600516990fd8b3149ae62d515ce0df05a7",
+				"dweb:/ipfs/Qme33kY2vEuGN56z43Bdbj4Csdt4UG3k6RKhzSgnyXzTJt"
 			]
 		}
 	},

@@ -122,8 +122,35 @@ contract Milestone {
     /*
         Conflict - Vote
     */
+
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
         conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
+
+/*
+    Getter Helper Functions
+*/
+
+    function getResults(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint) {
+        return conflict.getResults(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns ( ConflictStatus ) {
+        return conflict.getConflictStatus(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    function getVotesCollected(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflict.getVotesCollected(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    function getVotesforRequester(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflict.getVotesforRequester(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    function getVotesforProvider(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflict.getVotesforProvider(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+
 }
 

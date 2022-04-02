@@ -169,11 +169,36 @@ contract Project {
     }    
 
     /*
-        Conflict - 
+        Conflict - Create
+    */ 
+    
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
+        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+    }
+
+    /*
+        Conflict - Update
     */
 
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        service.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
+    }
 
+    /*
+        Conflict - Delete
+    */ 
 
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        service.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Vote
+    */
+    
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
+        service.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+    }
 
 /*
     Getter Helper Functions

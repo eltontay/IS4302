@@ -110,6 +110,54 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceRequester",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceProvider",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalVoters",
+						"type": "uint256"
+					}
+				],
+				"name": "createConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
 						"internalType": "string",
 						"name": "titleMilestone",
 						"type": "string"
@@ -167,6 +215,29 @@
 					}
 				],
 				"name": "createService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteConflict",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -361,6 +432,39 @@
 					},
 					{
 						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "updateConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
 						"name": "titleMilestone",
 						"type": "string"
 					},
@@ -430,6 +534,39 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "vote",
+						"type": "uint8"
+					}
+				],
+				"name": "voteConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -468,35 +605,35 @@
 			]
 		},
 		"contracts/Conflict.sol": {
-			"keccak256": "0xc9dd7a1cd26c2d4221667d7e011edeab9a12ad199f34ed92b0715eb215fd8f00",
+			"keccak256": "0xb135254f48bc99bdf59a62fa71af178ff8bdf56d2873180c3ac12ba39aef00bb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fca039af1f86dd2d93221a2564b3db18f8feaf073d45e082ce5c26eebb2373ee",
-				"dweb:/ipfs/QmNqoa1ERVjn5e9dVaL2cMz5xTh616xgz7qHwiS1RFXd8f"
+				"bzz-raw://e9f6c3f337ce97f857ba3fbc1768102c9edc2c7a3eb6319d60152004b4ac2970",
+				"dweb:/ipfs/QmSwnxc9KUWYqWPFiKKpFhTKc8mcrfQd9xAHkxmRXx5mgA"
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0x7391d444251410ab1e54a8db6bb2989fdbf62b90d5aeff3735c709c774e8c4ba",
+			"keccak256": "0x0cafc60032cded0ca3c68fe330269276c09ccb51376a9c3e8c18fe285aa9d771",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://150b82778f9030f4a8848efc64268c9bb873542449e4dc86f062bfdcb62f5271",
-				"dweb:/ipfs/QmUG5C4oJ8WCCvrRH7ueoqUJ6qPQ21y9JYv9xei9YhhrND"
+				"bzz-raw://974de9caff3faabc82921549b9f1d928143fa558b0ad33f7338ec5d5c792698d",
+				"dweb:/ipfs/QmXyN1BBmKMDncXqRPL6wcyZWQaD2BAib8EfhvYqhDtqRY"
 			]
 		},
 		"contracts/Project.sol": {
-			"keccak256": "0x81860e171a045c1479c2760519cb02bb83cb7b3e5e9112b135ca0a18c6e39053",
+			"keccak256": "0x8db0a42228e377cc60b5b9c49ef2b36b62a4691797bef59999ad482d26f5057d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b8a87dd97a8667a7c7723d63b120f24996d9728eb17801670f2c37c5caa65be7",
-				"dweb:/ipfs/Qme1ugHVufax9X5ir3aFTZhPuxDmutiwnXsHwz4q3Nncbo"
+				"bzz-raw://4345238f687007c9544ed481c973b341c37d0145d0bd645da9b6768fff11e6c7",
+				"dweb:/ipfs/QmXbeLmYjKx9TTnR5KFgTm2ye9ULA9qSPFTW3wCPuN28pe"
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0xdd6c01457c14442fcefd17cfeaeaaae7e1c6a3445c46dd1634b4d775fa5b03ab",
+			"keccak256": "0xa1421aad3c0790ef51d74b8e2136a938e76324bc0f8990c2f141d9db139821d5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ff6fc5bbebcc10c39028bf9ad56243ad5628a104e240d144d972c252f4bcc023",
-				"dweb:/ipfs/QmTbP7tK1uJQTwMpTH6zHUKvB1aUK6XgMpvXARFEXcjBZW"
+				"bzz-raw://366be31a341e3e4b64c3bbd30b21919b994825ec8be1de294b6d0eb7cdf9d140",
+				"dweb:/ipfs/QmTLrLqzUns1M8MH4M5dvwueX7TcRj3wmwu2hwCUTuf9iq"
 			]
 		}
 	},

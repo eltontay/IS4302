@@ -155,4 +155,35 @@ contract Service {
         milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
     }
 
+    /*
+        Conflict - Create
+    */ 
+    
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
+        milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+    }
+
+    /*
+        Conflict - Update
+    */
+
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        milestone.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
+    }
+
+    /*
+        Conflict - Delete
+    */ 
+
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        milestone.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Vote
+    */
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
+        milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+    }
+
 }
