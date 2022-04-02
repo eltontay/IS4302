@@ -19,7 +19,7 @@ contract Project {
         uint256 projectNumber; 
         string title;
         string description;
-        address projectOwner; // defaults to address(0)
+        address projectOwner; // defaults to address(0) , service requester
         bool exist; // allowing update such as soft delete of project - projectNum
         States.ProjectStatus projectstatus;
     }
@@ -103,6 +103,9 @@ contract Project {
         projectTotal --;
         emit projectDeleted(projectNumber, msg.sender);
     }
+
+// finish project function
+
 
     /*
         Service - Create

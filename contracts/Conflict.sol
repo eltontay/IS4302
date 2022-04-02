@@ -20,7 +20,7 @@ contract Conflict {
         uint256 votesCollected;
         uint256 requesterVotes;
         uint256 providerVotes;
-        bool exist;
+        bool exist; // soft delete , default is false. 
         uint8 result;
         mapping(address => uint8) votes;
     }
@@ -33,6 +33,8 @@ contract Conflict {
     event conflictRaised(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceProvider);
     event conflictVoted(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address voter, uint8 vote);
     event conflictResult(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 result);
+
+// modifier -> need to check flag for exist == true (needs to be done)
 
     /*
         Conflict - Create

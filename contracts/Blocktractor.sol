@@ -4,6 +4,29 @@ import "./Profile.sol";
 import "./Project.sol";
 import "./States.sol";
 
+// Review -> Profile -> Blocktractor
+// Conflict -> Milestone -> Service -> Project -> Blocktractor 
+
+// Payments in blocktractor also needs to be done.
+
+
+
+// WorkFlow 1
+// Step 1 : Create Profile
+// Step 2 : Create Project -- Project Owner (Service Requester)
+// Step 3 : Create Service(s) -- Project Owner (Service Requester)
+// Step 4 : Create Milestone(s) for each Service(s) -- Project Owner (Service Requester)
+
+// WorkFlow 2
+// Step 1 : Finish Project
+// Step 2 : Review Profile
+
+// Workflow 3
+// Step 1 : Finish Milestone -- Service Provider
+// Step 2 : Create Conflict -- Project Owner (Service Requester)
+
+// Once all completed, come together then do payments
+
 contract Blocktractor {
 
     Profile profileContract;
@@ -22,6 +45,14 @@ contract Blocktractor {
 /*
     Modifiers
 */
+
+
+// function in blocktractor , first filters out using a function from project to see if it is completed, enum status,
+// only then allows person to review the profile.
+
+// function 1 : Project 
+// function 2 : Review Profile in Review
+
 
    /*
         Project - Create 
@@ -43,7 +74,7 @@ contract Blocktractor {
         Project - Update 
     */
     
-    function updateProject(uint256 projectNumber, string memory title, string memory description) public onlyOwner(projectNumber,msg.sender) {
+    function updateProject(uint256 projectNumber, string memory title, string memory description) public  {
         project.updateProject(projectNumber,title,decription);
     }
 
@@ -51,7 +82,7 @@ contract Blocktractor {
         Project - Delete 
     */
     
-    function deleteProject(uint256 projectNumber) public onlyOwner(projectNumber,msg.sender) {
+    function deleteProject(uint256 projectNumber) public {
         project.deleteProject(projectNumber);
     }
 
@@ -158,9 +189,5 @@ contract Blocktractor {
     function getProjectOwner(uint256 projectId) public view returns(address) {
         return projects[projectId].projectOwner;
     }
-
-}
-
-
 
 }

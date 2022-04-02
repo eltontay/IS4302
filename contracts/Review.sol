@@ -38,6 +38,8 @@ contract Review {
 
     }
 
+    // mapping (address => mapping (uint256 => review))    [address][1] -> review1 , [address][2] -> review2
+
     mapping (address => review[]) serviceProviderReviews; // list of reviews received for each profile for each service provided (review id, milestone completed, star rating out of 5)
     mapping (address => review[]) serviceRequesterReviews; // list of reviews received for each profile for each service received (review id, milestone completed, star rating out of 5)
 

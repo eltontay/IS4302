@@ -621,11 +621,11 @@
 			]
 		},
 		"contracts/Project.sol": {
-			"keccak256": "0xfd5153e7fc18c680b96c3520066990e38f59ab7f3929ac00c2a67ec15609721e",
+			"keccak256": "0x72d41112cfbe58bf9973527ffaaa99241ee6cca4bc3324bd7974c74374b0c9aa",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7c4c9f0352eaee49efc87316878772610b94e2c672acd4925fecf5a203ba8fb9",
-				"dweb:/ipfs/QmYh5eTjS3PiinEqrhHzNN2CKy945WEHFebPsyoqvnKu1C"
+				"bzz-raw://20caab2c8e55be890b2d44054e03af47e432b0ae74f07d620beae62fdc58e8bd",
+				"dweb:/ipfs/QmRexP8P4sJJncpjyk7jBrwUmZHQJ9rG19NHjhHywzQ99v"
 			]
 		},
 		"contracts/Service.sol": {
