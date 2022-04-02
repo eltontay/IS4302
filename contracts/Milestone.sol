@@ -1,124 +1,120 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-// import "@openzeppelin/contracts/utils/Strings.sol";
+import "./Conflict.sol";
+import "./States.sol";
 
-contract Milestones {
+contract Milestone {
 
-    enum Status { none, pending, approved, started, completed, verified }
+    Conflict conflict;
+
+    constructor (Conflict conflictContract) public {
+        conflict = conflictContract;
+    }
 
     struct milestone {
-        string milestoneTitle;
-        string milestoneDescription;
-        // bool exist; // allowing updates such as soft delete of milestone   
-        Status status; // Defaults at none
+        uint256 projectNumber;
+        uint256 serviceNumber;
+        uint256 milestoneNumber;
+        string title;
+        string description;
+        bool exist; // allowing updates such as soft delete of milestone   
+        States.MilestoneStatus status; // Defaults at none
     }
 
-    mapping (uint256 => milestone[]) milestones; // indexed mapping of services to multiple milestones
+    mapping (uint256 => mapping(uint256 => mapping(uint256 => milestone))) servicesMilestones; // [projectNumber][serviceNumber][milestoneNumber]
 
-    event milestoneStatusChanged(uint256 serviceNumber, uint256 milestoneNumber, Status statusBefore, Status statusAfter);
-    event milestoneCreated(uint256 serviceNumber, milestone newMilestone, uint256 numMilestones);
-    event milestoneUpdated(uint256 serviceNumber, uint256 milestoneNumber, milestone newMilestone, milestone oldMilestone);
-    event milestoneDeleted(uint256 serviceNumber, uint256 milestoneNumber, milestone milestoneDeleted, uint256 numMilestones);
-    event milestoneCompleted(uint256 serviceNumber, uint256 milestoneNumber);
+    event milestoneCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string title, string description);
+    event milestoneUpdated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string title, string description);
+    event milestoneDeleted(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber);
 
-    modifier doMilestonesExist(uint256 serviceNumber) {
-        require(milestones[serviceNumber].length != 0, "Milestones have not been created yet");
-        _;
-    }
+    uint256 milestoneTotal = 0;
+    uint256 milestoneNum = 0;
 
-    modifier doSpecificMilestoneExist(uint256 serviceNumber, uint256 numMilestone) {        
-        require(numMilestone < milestones[serviceNumber].length, "Milestone number out of range");
-        _;
-    }
-
-
-
+/*
+    Modifiers
+*/
 
 /*
     CUD Milestones
 */
 
-    // Create Milestones 
-    // can only be called externally 
-    function createMilestone(uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) external {
-        milestone memory newMilestone = milestone(titleMilestone, descriptionMilestone, Status.pending);
-        milestones[serviceNumber].push(newMilestone);
+    /*
+        Milestone - Create
+    */
 
-        emit milestoneCreated(serviceNumber, newMilestone, milestones[serviceNumber].length);
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external {
+
+        milestone storage newMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNum];
+        newMilestone.projectNumber = projectNumber;
+        newMilestone.serviceNumber = serviceNumber;
+        newMilestone.milestoneNumber = milestoneNum;
+        newMilestone.title = title;
+        newMilestone.description = description;
+        newMilestone.exist = true;
+        newMilestone.status = States.MilestoneStatus.none;
+
+        emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
+
+        milestoneTotal++;
+        milestoneNum++;
+
     }
 
-    // Updating Milestone 
-    // edits both title and description
-    function updateMilestone(uint256 serviceNumber, uint256 milestoneNum, string memory titleMilestone, string memory descriptionMilestone) external doMilestonesExist(serviceNumber) {
-        milestone memory newMilestone = milestone(titleMilestone, descriptionMilestone, Status.pending);
-        milestone memory oldMilestone = milestones[serviceNumber][milestoneNum];
+    /*
+        Milestone - Read 
+    */
 
-        milestones[serviceNumber][milestoneNum] = newMilestone;
-
-        emit milestoneUpdated(serviceNumber, milestoneNum, newMilestone, oldMilestone);
+    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (string memory) {
+        return (servicesMilestones[projectNumber][serviceNumber][milestoneNumber].title);
     }
 
-    // Delete Milestones 
-    // removing milestone by position and moving all milestones down
-    function deleteMilestone(uint256 serviceNumber, uint256 milestoneNum) external doMilestonesExist(serviceNumber) {
-        milestone memory deletedMilestone = milestones[serviceNumber][milestoneNum];
+    /*
+        Milestone - Update
+    */
 
-        for (uint i = milestoneNum; i < milestones[serviceNumber].length-1; i++){
-            milestones[serviceNumber][i] = milestones[serviceNumber][i+1];
-        }
-        milestones[serviceNumber].pop();
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        
+        servicesMilestones[projectNumber][serviceNumber][milestoneNumber].title = title;
+        servicesMilestones[projectNumber][serviceNumber][milestoneNumber].description = description;
 
-        emit milestoneDeleted(serviceNumber, milestoneNum, deletedMilestone, milestones[serviceNumber].length);
+        emit milestoneUpdated(projectNumber, serviceNumber, milestoneNumber, title, description);
     }
 
+    /*
+        Milestone - Delete
+    */ 
 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
 
-/*
-    Status changes functions 
-*/
+        servicesMilestones[projectNumber][serviceNumber][milestoneNumber].exist = false;        
 
-    // Updating Milestone Status to selected function 
-    function updateMilestoneStatus(uint256 serviceNumber, uint256 milestoneNum, Status status) internal doMilestonesExist(serviceNumber) {
-        Status curStatus = milestones[serviceNumber][milestoneNum].status;
-        milestones[serviceNumber][milestoneNum].status = status;
+        milestoneTotal--;
 
-        emit milestoneStatusChanged(serviceNumber, milestoneNum, curStatus, status);
+        emit milestoneDeleted(projectNumber, serviceNumber, milestoneNumber);
     }
 
-    // Updating all Milestones to pending since cancel request is called by Service Requester
-    function updateAllMilestonePending(uint256 serviceNumber) external {
-        for (uint i = 0; i < milestones[serviceNumber].length; i++){
-            updateMilestoneStatus(serviceNumber, i, Status.pending);
-        }
+    /*
+        Conflict - Create
+    */ 
+    
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
+        conflict.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
     }
 
-    // Updating Milestone status to approved
-    function updateMilestoneApproved(uint256 serviceNumber, uint256 milestoneNum) external doMilestonesExist(serviceNumber) {
-        updateMilestoneStatus(serviceNumber, milestoneNum, Status.approved);
+    /*
+        Conflict - Update
+    */
+
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        conflict.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
     }
 
-    // Updating Milestone status to started
-    function updateMilestoneStarted(uint256 serviceNumber, uint256 milestoneNum) external doMilestonesExist(serviceNumber) {
-        updateMilestoneStatus(serviceNumber, milestoneNum, Status.started);
-    }
+    /*
+        Conflict - Delete
+    */ 
 
-    // Updating Milestone status to completed
-    function updateMilestoneCompleted(uint256 serviceNumber, uint256 milestoneNum) external doMilestonesExist(serviceNumber) {
-        updateMilestoneStatus(serviceNumber, milestoneNum, Status.completed);
-    }
-
-    // Updating Milestone status to completed
-    function updateMilestoneVerified(uint256 serviceNumber, uint256 milestoneNum) external doMilestonesExist(serviceNumber) {
-        updateMilestoneStatus(serviceNumber, milestoneNum, Status.verified);
-    }
-
-
-
-/*
-    Getter Functions 
-*/
-
+<<<<<<< HEAD
     // Get All Milestone 
     function getAllMilestone(uint256 serviceNumber) public view doMilestonesExist(serviceNumber) returns (milestone[] memory) {
         return milestones[serviceNumber];
@@ -150,47 +146,44 @@ contract Milestones {
     }
 
 
+=======
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        conflict.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Vote
+    */
+
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
+        conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+    }
+
+>>>>>>> 19bd70d1ac482f65ba5ab3ecda873ce550121073
 /*
-    Checker Functions 
+    Getter Helper Functions
 */
 
-    // Chekc if all Milestone status matches
-    function checkAllMilestoneStatusMatch(uint256 serviceNumber, Status state) internal view returns (bool) {
-        for (uint256 i = 0; i < milestones[serviceNumber].length; i++) {
-            if (milestones[serviceNumber][i].status != state) {
-                return false;
-            }
-        }
-        return true;
+    function getResults(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint) {
+        return conflict.getResults(projectNumber,serviceNumber,milestoneNumber);
     }
 
-    // Check if at least one Milestone is created
-    function checkMinMilestoneCreated(uint256 serviceNumber) public view returns (bool) {
-        return milestones[serviceNumber].length != 0;
+    function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns ( States.ConflictStatus ) {
+        return conflict.getConflictStatus(projectNumber,serviceNumber,milestoneNumber);
     }
 
-    // Check if Milestone status corresponds
-    function checkMilestoneStatus(uint256 serviceNumber, uint256 milestoneNumber, uint8 status) public view returns (bool) {
-        return uint8(milestones[serviceNumber][milestoneNumber].status) == status;
+    function getVotesCollected(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflict.getVotesCollected(projectNumber,serviceNumber,milestoneNumber);
     }
 
-    //Check if all Milestone status are approved
-    function checkAllMilestoneApproved(uint256 serviceNumber) public view returns (bool) {
-        return checkAllMilestoneStatusMatch(serviceNumber, Status.approved);
+    function getVotesforRequester(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflict.getVotesforRequester(projectNumber,serviceNumber,milestoneNumber);
     }
 
-    //Check if all Milestone status are completed
-    function checkAllMilestoneCompleted(uint256 serviceNumber) public view returns (bool) {
-        return checkAllMilestoneStatusMatch(serviceNumber, Status.completed);
+    function getVotesforProvider(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return conflict.getVotesforProvider(projectNumber,serviceNumber,milestoneNumber);
     }
-
-    //Check if all Milestone status are verified
-    function checkAllMilestoneVerified(uint256 serviceNumber) public view returns (bool) {
-        return checkAllMilestoneStatusMatch(serviceNumber, Status.verified);
-    }
-
 
 
 }
-
 

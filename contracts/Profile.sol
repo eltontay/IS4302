@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+// take in review
+// changes need to be made from review
+
 contract Profile {
 
     // The main structure of the profile
@@ -10,7 +13,10 @@ contract Profile {
         string password;
         address owner;
         bool created;
+        // store in review, mapping
     }
+
+    // constructor needs review
 
     event serviceCreated(bool successful);
 
@@ -50,6 +56,5 @@ contract Profile {
             emit serviceCreated(false);
         }
     }
-
 
 }
