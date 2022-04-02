@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 import "./Service.sol";
+import "./States.sol";
 
 /*
     Service Requester (Project Owner)
@@ -13,7 +14,6 @@ contract Project {
         service = serviceContract;
     }
     
-    enum ProjectStatus { none, active, inactive, terminated }
 
     struct project {
         uint256 projectNumber; 
@@ -21,7 +21,7 @@ contract Project {
         string description;
         address projectOwner; // defaults to address(0)
         bool exist; // allowing update such as soft delete of project - projectNum
-        ProjectStatus projectstatus;
+        States.ProjectStatus projectstatus;
     }
 
     uint256 public projectTotal = 0; // Counts of number of projects existing , only true exist bool
@@ -37,7 +37,7 @@ contract Project {
 */
     modifier checkValidProject(uint256 projectNumber) {
         require(projects[projectNumber].exist, "This project has not been created yet. Please create project first");
-        require(projects[projectNumber].projectstatus == ProjectStatus.active, "This project is no longer active.");
+        require(projects[projectNumber].projectstatus == States.ProjectStatus.active, "This project is no longer active.");
         _;
     }
 
@@ -63,7 +63,7 @@ contract Project {
         newProject.description = description;
         newProject.projectOwner = msg.sender;
         newProject.exist = true;
-        newProject.projectstatus = ProjectStatus.active;
+        newProject.projectstatus = States.ProjectStatus.active;
 
         emit projectCreated(projectNum, title, description, msg.sender);
         projectTotal++;
@@ -195,7 +195,7 @@ contract Project {
     /*
         Conflict - Vote
     */
-    
+
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
         service.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }

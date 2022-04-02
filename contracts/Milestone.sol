@@ -2,6 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "./Conflict.sol";
+import "./States.sol";
 
 contract Milestone {
 
@@ -11,8 +12,6 @@ contract Milestone {
         conflict = conflictContract;
     }
 
-    enum Status { none, pending, approved, started, completed, verified, conflict}
-
     struct milestone {
         uint256 projectNumber;
         uint256 serviceNumber;
@@ -20,7 +19,7 @@ contract Milestone {
         string title;
         string description;
         bool exist; // allowing updates such as soft delete of milestone   
-        Status status; // Defaults at none
+        States.MilestoneStatus status; // Defaults at none
     }
 
     mapping (uint256 => mapping(uint256 => mapping(uint256 => milestone))) servicesMilestones; // [projectNumber][serviceNumber][milestoneNumber]
@@ -53,7 +52,7 @@ contract Milestone {
         newMilestone.title = title;
         newMilestone.description = description;
         newMilestone.exist = true;
-        newMilestone.status = Status.none;
+        newMilestone.status = States.MilestoneStatus.none;
 
         emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
 
@@ -135,7 +134,7 @@ contract Milestone {
         return conflict.getResults(projectNumber,serviceNumber,milestoneNumber);
     }
 
-    function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns ( ConflictStatus ) {
+    function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns ( States.ConflictStatus ) {
         return conflict.getConflictStatus(projectNumber,serviceNumber,milestoneNumber);
     }
 

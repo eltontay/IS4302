@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 import "./Milestone.sol";
+import "./States.sol";
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 
@@ -18,8 +19,6 @@ contract Service {
         milestone = milestoneContract;
     }
 
-    enum Status { none, pending, approved, started, completed, conflict }
-
     struct service {
         uint256 projectNumber;
         uint256 serviceNumber;
@@ -30,7 +29,7 @@ contract Service {
         address payable serviceRequester; // msg.sender
         address payable serviceProvider; // defaults to address(0)
         bool exist; // allowing update such as soft delete of service
-        Status status; // Defaults at none
+        States.ServiceStatus status; // Defaults at none
     }
 
 /*
@@ -60,7 +59,7 @@ contract Service {
         _;
     }
 
-    modifier hasServiceStatus(uint256 projectNumber, uint256 serviceNumber, Status state) {
+    modifier hasServiceStatus(uint256 projectNumber, uint256 serviceNumber, States.ServiceStatus state) {
         require(projectServices[projectNumber][serviceNumber].status == state, "The status of this service does not match the intended status.");
         _;
     }
@@ -86,7 +85,7 @@ contract Service {
         newService.serviceRequester = projectOwner;
         newService.serviceProvider = payable(address(0));
         newService.exist = true;
-        newService.status = Status.none;
+        newService.status = States.ServiceStatus.none;
 
         emit serviceCreated(projectNumber, serviceNum, title, description, price);
 
