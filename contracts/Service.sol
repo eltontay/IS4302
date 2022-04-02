@@ -98,12 +98,9 @@ contract Service {
         Service - Read 
     */
 
-    function readService(uint256 projectNumber, uint256 serviceNumber) external view returns (string memory , string memory , uint256 , uint256 ) {
+    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) external view returns (string memory ) {
         return (
-            projectServices[projectNumber][serviceNumber].title,
-            projectServices[projectNumber][serviceNumber].description,
-            projectServices[projectNumber][serviceNumber].price,
-            projectServices[projectNumber][serviceNumber].currentMilestone
+            projectServices[projectNumber][serviceNumber].title
         );
     }
 
@@ -140,8 +137,8 @@ contract Service {
     /*
         Milestone - Read
     */   
-    function readMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (string memory , string memory ) {
-        milestone.readMilestone(projectNumber,serviceNumber,milestoneNumber);
+    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (string memory) {
+        milestone.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
     }
     
     /*

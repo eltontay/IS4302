@@ -184,13 +184,8 @@
 						"type": "uint256"
 					}
 				],
-				"name": "readMilestone",
+				"name": "readMilestoneTitle",
 				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					},
 					{
 						"internalType": "string",
 						"name": "",
@@ -262,19 +257,19 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0x733d300a21ecc764a1e00fa21f4ae7a161006f38ad8a6ec12e886725335a7c4d",
+			"keccak256": "0xc9dd7a1cd26c2d4221667d7e011edeab9a12ad199f34ed92b0715eb215fd8f00",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3424835c34a042cfc4d64e115b5aa97454efc86589e8a5bc596dea6179a717d5",
-				"dweb:/ipfs/QmSdPhFMTnV8Kp2q3cXRuNjd9oZojxWrHhRX7Re5KrFuff"
+				"bzz-raw://fca039af1f86dd2d93221a2564b3db18f8feaf073d45e082ce5c26eebb2373ee",
+				"dweb:/ipfs/QmNqoa1ERVjn5e9dVaL2cMz5xTh616xgz7qHwiS1RFXd8f"
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0x7dd12f9be0ac70515d1a5f596ceb40530e3a4ea9bb32287eab431903fe7affde",
+			"keccak256": "0x7391d444251410ab1e54a8db6bb2989fdbf62b90d5aeff3735c709c774e8c4ba",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://006e55d59a4de159de0ece8b1db76fd1595719dd0d79321bc5ea5d5fbc100733",
-				"dweb:/ipfs/QmdPAK6qw4TBypCMsxcDUDfhGMW18tPHmin284GTv64oUA"
+				"bzz-raw://150b82778f9030f4a8848efc64268c9bb873542449e4dc86f062bfdcb62f5271",
+				"dweb:/ipfs/QmUG5C4oJ8WCCvrRH7ueoqUJ6qPQ21y9JYv9xei9YhhrND"
 			]
 		}
 	},

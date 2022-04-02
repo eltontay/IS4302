@@ -22,7 +22,7 @@ contract Conflict {
         uint256 votesCollected;
         uint256 requesterVotes;
         uint256 providerVotes;
-        bool exists;
+        bool exist;
         uint8 result;
         mapping(address => uint8) votes;
     }
@@ -30,6 +30,7 @@ contract Conflict {
     mapping (uint256 => mapping( uint256 => mapping (uint256 => conflict))) conflicts; // [projectNumber][serviceNumber][milestoneNumber] -> conflict
 
     event conflictCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceRequester, address serviceProvider, uint256 totalVoters);
+    
 
     event conflictRaised(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceProvider);
     event conflictVoted(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address voter, uint8 vote);
@@ -38,8 +39,8 @@ contract Conflict {
     /*
         Conflict - Create
     */
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string title, string description, address serviceRequester, address serviceProvider,  uint256 totalVoters) public {
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].exists != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) public {
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].exist != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
 
         conflict storage newConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
         newConflict.projectNumber = projectNumber;     
@@ -54,7 +55,7 @@ contract Conflict {
         newConflict.votesCollected = 0;
         newConflict.requesterVotes = 0;
         newConflict.providerVotes = 0;    
-        newConflict.exists = true;
+        newConflict.exist = true;
         newConflict.result = 0;
 
         emit conflictCreated(projectNumber, serviceNumber, milestoneNumber, serviceRequester, serviceProvider, totalVoters);
@@ -64,13 +65,8 @@ contract Conflict {
         Conflict - Read
     */
 
-    function readConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (uint256, uint256, uint256, ConflictStatus ) {
-        return (
-        conflicts[projectNumber][serviceNumber][milestoneNumber].projectNumber, 
-        conflicts[projectNumber][serviceNumber][milestoneNumber].serviceNumber,
-        conflicts[projectNumber][serviceNumber][milestoneNumber].milestoneNumber,
-        conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus,
-        );
+    function readConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (ConflictStatus) {
+        return (conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus);
     }
 
     /*
@@ -86,9 +82,7 @@ contract Conflict {
         Conflict - Delete
     */ 
     function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
-
         conflicts[projectNumber][serviceNumber][milestoneNumber].exist = false;        
-
     }
 
 

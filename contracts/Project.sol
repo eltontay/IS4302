@@ -74,10 +74,9 @@ contract Project {
         Project - Read 
     */
 
-    function readProject(uint256 projectNumber) public view returns (string memory , string memory) {
+    function readProjectTitle(uint256 projectNumber) public view returns (string memory) {
         return (
-            projects[projectNumber].title, 
-            projects[projectNumber].description
+            projects[projectNumber].title
         );
     }
 
@@ -117,8 +116,8 @@ contract Project {
         Service - Read
     */
 
-    function readService(uint256 projectNumber, uint256 serviceNumber) public view returns (string memory , string memory, uint256 , uint256 ) {
-        service.readService(projectNumber,serviceNumber);
+    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns (string memory) {
+        service.readServiceTitle(projectNumber,serviceNumber);
     }
 
     /*
@@ -149,8 +148,8 @@ contract Project {
         Milestone - Read
     */   
 
-    function readMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (string memory , string memory ) {
-        service.readMilestone(projectNumber,serviceNumber,milestoneNumber);
+    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (string memory) {
+        service.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
     }
 
     /*
