@@ -44,11 +44,6 @@ contract Milestone {
         Milestone - Create
     */
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external {
-        // uint256 milestoneNumber = servicesMilestones[projectNumber][serviceNumber].length + 1;
-        // milestone memory newMilestone = milestone(projectNumber, serviceNumber, milestoneNumber, title, description, true, Status.pending);
-        // servicesMilestones[projectNumber][serviceNumber].push(newMilestone);
-
-        // emit milestoneCreated(projectNumber, serviceNumber, milestoneNumber, title, description);
 
         milestone storage newMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNum];
         newMilestone.projectNumber = projectNumber;

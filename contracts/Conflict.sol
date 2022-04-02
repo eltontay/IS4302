@@ -3,6 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 // import "./Service.sol";
 
 // Vote 1 for Service Requester, Vote 2 for Service Provider 
+// Each milestone can hold one conflict
 
 contract Conflict {
 
@@ -12,6 +13,8 @@ contract Conflict {
         uint256 projectNumber;
         uint256 serviceNumber;
         uint256 milestoneNumber;
+        string title;
+        string description;
         address serviceRequester; // Project Owner
         address serviceProvider; 
         ConflictStatus conflictstatus;
@@ -26,7 +29,6 @@ contract Conflict {
 
     mapping (uint256 => mapping( uint256 => mapping (uint256 => conflict))) conflicts; // [projectNumber][serviceNumber][milestoneNumber] -> conflict
 
-
     event conflictCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceRequester, address serviceProvider, uint256 totalVoters);
 
     event conflictRaised(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceProvider);
@@ -36,13 +38,15 @@ contract Conflict {
     /*
         Conflict - Create
     */
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceRequester, address serviceProvider,  uint256 totalVoters) public {
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string title, string description, address serviceRequester, address serviceProvider,  uint256 totalVoters) public {
         require(conflicts[projectNumber][serviceNumber][milestoneNumber].exists != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
 
         conflict storage newConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
         newConflict.projectNumber = projectNumber;     
         newConflict.serviceNumber = serviceNumber;        
         newConflict.milestoneNumber = milestoneNumber;
+        newConflict.title = title;
+        newConflict.description = description;
         newConflict.serviceRequester = serviceRequester;
         newConflict.serviceProvider = serviceProvider;
         newConflict.conflictstatus = ConflictStatus.pending;
@@ -60,15 +64,32 @@ contract Conflict {
         Conflict - Read
     */
 
+    function readConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (uint256, uint256, uint256, ConflictStatus ) {
+        return (
+        conflicts[projectNumber][serviceNumber][milestoneNumber].projectNumber, 
+        conflicts[projectNumber][serviceNumber][milestoneNumber].serviceNumber,
+        conflicts[projectNumber][serviceNumber][milestoneNumber].milestoneNumber,
+        conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus,
+        );
+    }
+
     /*
         Conflict - Update
     */
-
-
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        
+        conflicts[projectNumber][serviceNumber][milestoneNumber].title = title;
+        conflicts[projectNumber][serviceNumber][milestoneNumber].description = description;
+    }
 
     /*
         Conflict - Delete
-    */
+    */ 
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+
+        conflicts[projectNumber][serviceNumber][milestoneNumber].exist = false;        
+
+    }
 
 
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) public {
