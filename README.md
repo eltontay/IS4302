@@ -18,6 +18,8 @@ Service.sol
 Milestone.sol
 - Conflict.sol
 
+States.sol
+- Enum states of all the solidity files
 
 ## 2. Migrations
 

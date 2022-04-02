@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-import "./Profile.sol";
-import "./Service.sol";
 
 library SafeMath {
     /**
@@ -24,9 +22,6 @@ contract Review {
     
     using SafeMath for uint256;
 
-    Profile profileContract;
-    Service serviceContract;
-
     enum Role {serviceProvider, serviceRequester}    
 
     struct review {
@@ -39,9 +34,8 @@ contract Review {
         uint star_rating;
     }
 
-    constructor(Profile profcontract, Service servContract) public {
-        profileContract = profcontract;
-        serviceContract = servContract;
+    constructor() public {
+
     }
 
     mapping (address => review[]) serviceProviderReviews; // list of reviews received for each profile for each service provided (review id, milestone completed, star rating out of 5)
