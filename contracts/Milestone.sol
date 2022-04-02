@@ -43,6 +43,7 @@ contract Milestone {
     /*
         Milestone - Create
     */
+
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external {
 
         milestone storage newMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNum];
@@ -72,6 +73,7 @@ contract Milestone {
     /*
         Milestone - Update
     */
+
     function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
         
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].title = title;
@@ -83,6 +85,7 @@ contract Milestone {
     /*
         Milestone - Delete
     */ 
+
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
 
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].exist = false;        
@@ -92,7 +95,35 @@ contract Milestone {
         emit milestoneDeleted(projectNumber, serviceNumber, milestoneNumber);
     }
 
+    /*
+        Conflict - Create
+    */ 
+    
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
+        conflict.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+    }
 
+    /*
+        Conflict - Update
+    */
+
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        conflict.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
+    }
+
+    /*
+        Conflict - Delete
+    */ 
+
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        conflict.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Vote
+    */
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
+        conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+    }
 }
-
 

@@ -128,6 +128,54 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceRequester",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceProvider",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalVoters",
+						"type": "uint256"
+					}
+				],
+				"name": "createConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
 						"internalType": "string",
 						"name": "title",
 						"type": "string"
@@ -139,6 +187,29 @@
 					}
 				],
 				"name": "createMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteConflict",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -223,7 +294,73 @@
 						"type": "string"
 					}
 				],
+				"name": "updateConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
 				"name": "updateMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "vote",
+						"type": "uint8"
+					}
+				],
+				"name": "voteConflict",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -257,19 +394,19 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0xc9dd7a1cd26c2d4221667d7e011edeab9a12ad199f34ed92b0715eb215fd8f00",
+			"keccak256": "0xb135254f48bc99bdf59a62fa71af178ff8bdf56d2873180c3ac12ba39aef00bb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fca039af1f86dd2d93221a2564b3db18f8feaf073d45e082ce5c26eebb2373ee",
-				"dweb:/ipfs/QmNqoa1ERVjn5e9dVaL2cMz5xTh616xgz7qHwiS1RFXd8f"
+				"bzz-raw://e9f6c3f337ce97f857ba3fbc1768102c9edc2c7a3eb6319d60152004b4ac2970",
+				"dweb:/ipfs/QmSwnxc9KUWYqWPFiKKpFhTKc8mcrfQd9xAHkxmRXx5mgA"
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0x7391d444251410ab1e54a8db6bb2989fdbf62b90d5aeff3735c709c774e8c4ba",
+			"keccak256": "0x0cafc60032cded0ca3c68fe330269276c09ccb51376a9c3e8c18fe285aa9d771",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://150b82778f9030f4a8848efc64268c9bb873542449e4dc86f062bfdcb62f5271",
-				"dweb:/ipfs/QmUG5C4oJ8WCCvrRH7ueoqUJ6qPQ21y9JYv9xei9YhhrND"
+				"bzz-raw://974de9caff3faabc82921549b9f1d928143fa558b0ad33f7338ec5d5c792698d",
+				"dweb:/ipfs/QmXyN1BBmKMDncXqRPL6wcyZWQaD2BAib8EfhvYqhDtqRY"
 			]
 		}
 	},

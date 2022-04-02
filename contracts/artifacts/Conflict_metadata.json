@@ -379,35 +379,6 @@
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
-					}
-				],
-				"name": "readConflictStatus",
-				"outputs": [
-					{
-						"internalType": "enum Conflict.ConflictStatus",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "projectNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "serviceNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "milestoneNumber",
-						"type": "uint256"
 					},
 					{
 						"internalType": "string",
@@ -487,11 +458,11 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0xc9dd7a1cd26c2d4221667d7e011edeab9a12ad199f34ed92b0715eb215fd8f00",
+			"keccak256": "0xb135254f48bc99bdf59a62fa71af178ff8bdf56d2873180c3ac12ba39aef00bb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fca039af1f86dd2d93221a2564b3db18f8feaf073d45e082ce5c26eebb2373ee",
-				"dweb:/ipfs/QmNqoa1ERVjn5e9dVaL2cMz5xTh616xgz7qHwiS1RFXd8f"
+				"bzz-raw://e9f6c3f337ce97f857ba3fbc1768102c9edc2c7a3eb6319d60152004b4ac2970",
+				"dweb:/ipfs/QmSwnxc9KUWYqWPFiKKpFhTKc8mcrfQd9xAHkxmRXx5mgA"
 			]
 		}
 	},

@@ -39,6 +39,7 @@ contract Conflict {
     /*
         Conflict - Create
     */
+
     function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) public {
         require(conflicts[projectNumber][serviceNumber][milestoneNumber].exist != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
 
@@ -60,20 +61,12 @@ contract Conflict {
 
         emit conflictCreated(projectNumber, serviceNumber, milestoneNumber, serviceRequester, serviceProvider, totalVoters);
     }
-
-    /*
-        Conflict - Read
-    */
-
-    function readConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (ConflictStatus) {
-        return (conflicts[projectNumber][serviceNumber][milestoneNumber].conflictstatus);
-    }
-
+    
     /*
         Conflict - Update
     */
+
     function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
-        
         conflicts[projectNumber][serviceNumber][milestoneNumber].title = title;
         conflicts[projectNumber][serviceNumber][milestoneNumber].description = description;
     }
@@ -81,10 +74,14 @@ contract Conflict {
     /*
         Conflict - Delete
     */ 
+
     function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
         conflicts[projectNumber][serviceNumber][milestoneNumber].exist = false;        
     }
 
+    /*
+        Conflict - Vote
+    */
 
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) public {
         require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceRequester != sender , "You raised this conflict. You cannot vote on it.");
