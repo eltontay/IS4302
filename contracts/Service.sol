@@ -13,13 +13,9 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 */
 contract Service {
 
-<<<<<<< HEAD
-    constructor(Milestones milestoneAddress) {
-        milestoneContract = milestoneAddress;
-    }
-=======
+
+
     Milestone milestone;
->>>>>>> 19bd70d1ac482f65ba5ab3ecda873ce550121073
 
     constructor (Milestone milestoneContract) public {
         milestone = milestoneContract;
@@ -48,7 +44,7 @@ contract Service {
 
     uint256 public serviceTotal = 0; // Counts of number of services existing , only true exist bool
     uint256 public serviceNum = 0; // Project Number/ID , value only goes up, includes both true and false exist bool
-    mapping (uint256 => mapping (uint256 => service)) projectServices; // [projectNumber][serviceNumber] 
+    mapping (uint256 => mapping (uint256 => service)) public projectServices; // [projectNumber][serviceNumber] 
 
 
 /*
@@ -191,4 +187,14 @@ contract Service {
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
+    /*
+        Service - Update state 
+    */
+    function updateServiceToPending(uint256 projectNumber, uint256 serviceNumber) public {
+        service storage requestedService = projectServices[projectNumber][serviceNumber]; 
+        //check if service is open for work 
+        require(requestedService.status == States.ServiceStatus.none, "You are currently not allowed to work on this service"); 
+        //change service status to pending for project owner approval  
+        requestedService.status = States.ServiceStatus.pending; 
+    }
 }

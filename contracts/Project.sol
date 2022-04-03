@@ -2,6 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Service.sol";
 import "./States.sol";
+import "./Profile.sol";
 
 /*
     Service Requester (Project Owner)
@@ -9,9 +10,12 @@ import "./States.sol";
 contract Project {
     
     Service service; 
+    Profile profile; 
 
-    constructor(Service serviceContract) public {
+    constructor(Service serviceContract, Profile profileContract) public {
         service = serviceContract;
+        profile = profileContract; 
+
     }
     
 
@@ -26,7 +30,7 @@ contract Project {
 
     uint256 public projectTotal = 0; // Counts of number of projects existing , only true exist bool
     uint256 public projectNum = 0; // Project Number/ID , value only goes up, includes both true and false exist bool
-    mapping(uint256 => project) projects;
+    mapping(uint256 => project) public projects;
 
     event projectCreated(uint256 projectNumber, string title, string description, address projectOwner);
     event projectUpdated(uint256 projectNumber, string title, string description, address projectOwner);
@@ -104,7 +108,16 @@ contract Project {
         emit projectDeleted(projectNumber, msg.sender);
     }
 
-// finish project function
+    
+    /*
+        Project - Complete
+        Can add payment functions here 
+    */
+    
+    function completeProject(uint256 projectNumber) public onlyOwner(projectNumber,msg.sender) {
+
+    }
+
 
 
     /*
@@ -208,7 +221,18 @@ contract Project {
 */
 
     function getProjectOwner(uint256 projectId) public view returns(address) {
-        return projects[projectId].projectOwner;
+        projects[projectId].projectOwner;
+    }
+
+/*
+    Service provider Functions
+*/
+    /*
+        Service - Request to start service 
+        Function for contractor to request to start a service 
+    */
+    function requestToStartService(uint256 projectNumber, uint256 serviceNumber) public {
+        service.updateServiceToPending(projectNumber, serviceNumber); 
     }
 
 }

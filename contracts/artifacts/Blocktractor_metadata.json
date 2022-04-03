@@ -9,12 +9,12 @@
 				"inputs": [
 					{
 						"internalType": "contract Profile",
-						"name": "profileAddress",
+						"name": "profileContract",
 						"type": "address"
 					},
 					{
 						"internalType": "contract Project",
-						"name": "projectAddress",
+						"name": "projectContract",
 						"type": "address"
 					},
 					{
@@ -37,6 +37,482 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceRequester",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceProvider",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalVoters",
+						"type": "uint256"
+					}
+				],
+				"name": "createConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "titleMilestone",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "descriptionMilestone",
+						"type": "string"
+					}
+				],
+				"name": "createMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "username",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "password",
+						"type": "string"
+					}
+				],
+				"name": "createProfile",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "createProject",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					}
+				],
+				"name": "createService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "deleteProfile",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteProject",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "readMilestoneTitle",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "readProjectTitle",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "readServiceTitle",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "requestToStartService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "updateConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "titleMilestone",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "descriptionMilestone",
+						"type": "string"
+					}
+				],
+				"name": "updateMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "updateProfileName",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "updateProject",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					}
+				],
+				"name": "updateService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "vote",
+						"type": "uint8"
+					}
+				],
+				"name": "voteConflict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -76,59 +552,59 @@
 			]
 		},
 		"contracts/Blocktractor.sol": {
-			"keccak256": "0x89ae5285b1879926e73958f578132d3ebdb145211f4348f20ef056709cf75e5b",
+			"keccak256": "0x3b2ecff8258242eef9e2aa25347332b753685411ef8c62a2a616b015c6f56dcc",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ab8dfd4704f9ada54c368849b43757a9298eb86bc5398e45b4ebe2e0ee3c86ef",
-				"dweb:/ipfs/QmRb4RU6cxJhS51xj2mJrKj9nZ1H8WsXL8sLcaDPJHHeC8"
+				"bzz-raw://6a70e6912225d3e476890dc2c8418bb28ee11312ee3494a2b5576dffc610bada",
+				"dweb:/ipfs/QmaqTd4jqvYLJVg8ZNDu6C719aPzWDc2RfngkKiS7DtoHq"
 			]
 		},
 		"contracts/Conflict.sol": {
-			"keccak256": "0xa4f3b4f87575e451e90f5dcdadf6b729dc65ee7c6db4292034c0f2c4d2a242af",
+			"keccak256": "0xf05a73b60bf4d4f660cbeefff0d4f11ee51d0958fcaca53e89704da42364b82b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d744fca72c1e2df80b9506dd96df0ed67c3c34ac55a70d9d4796fb4b6704bf75",
-				"dweb:/ipfs/Qmcf2NAUNrSwYK9wJA3Qr25gzZLyUehA6TVQp8JxNLxPUq"
+				"bzz-raw://77106ca549f3a84043c9cf53aed25e4de0989721cc17c3dbd73a82acd31ca1a2",
+				"dweb:/ipfs/QmfVW3qJxuMtiJFCZcoxkCiBGQqL4SU3MPt7UpT3Tfgq3G"
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0x9106f0d724440c0921366fde08b184d3fb882867a26c450caf707ff244e6a03a",
+			"keccak256": "0x8623f52fc661f689b418712efe3896c159fccce231ec49e697016dc8078e20ad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://784f7c5e6867fea34ea1f30a006093546ff8176c25927c65a761ffa987aab002",
-				"dweb:/ipfs/QmZTZbioSUYnxqFf8MvoZ86r9o9niF57EjwGVCfcfekAWz"
+				"bzz-raw://f0ed4c29fca4218bc0756d23a0641c248df36333e4517c5433c143d8154c985b",
+				"dweb:/ipfs/QmdjnVd4iFZPxU2oFhA3fdaccTxYypDju5wH2ByM21CsZU"
 			]
 		},
 		"contracts/Profile.sol": {
-			"keccak256": "0xeb0173038b59278ff4ed81d6a4f4a092026b298018564e6a5e1a6b1f5a19ca83",
+			"keccak256": "0x0fc95ab393398891c5406ddaa4b4112785f61a37c3794a71e9bc2151fe248e76",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9813df6eb900f0c86cd845f24201b8b8013027086fcf28c5a44391f6d5b04798",
-				"dweb:/ipfs/QmToatxg2BsEQE5qNp9Ra8qAJ2XPixcP7t8Hw9XHKfzKG5"
+				"bzz-raw://8391c26f6f9cbebd74933c07b6a760c23b4b7142cf77e882e1be815ca6788b6f",
+				"dweb:/ipfs/QmRzzG4en7HCarFseK64mfEbbWL518maLxkLhtmFLBkgzp"
 			]
 		},
 		"contracts/Project.sol": {
-			"keccak256": "0xfd5153e7fc18c680b96c3520066990e38f59ab7f3929ac00c2a67ec15609721e",
+			"keccak256": "0x9ffc0c72bf2fd002b989980cd58918835dfbb6df952664584a349116cb7be311",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7c4c9f0352eaee49efc87316878772610b94e2c672acd4925fecf5a203ba8fb9",
-				"dweb:/ipfs/QmYh5eTjS3PiinEqrhHzNN2CKy945WEHFebPsyoqvnKu1C"
+				"bzz-raw://b2096e77ad847559635550479eccd84421b86931ab693eced36dca7138afa2ba",
+				"dweb:/ipfs/QmYPaHReaQH1emGCbqCZrGh2UxmnV3TYNwDDEBujnqt5Ag"
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0xc589a7a75347ae004c14493d04710903be1868973cdb1eec443a3c52ee97af99",
+			"keccak256": "0x2214ee1aa3216a41d1b89526de4747fd00aeee3b25fa8dbc632f41701ab9de75",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d4acc9046206d9d170f4b928daed48b0636a56a310a74cced66515ce271acb09",
-				"dweb:/ipfs/QmQQaKcciLYi5YXHmQSEnyMX8twu5kjH5Q3Z9iWc5eoUiQ"
+				"bzz-raw://d88bab0ed321f8bd435243a2345e3dcf530f367488b8cad6e367ed11950cfa21",
+				"dweb:/ipfs/QmRCed3p9Nuuomauk1e2xtVv4xtCp5xxRNYWb8i1xkgLK2"
 			]
 		},
 		"contracts/States.sol": {
-			"keccak256": "0x007f251e5e1a7b313115d732b7a770b06a6a286ba97d071e51f9b9f7a3c46494",
+			"keccak256": "0x29f69e556e157eac16e860b10df5631148df1b01f43f70df97d8d6149d96dcbb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ae4142d1b5c0930c668c00773cfaef4b47cce84e996906b3d593b762bd609f4c",
-				"dweb:/ipfs/QmW3xYxvLgrPc1gXiLcuwXTcZFDWaafsQQPBivVAP1wUA1"
+				"bzz-raw://46b4ce5b867ab744e36240f99d46ad75da9e54ea186183f5d129eb006a6ef5d7",
+				"dweb:/ipfs/QmZMRAqUPsGuwkKgpB8RnorXKeR8QD5SCMBPrxNJ1HqqWW"
 			]
 		}
 	},
