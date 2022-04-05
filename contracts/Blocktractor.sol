@@ -105,8 +105,8 @@ contract Blocktractor {
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) public {
-        project.updateService(projectNumber,serviceNumber,title,description,price);
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) public {
+        project.updateService(projectNumber,serviceNumber,title,description,price,status);
     }
 
     /*
@@ -121,6 +121,20 @@ contract Blocktractor {
         Service - Accept service request  
         Function for project owner to accept a contractor's service 
     */
+
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
+        project.acceptServiceRequest(projectNumber,serviceNumber,msg.sender);
+    }
+
+    /*
+        Service - Reject service request  
+        Function for project owner to reject a contractor's service 
+    */
+
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
+        project.rejectServiceRequest(projectNumber,serviceNumber,msg.sender);   
+    }
+
 
     /*
         Milestone - Create
@@ -216,8 +230,8 @@ contract Blocktractor {
         Service - Request to start service 
         Function for contractor to request to start a service 
     */
-    function requestToStartService() public {
-
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.takeServiceRequest(projectNumber, serviceNumber, msg.sender);
     }
 
 

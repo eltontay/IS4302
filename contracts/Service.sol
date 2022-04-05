@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
     1. Service Requester (Project Owner)
     2. Service Providers (Stakeholders)
     Each Service contains milestone(s)
+    Each Service can be reviewed
     Each Milestone allows conflict(s) to be raised by the service requester.
 */
 contract Service {
@@ -38,7 +39,7 @@ contract Service {
     Events - Service Requester (Project Owner)
 */
     event serviceCreated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
-    event serviceUpdated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
+    event serviceUpdated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price , States.ServiceStatus status);
     event serviceDeleted(uint256 projectNumber, uint256 serviceNumber);
 
 
@@ -53,6 +54,11 @@ contract Service {
 
     modifier requiredString(string memory str) {
         require(bytes(str).length > 0, "A string is required!");
+        _;
+    }
+
+    modifier onlyServiceRequester(uint256 projectNumber, uint256 serviceNumber, address serviceRequester){ // Only allow Service Requester / Project Owner can access these functions
+        require(serviceRequester == projectServices[projectNumber][serviceNumber].serviceRequester, "Unauthorised access to service, only service requester can access");
         _;
     }
 
@@ -109,24 +115,48 @@ contract Service {
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) external {
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) external {
 
-        projectServices[projectNumber][serviceNum].title = title;
-        projectServices[projectNumber][serviceNum].description = description;
-        projectServices[projectNumber][serviceNum].price = price;
+        projectServices[projectNumber][serviceNumber].title = title;
+        projectServices[projectNumber][serviceNumber].description = description;
+        projectServices[projectNumber][serviceNumber].price = price;
+        projectServices[projectNumber][serviceNumber].status = status;
 
-        emit serviceUpdated(projectNumber, serviceNumber, title, description, price);
+        emit serviceUpdated(projectNumber, serviceNumber, title, description, price, status);
     }
 
     /*
         Service - Delete
     */
+
     function deleteService(uint256 projectNumber, uint256 serviceNumber) external {
         projectServices[projectNumber][serviceNumber].exist = false;
 
         serviceTotal--;
         emit serviceDeleted(projectNumber,serviceNumber);
     }
+
+    /*
+        Service - Accept service request  
+        Function for project owner to accept a contractor's service 
+    */
+
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
+        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) {
+            projectServices[projectNumber][serviceNumber].status = States.ServiceStatus.accepted;
+    }
+
+    /*
+        Service - Reject service request  
+        Function for project owner to reject a contractor's service 
+    */
+
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
+        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) {
+            projectServices[projectNumber][serviceNumber].status = States.ServiceStatus.none;
+            projectServices[projectNumber][serviceNumber].serviceProvider = payable(address(0));
+    }
+
 
     /*
         Milestone - Create
@@ -187,14 +217,20 @@ contract Service {
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
+/*
+    Service provider Functions
+*/
+
     /*
         Service - Update state 
     */
-    function updateServiceToPending(uint256 projectNumber, uint256 serviceNumber) public {
+
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public {
         service storage requestedService = projectServices[projectNumber][serviceNumber]; 
         //check if service is open for work 
         require(requestedService.status == States.ServiceStatus.none, "You are currently not allowed to work on this service"); 
         //change service status to pending for project owner approval  
         requestedService.status = States.ServiceStatus.pending; 
+        requestedService.serviceProvider = payable(serviceProvider); 
     }
 }

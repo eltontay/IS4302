@@ -14,8 +14,7 @@ contract Project {
 
     constructor(Service serviceContract, Profile profileContract) public {
         service = serviceContract;
-        profile = profileContract; 
-
+        profile = profileContract;
     }
     
 
@@ -114,9 +113,9 @@ contract Project {
         Can add payment functions here 
     */
     
-    function completeProject(uint256 projectNumber) public onlyOwner(projectNumber,msg.sender) {
+    // function completeProject(uint256 projectNumber) public onlyOwner(projectNumber,msg.sender) {
 
-    }
+    // }
 
 
 
@@ -140,8 +139,8 @@ contract Project {
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) public {
-        service.updateService(projectNumber,serviceNumber,title,description,price);
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) public {
+        service.updateService(projectNumber,serviceNumber,title,description,price,status);
     }
 
     /*
@@ -150,6 +149,24 @@ contract Project {
 
     function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
         service.deleteService(projectNumber,serviceNumber);
+    }
+
+    /*
+        Service - Accept service request  
+        Function for project owner to accept a contractor's service 
+    */
+
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external {
+        service.acceptServiceRequest(projectNumber,serviceNumber,serviceRequester);
+    }
+
+    /*
+        Service - Reject service request  
+        Function for project owner to reject a contractor's service 
+    */
+
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external {
+        service.rejectServiceRequest(projectNumber,serviceNumber,serviceRequester);   
     }
 
     /*
@@ -227,12 +244,13 @@ contract Project {
 /*
     Service provider Functions
 */
+
     /*
         Service - Request to start service 
         Function for contractor to request to start a service 
     */
-    function requestToStartService(uint256 projectNumber, uint256 serviceNumber) public {
-        service.updateServiceToPending(projectNumber, serviceNumber); 
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public {
+        service.takeServiceRequest(projectNumber, serviceNumber, serviceProvider); 
     }
 
 }

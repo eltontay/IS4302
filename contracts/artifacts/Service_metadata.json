@@ -104,10 +104,39 @@
 						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum States.ServiceStatus",
+						"name": "status",
+						"type": "uint8"
 					}
 				],
 				"name": "serviceUpdated",
 				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceRequester",
+						"type": "address"
+					}
+				],
+				"name": "acceptServiceRequest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -405,6 +434,29 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceRequester",
+						"type": "address"
+					}
+				],
+				"name": "rejectServiceRequest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "serviceNum",
 				"outputs": [
@@ -428,6 +480,29 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceProvider",
+						"type": "address"
+					}
+				],
+				"name": "takeServiceRequest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -522,27 +597,14 @@
 						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
+					},
+					{
+						"internalType": "enum States.ServiceStatus",
+						"name": "status",
+						"type": "uint8"
 					}
 				],
 				"name": "updateService",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "projectNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "serviceNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "updateServiceToPending",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -633,19 +695,19 @@
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0x80c7ad94b55e1741198fdafe6feffc747770b8e69bffc9ed4fe3a46b032760cf",
+			"keccak256": "0x0b75e366793f9faa51a3394a5cdc90fd0342c48d8843cbbcced4c305a8897cc9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://20b86e56a7b8d4eac318b147460cd6616221c4f56d17a30c21ca774964a0338d",
-				"dweb:/ipfs/QmZiRpmdcSMXEr1HGE5QJGbZUHSu6hpHaqj5ZxHhU5fk8D"
+				"bzz-raw://783aea80f65fa5495f1baa7c42ec1f557f2313d66e98ed4bda2eacec57699c86",
+				"dweb:/ipfs/QmSUfDuytAMw5NMS1K63m3wyfkJkTm12dnQtRiweQcTWYF"
 			]
 		},
 		"contracts/States.sol": {
-			"keccak256": "0x29f69e556e157eac16e860b10df5631148df1b01f43f70df97d8d6149d96dcbb",
+			"keccak256": "0xbb7d1d825edf97e18fab787805ba609cad44076179e4810949916c0ec541d657",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://46b4ce5b867ab744e36240f99d46ad75da9e54ea186183f5d129eb006a6ef5d7",
-				"dweb:/ipfs/QmZMRAqUPsGuwkKgpB8RnorXKeR8QD5SCMBPrxNJ1HqqWW"
+				"bzz-raw://bad6dc32d5610619ca00b4f6750e651ad47958cdb02cbf1129266af90674205a",
+				"dweb:/ipfs/Qmd3HV6vDkMtrjHjVUZqaCgcabkmkfzYDFq73KGYdrtVXJ"
 			]
 		}
 	},
