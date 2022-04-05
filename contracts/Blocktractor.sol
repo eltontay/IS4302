@@ -172,8 +172,8 @@ contract Blocktractor {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
-        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, uint256 totalVoters) external {
+        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender,totalVoters);
     }
 
     /*
@@ -234,14 +234,12 @@ contract Blocktractor {
         project.takeServiceRequest(projectNumber, serviceNumber, msg.sender);
     }
 
-
     /*
-        Service - Request to start service 
-        Function for contractor to request to start a service 
+        Service - Complete service request
     */
 
-    /*
-        Service - Complete service 
-        NEED TO ADD LOGIC FOR HOW THIS LINKS TO MILESTONES. FOR NOW I JUST ADDED REVIEW 
-    */
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
+        project.completeServiceRequest(projectNumber, serviceNumber, msg.sender);      
+    }
+
 }

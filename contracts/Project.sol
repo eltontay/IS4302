@@ -205,8 +205,8 @@ contract Project {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
-        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, uint256 totalVoters) external {
+        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,totalVoters);
     }
 
     /*
@@ -249,8 +249,19 @@ contract Project {
         Service - Request to start service 
         Function for contractor to request to start a service 
     */
+    
     function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public {
         service.takeServiceRequest(projectNumber, serviceNumber, serviceProvider); 
     }
+
+    /*
+        Service - Complete service request
+    */
+
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) external {
+        service.completeServiceRequest(projectNumber, serviceNumber, serviceProvider);      
+    }
+
+
 
 }

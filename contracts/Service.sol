@@ -62,6 +62,11 @@ contract Service {
         _;
     }
 
+    modifier onlyServiceProvider(uint256 projectNumber, uint256 serviceNumber, address serviceProvider){ // Only allow Service serviceProvider / Project Owner can access these functions
+        require(serviceProvider == projectServices[projectNumber][serviceNumber].serviceProvider, "Unauthorised access to service, only service serviceProvider can access");
+        _;
+    }
+
     modifier activeService(uint256 projectNumber, uint256 serviceNumber) {
         require(projectServices[projectNumber][serviceNumber].exist == true, "This service has been deleted and does not exist anymore");
         _;
@@ -157,6 +162,16 @@ contract Service {
             projectServices[projectNumber][serviceNumber].serviceProvider = payable(address(0));
     }
 
+    // /*
+    //     Service - Raise Conflict
+    //     Function for project owner to reject a contractor's service 
+    // */
+
+    // function raiseConflict(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
+    //     onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) {
+    //         projectServices[projectNumber][serviceNumber].status = States.ServiceStatus.none;
+    //         projectServices[projectNumber][serviceNumber].serviceProvider = payable(address(0));
+    // }
 
     /*
         Milestone - Create
@@ -190,8 +205,10 @@ contract Service {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
-        milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester,  uint256 totalVoters) external 
+        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester){
+            address serviceProvider = projectServices[projectNumber][serviceNumber].serviceProvider;
+            milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
     }
 
     /*
@@ -233,4 +250,14 @@ contract Service {
         requestedService.status = States.ServiceStatus.pending; 
         requestedService.serviceProvider = payable(serviceProvider); 
     }
+
+    /*
+        Service - Complete service request
+    */
+
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) external 
+        onlyServiceProvider(projectNumber,serviceNumber,serviceProvider) {
+            projectServices[projectNumber][serviceNumber].status = States.ServiceStatus.completed;
+    }
+
 }

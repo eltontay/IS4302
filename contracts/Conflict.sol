@@ -40,7 +40,7 @@ contract Conflict {
         Conflict - Create
     */
 
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) public {
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider, uint256 totalVoters) public {
         require(conflicts[projectNumber][serviceNumber][milestoneNumber].exist != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
 
         conflict storage newConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
