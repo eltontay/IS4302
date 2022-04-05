@@ -3,7 +3,6 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
 import "./States.sol";
-import "./Service.sol"; 
 // Review -> Profile -> Blocktractor
 // Conflict -> Milestone -> Service -> Project -> Blocktractor 
 
