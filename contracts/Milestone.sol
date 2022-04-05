@@ -8,7 +8,7 @@ contract Milestone {
 
     Conflict conflict;
 
-    constructor (Conflict conflictContract) public {
+    constructor (Conflict conflictContract) {
         conflict = conflictContract;
     }
 
@@ -152,4 +152,3 @@ contract Milestone {
 
 
 }
-

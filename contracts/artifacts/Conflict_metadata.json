@@ -466,11 +466,11 @@
 			]
 		},
 		"contracts/States.sol": {
-			"keccak256": "0x007f251e5e1a7b313115d732b7a770b06a6a286ba97d071e51f9b9f7a3c46494",
+			"keccak256": "0xc8e39dbff16f02492119881933d70313c415896d22b408653013a2c653b3827a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ae4142d1b5c0930c668c00773cfaef4b47cce84e996906b3d593b762bd609f4c",
-				"dweb:/ipfs/QmW3xYxvLgrPc1gXiLcuwXTcZFDWaafsQQPBivVAP1wUA1"
+				"bzz-raw://399457c7eb2989d83bd91ed3f81052229c8b19373688a3a2884a2dc9a18cf05b",
+				"dweb:/ipfs/QmXPceiyx85hcGNacn1QFD2AvwkeAU19XehYY58vgAfRBK"
 			]
 		}
 	},

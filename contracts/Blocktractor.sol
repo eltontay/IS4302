@@ -3,7 +3,6 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
 import "./States.sol";
-
 // Review -> Profile -> Blocktractor
 // Conflict -> Milestone -> Service -> Project -> Blocktractor 
 
@@ -11,7 +10,7 @@ import "./States.sol";
 
 
 
-// WorkFlow 1
+// WorkFlow 1 
 // Step 1 : Create Profile
 // Step 2 : Create Project -- Project Owner (Service Requester)
 // Step 3 : Create Service(s) -- Project Owner (Service Requester)
@@ -29,8 +28,8 @@ import "./States.sol";
 
 contract Blocktractor {
 
-    Profile profileContract;
-    Project projectContract;
+    Profile profile;
+    Project project;
 
     address payable escrow_wallet = payable(msg.sender);
     address payable revenue_wallet = payable(msg.sender);
@@ -75,7 +74,7 @@ contract Blocktractor {
     */
     
     function updateProject(uint256 projectNumber, string memory title, string memory description) public  {
-        project.updateProject(projectNumber,title,decription);
+        project.updateProject(projectNumber,title,description);
     }
 
     /*
@@ -117,6 +116,11 @@ contract Blocktractor {
     function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
         project.deleteService(projectNumber,serviceNumber);
     }
+
+    /*
+        Service - Accept service request  
+        Function for project owner to accept a contractor's service 
+    */
 
     /*
         Milestone - Create
@@ -182,12 +186,48 @@ contract Blocktractor {
         project.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
-/*
-    Getter Helper Functions
-*/
-
-    function getProjectOwner(uint256 projectId) public view returns(address) {
-        return projects[projectId].projectOwner;
+    /*
+        Profile - Create
+    */
+    function createProfile(string memory name, string memory username, string memory password) public {
+        profile.createProfile(name, username, password, msg.sender);
     }
 
+    /*
+        Profile - Delete
+    */
+    function deleteProfile() public {
+        profile.deleteProfile(msg.sender);
+    }
+
+    /*
+        Profile - Update
+    */
+    function updateProfileName(string memory name) public {
+        profile.updateProfileName(name, msg.sender);
+    }
+
+
+/*
+    Service provider functions 
+*/
+
+    /*
+        Service - Request to start service 
+        Function for contractor to request to start a service 
+    */
+    function requestToStartService() public {
+
+    }
+
+
+    /*
+        Service - Request to start service 
+        Function for contractor to request to start a service 
+    */
+
+    /*
+        Service - Complete service 
+        NEED TO ADD LOGIC FOR HOW THIS LINKS TO MILESTONES. FOR NOW I JUST ADDED REVIEW 
+    */
 }
