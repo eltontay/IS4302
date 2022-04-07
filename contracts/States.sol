@@ -7,7 +7,7 @@ library States {
 
     enum MilestoneStatus { none, pending, approved, started, completed, verified, conflict}
 
-    enum ServiceStatus { none, pending, accepted , started, completed, conflict }
+    enum ServiceStatus { created, pending, accepted , completed, conflict, terminated }
 
     enum ProjectStatus { active, inactive, terminated } 
 
