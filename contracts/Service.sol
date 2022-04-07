@@ -291,13 +291,22 @@ contract Service {
     }
 
     /*
+        Conflict - Start Vote
+    */
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
+    {
+        milestone.startVote(projectNumber, serviceNumber, milestoneNumber);
+    }
+
+    /*
         Conflict - Vote
     */
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
     {
-        // Need to set a requirement that only voters working on the same project can vote?
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 

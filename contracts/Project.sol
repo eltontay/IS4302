@@ -270,6 +270,12 @@ contract Project {
         service.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
     }
 
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+        atState(projectNumber, States.ProjectStatus.active)
+    {
+        service.startVote(projectNumber, serviceNumber, milestoneNumber);
+    }
+
     /*
         Conflict - Vote
     */

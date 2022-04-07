@@ -57,7 +57,6 @@ contract Milestone {
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status = state;
     }
 
-
 /*
     CUD Milestones
 */
@@ -167,7 +166,7 @@ contract Milestone {
     /*
         Milestone - Complete
     */
-    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) private 
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started) // Must work on milestone in order
     {
@@ -212,6 +211,16 @@ contract Milestone {
     }
 
     /*
+        Conflict - Start Vote
+    */
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
+    {
+        conflict.startVote(projectNumber, serviceNumber, milestoneNumber);
+    }
+
+    /*
         Conflict - Vote
     */
 
@@ -219,7 +228,6 @@ contract Milestone {
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
     {
-        // Need to add requirement to check if sender is involved in the Project?
         conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
