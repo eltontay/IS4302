@@ -4,6 +4,7 @@
     "@openzeppelin/test-helpers": "^0.5.15",
     "@remix-project/remixd": "^0.5.7",
     "assert": "^2.0.0",
+    "package.json": "^2.0.1",
     "truffle-assertions": "^0.9.2"
   }
 }

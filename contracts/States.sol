@@ -9,6 +9,6 @@ library States {
 
     enum ServiceStatus { none, pending, accepted , started, completed, conflict }
 
-    enum ProjectStatus { none, active, inactive, terminated } 
+    enum ProjectStatus { active, inactive, terminated } 
 
 }
