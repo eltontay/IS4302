@@ -213,7 +213,7 @@ contract Service {
     function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view 
         activeService(projectNumber, serviceNumber)
     returns (string memory) {
-        milestone.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
+        return milestone.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
     }
     
     /*
@@ -222,8 +222,6 @@ contract Service {
     function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) external 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
-        requiredString(titleMilestone)
-        requiredString(descriptionMilestone)
     {
         // need to set a requirement for onlyServiceRequester?
         milestone.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
@@ -237,6 +235,17 @@ contract Service {
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {        
         milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    /*
+        Milestone - Complete 
+    */
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {
+        // To report the completion of the milestone
+        milestone.completeMilestone(projectNumber, serviceNumber, milestoneNumber);
     }
 
     /*

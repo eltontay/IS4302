@@ -35,6 +35,29 @@ contract Milestone {
     Modifiers
 */
 
+    modifier requiredString(string memory str) {
+        require(bytes(str).length > 0, "A string is required!");
+        _;
+    }
+
+    modifier isValidMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber){
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].exist, "This Milestone does not exist ya dummy!");
+        _;
+    }
+
+    modifier atState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.MilestoneStatus state){
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == state, "Cannot carry out this operation!");
+        _;
+    }
+
+/*
+    Setter Functions
+*/
+    function setState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.MilestoneStatus state) internal {
+        servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status = state;
+    }
+
+
 /*
     CUD Milestones
 */
@@ -43,7 +66,10 @@ contract Milestone {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external {
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external 
+        requiredString(title)
+        requiredString(description)
+    {
 
         milestone storage newMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNum];
         newMilestone.projectNumber = projectNumber;
@@ -52,20 +78,21 @@ contract Milestone {
         newMilestone.title = title;
         newMilestone.description = description;
         newMilestone.exist = true;
-        newMilestone.status = States.MilestoneStatus.none;
+        newMilestone.status = States.MilestoneStatus.created;
 
         emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
 
         milestoneTotal++;
         milestoneNum++;
-
     }
 
     /*
         Milestone - Read 
     */
 
-    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (string memory) {
+    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+    returns (string memory) {
         return (servicesMilestones[projectNumber][serviceNumber][milestoneNumber].title);
     }
 
@@ -73,7 +100,12 @@ contract Milestone {
         Milestone - Update
     */
 
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
+        requiredString(title)
+        requiredString(description)
+    {
         
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].title = title;
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].description = description;
@@ -85,28 +117,85 @@ contract Milestone {
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
-
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
+    {
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].exist = false;        
-
         milestoneTotal--;
-
+        setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.terminated);
         emit milestoneDeleted(projectNumber, serviceNumber, milestoneNumber);
+    }
+
+    /*
+        Milestone - Accept
+    */
+    
+    function acceptService(uint256 projectNumber, uint256 serviceNumber) external{
+        // Accepts Service Contract, so all the Milestones are set to approved (locked in)
+        for (uint i = 0; i < milestoneNum; i++){
+            if(servicesMilestones[projectNumber][serviceNumber][i].status != States.MilestoneStatus.created ||
+            servicesMilestones[projectNumber][serviceNumber][i].exist == false){ 
+                continue; 
+            }
+            setState(projectNumber, serviceNumber, i, States.MilestoneStatus.approved);
+            startNextMilestone(projectNumber, serviceNumber);
+        }
+    }
+
+    /*
+        Milestone - Start
+    */
+
+    function startNextMilestone(uint256 projectNumber, uint256 serviceNumber) internal {
+        for (uint i = 0; i < milestoneNum; i++){
+            if(servicesMilestones[projectNumber][serviceNumber][i].status == States.MilestoneStatus.approved &&
+            servicesMilestones[projectNumber][serviceNumber][i].exist){ 
+                startMilestone(projectNumber, serviceNumber, i);
+                return ;
+            }
+        }
+    }
+
+    function startMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) private
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.approved)
+    {
+        setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started);
+    }
+
+    /*
+        Milestone - Complete
+    */
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) private 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started) // Must work on milestone in order
+    {
+        setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed);
+        startNextMilestone(projectNumber, serviceNumber);
     }
 
     /*
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external {
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed)
+    {
+        // Need to set requirement for service requestor?
         conflict.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+        setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict);
     }
 
     /*
         Conflict - Update
     */
 
-    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
+    {
         conflict.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
     }
 
@@ -114,15 +203,23 @@ contract Milestone {
         Conflict - Delete
     */ 
 
-    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
+    {
         conflict.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+        setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed);
     }
 
     /*
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
+    {
+        // Need to add requirement to check if sender is involved in the Project?
         conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
