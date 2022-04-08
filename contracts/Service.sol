@@ -13,9 +13,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
     Each Milestone allows conflict(s) to be raised by the service requester.
 */
 contract Service {
-
-
-
     Milestone milestone;
 
     constructor (Milestone milestoneContract) public {
@@ -39,7 +36,7 @@ contract Service {
     Events - Service Requester (Project Owner)
 */
     event serviceCreated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
-    event serviceUpdated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price , States.ServiceStatus status);
+    event serviceUpdated(uint256 projectNumber, uint256 serviceNumber, string title, string description, uint256 price);
     event serviceDeleted(uint256 projectNumber, uint256 serviceNumber);
 
 
@@ -72,9 +69,17 @@ contract Service {
         _;
     }
 
-    modifier hasServiceStatus(uint256 projectNumber, uint256 serviceNumber, States.ServiceStatus state) {
+    modifier atState(uint256 projectNumber, uint256 serviceNumber, States.ServiceStatus state) {
         require(projectServices[projectNumber][serviceNumber].status == state, "The status of this service does not match the intended status.");
         _;
+    }
+
+/*
+    Setter Functions
+*/
+
+    function setState(uint256 projectNumber, uint256 serviceNumber, States.ServiceStatus state) internal {
+        projectServices[projectNumber][serviceNumber].status = state;
     }
 
 /*
@@ -85,7 +90,10 @@ contract Service {
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price, address payable projectOwner) external requiredString(title) requiredString(description) {        
+    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price, address payable projectOwner) external 
+        requiredString(title) 
+        requiredString(description) 
+    {        
         require(price > 0, "A Service Price must be specified");
 
         service storage newService = projectServices[projectNumber][serviceNum];
@@ -98,7 +106,7 @@ contract Service {
         newService.serviceRequester = projectOwner;
         newService.serviceProvider = payable(address(0));
         newService.exist = true;
-        newService.status = States.ServiceStatus.none;
+        newService.status = States.ServiceStatus.created;
 
         emit serviceCreated(projectNumber, serviceNum, title, description, price);
 
@@ -110,34 +118,43 @@ contract Service {
         Service - Read 
     */
 
-    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) external view returns (string memory ) {
-        return (
-            projectServices[projectNumber][serviceNumber].title
-        );
+    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) external view 
+        activeService(projectNumber, serviceNumber)
+    returns (string memory) {
+        return projectServices[projectNumber][serviceNumber].title;
     }
 
     /*
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) external {
-
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+        requiredString(title)
+        requiredString(description)
+    {
+        // need to set a requirement for onlyServiceRequester?
+        require(price > 0, "A Service Price must be specified");
         projectServices[projectNumber][serviceNumber].title = title;
         projectServices[projectNumber][serviceNumber].description = description;
         projectServices[projectNumber][serviceNumber].price = price;
-        projectServices[projectNumber][serviceNumber].status = status;
 
-        emit serviceUpdated(projectNumber, serviceNumber, title, description, price, status);
+        emit serviceUpdated(projectNumber, serviceNumber, title, description, price);
     }
 
     /*
         Service - Delete
     */
 
-    function deleteService(uint256 projectNumber, uint256 serviceNumber) external {
+    function deleteService(uint256 projectNumber, uint256 serviceNumber) external 
+        onlyServiceProvider(projectNumber, serviceNumber, msg.sender)
+        activeService(projectNumber, serviceNumber)
+    {
         projectServices[projectNumber][serviceNumber].exist = false;
-
         serviceTotal--;
+        setState(projectNumber, serviceNumber, States.ServiceStatus.terminated);
+
         emit serviceDeleted(projectNumber,serviceNumber);
     }
 
@@ -146,9 +163,13 @@ contract Service {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
-        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) {
-            projectServices[projectNumber][serviceNumber].status = States.ServiceStatus.accepted;
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester, address serviceProvider) external 
+        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.pending)
+    {
+        setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);  
+        projectServices[projectNumber][serviceNumber].serviceProvider = payable(serviceProvider);  
     }
 
     /*
@@ -157,9 +178,12 @@ contract Service {
     */
 
     function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
-        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) {
-            projectServices[projectNumber][serviceNumber].status = States.ServiceStatus.none;
-            projectServices[projectNumber][serviceNumber].serviceProvider = payable(address(0));
+        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.pending)
+    {
+        setState(projectNumber, serviceNumber, States.ServiceStatus.created);
+        projectServices[projectNumber][serviceNumber].serviceProvider = payable(address(0));
     }
 
     // /*
@@ -176,29 +200,52 @@ contract Service {
     /*
         Milestone - Create
     */
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) external {
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {
         milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
     }
 
     /*
         Milestone - Read
     */   
-    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view returns (string memory) {
-        milestone.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
+    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view 
+        activeService(projectNumber, serviceNumber)
+    returns (string memory) {
+        return milestone.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
     }
     
     /*
         Milestone - Update
     */
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) external {
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {
+        // need to set a requirement for onlyServiceRequester?
         milestone.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
     }
 
     /*
         Milestone - Delete
     */
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {        
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {        
         milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    /*
+        Milestone - Complete 
+    */
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {
+        // To report the completion of the milestone
+        milestone.completeMilestone(projectNumber, serviceNumber, milestoneNumber);
     }
 
     /*
@@ -206,16 +253,29 @@ contract Service {
     */ 
     
     function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester,  uint256 totalVoters) external 
-        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester){
-            address serviceProvider = projectServices[projectNumber][serviceNumber].serviceProvider;
-            milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester)
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
+        requiredString(title)
+        requiredString(description)
+
+    {
+        address serviceProvider = projectServices[projectNumber][serviceNumber].serviceProvider;
+        milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+        setState(projectNumber, serviceNumber, States.ServiceStatus.conflict);
     }
 
     /*
         Conflict - Update
     */
 
-    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
+        requiredString(title)
+        requiredString(description)
+    {
+        // need to set a requirement for onlyServiceRequester?
         milestone.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
     }
 
@@ -223,14 +283,30 @@ contract Service {
         Conflict - Delete
     */ 
 
-    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
+    {
         milestone.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Start Vote
+    */
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
+    {
+        milestone.startVote(projectNumber, serviceNumber, milestoneNumber);
     }
 
     /*
         Conflict - Vote
     */
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
+    {
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
@@ -242,13 +318,18 @@ contract Service {
         Service - Update state 
     */
 
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public {
-        service storage requestedService = projectServices[projectNumber][serviceNumber]; 
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public 
+        onlyServiceProvider(projectNumber, serviceNumber, serviceProvider)
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {
+        require(projectServices[projectNumber][serviceNumber].serviceProvider == address(0), "This Service is already taken!");
+        //service storage requestedService = projectServices[projectNumber][serviceNumber]; 
         //check if service is open for work 
-        require(requestedService.status == States.ServiceStatus.none, "You are currently not allowed to work on this service"); 
+        //require(requestedService.status == States.ServiceStatus.created, "You are currently not allowed to work on this service"); 
         //change service status to pending for project owner approval  
-        requestedService.status = States.ServiceStatus.pending; 
-        requestedService.serviceProvider = payable(serviceProvider); 
+        setState(projectNumber, serviceNumber, States.ServiceStatus.pending);
+        //requestedService.serviceProvider = payable(serviceProvider); 
     }
 
     /*
@@ -256,8 +337,12 @@ contract Service {
     */
 
     function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) external 
-        onlyServiceProvider(projectNumber,serviceNumber,serviceProvider) {
-            projectServices[projectNumber][serviceNumber].status = States.ServiceStatus.completed;
+        onlyServiceProvider(projectNumber,serviceNumber,serviceProvider) 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
+    {
+        require(projectServices[projectNumber][serviceNumber].serviceProvider == serviceProvider, "You are not working on this Service!");
+        setState(projectNumber, serviceNumber, States.ServiceStatus.completed);
     }
 
 }

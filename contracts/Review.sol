@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+import "./Service.sol";
+
 library SafeMath {
     /**
      * @dev Returns the integer division of two unsigned integers. Reverts on
@@ -34,7 +36,9 @@ contract Review {
         uint star_rating;
     }
 
-    constructor() public {
+    Service serviceContract;
+    constructor(Service service) public {
+        serviceContract = service;
 
     }
 

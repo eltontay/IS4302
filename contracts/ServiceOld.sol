@@ -8,11 +8,11 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract ServiceOld {
     
-    Milestones milestoneContract;  
+    Milestone milestoneContract;  
     Conflict conflictContract;  
     Project projectContract;  
 
-    constructor(Milestones milestoneAddress, Conflict conflictAddress, Project projectAddress) public {
+    constructor(Milestone milestoneAddress, Conflict conflictAddress, Project projectAddress) public {
         milestoneContract = milestoneAddress;
         conflictContract = conflictAddress;
         projectContract = projectAddress;
