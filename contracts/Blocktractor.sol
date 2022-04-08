@@ -193,13 +193,6 @@ contract Blocktractor {
     }
 
     /*
-        Conflict - Start Vote
-    */
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
-        project.startVote(projectNumber, serviceNumber, milestoneNumber);
-    }
-
-    /*
         Conflict - Vote
     */
 

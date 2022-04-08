@@ -3,12 +3,12 @@ pragma solidity >=0.4.22 <0.9.0;
 
 library States {
     
-    enum ConflictStatus { created, voting, completed, terminated }
+    enum ConflictStatus { none, pending, completed }
 
-    enum MilestoneStatus { created, pending, approved, started, completed, verified, conflict, terminated}
+    enum MilestoneStatus { none, pending, approved, started, completed, verified, conflict}
 
-    enum ServiceStatus { created, pending, accepted, completed, conflict, terminated }
+    enum ServiceStatus { none, pending, accepted , started, completed, conflict }
 
-    enum ProjectStatus { active, inactive, terminated } 
+    enum ProjectStatus { none, active, inactive, terminated } 
 
 }

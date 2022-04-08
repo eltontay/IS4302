@@ -28,51 +28,20 @@ contract Conflict {
     mapping (uint256 => mapping( uint256 => mapping (uint256 => conflict))) conflicts; // [projectNumber][serviceNumber][milestoneNumber] -> conflict
 
     event conflictCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceRequester, address serviceProvider, uint256 totalVoters);
+    
+
     event conflictRaised(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address serviceProvider);
     event conflictVoted(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address voter, uint8 vote);
     event conflictResult(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 result);
 
-    /*
-        Modifiers
-    */
-    modifier isValidConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber){
-        require(doesConflictExist(projectNumber, serviceNumber, milestoneNumber) == true, "This Conflict does not exist.");
-        _;
-    }
-
-    modifier atState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.ConflictStatus state){
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus == state, "Cannot carry out this operation!");
-        _;
-    }
-
-    modifier requiredString(string memory str) {
-        require(bytes(str).length > 0, "A string is required!");
-        _;
-    }
-
-    modifier canVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender){
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceRequester != sender , "You raised this conflict. You cannot vote on it.");
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceProvider != sender, "You are involved in this conflict. You cannot vote on it.");
-        _;
-    }
-
-    /*
-        Setters
-    */
-
-    function setState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.ConflictStatus state) internal {
-        conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus = state;
-    }
+// modifier -> need to check flag for exist == true (needs to be done)
 
     /*
         Conflict - Create
     */
 
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider, uint256 totalVoters) public 
-        requiredString(title)
-        requiredString(description)
-    {
-        require(doesConflictExist(projectNumber, serviceNumber, milestoneNumber) == false, "Conflict has already been created for this particular Milestone."); //bool defaults to false
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider, uint256 totalVoters) public {
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].exist != true , "Conflict has already been created. Please do not create more than 1 conflict."); //bool defaults to false
 
         conflict storage newConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
         newConflict.projectNumber = projectNumber;     
@@ -82,7 +51,7 @@ contract Conflict {
         newConflict.description = description;
         newConflict.serviceRequester = serviceRequester;
         newConflict.serviceProvider = serviceProvider;
-        newConflict.conflictStatus = States.ConflictStatus.created;
+        newConflict.conflictStatus = States.ConflictStatus.pending;
         newConflict.voters = totalVoters;
         newConflict.votesCollected = 0;
         newConflict.requesterVotes = 0;
@@ -97,12 +66,7 @@ contract Conflict {
         Conflict - Update
     */
 
-    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external 
-        isValidConflict(projectNumber, serviceNumber, milestoneNumber)
-        atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.created)
-        requiredString(title)
-        requiredString(description)
-    {
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
         conflicts[projectNumber][serviceNumber][milestoneNumber].title = title;
         conflicts[projectNumber][serviceNumber][milestoneNumber].description = description;
     }
@@ -111,33 +75,18 @@ contract Conflict {
         Conflict - Delete
     */ 
 
-    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
-        isValidConflict(projectNumber, serviceNumber, milestoneNumber)
-        atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.created)
-    {
-        conflicts[projectNumber][serviceNumber][milestoneNumber].exist = false;  
-        setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.terminated);      
-    }
-
-    /*
-        Conflict- Start Vote
-    */
-    function startVote(uint256 projectNumber,uint256 serviceNumber, uint256 milestoneNumber) external 
-        isValidConflict(projectNumber, serviceNumber, milestoneNumber)
-        atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.created)
-    {
-        setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.voting);
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        conflicts[projectNumber][serviceNumber][milestoneNumber].exist = false;        
     }
 
     /*
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) public 
-        isValidConflict(projectNumber, serviceNumber, milestoneNumber)
-        atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.voting)
-        canVote(projectNumber, serviceNumber, milestoneNumber, sender)
-    {
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) public {
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceRequester != sender , "You raised this conflict. You cannot vote on it.");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceProvider != sender, "You are involved in this conflict. You cannot vote on it.");
+        
         require(conflicts[projectNumber][serviceNumber][milestoneNumber].votesCollected < conflicts[projectNumber][serviceNumber][milestoneNumber].voters, "Enough votes have been collected");
         require(conflicts[projectNumber][serviceNumber][milestoneNumber].votes[sender] == 0 , "You have already voted, you cannot vote again");
         require(vote == 1 || vote == 2, "You have not input a right vote. You can either vote 1 for Requester or 2 for Provider.");
@@ -154,7 +103,7 @@ contract Conflict {
         if (C.votesCollected == C.voters) {
             if (C.providerVotes > C.requesterVotes) {C.result = 2; }
             else {C.result = 1;} //if there is tie vote, service Requester will win the vote
-            setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.completed);
+            C.conflictStatus = States.ConflictStatus.completed;
 
             emit conflictResult(projectNumber, serviceNumber, milestoneNumber, C.result);
         }
@@ -188,10 +137,6 @@ contract Conflict {
 
     function getVotesforProvider(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
         return conflicts[projectNumber][serviceNumber][milestoneNumber].providerVotes;
-    }
-
-    function doesConflictExist(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (bool){
-        return conflicts[projectNumber][serviceNumber][milestoneNumber].exist;
     }
 
 }

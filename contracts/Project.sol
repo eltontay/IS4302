@@ -49,11 +49,6 @@ contract Project {
         _;
     }
 
-    modifier atState(uint256 projectNumber, States.ProjectStatus state){
-        require(projects[projectNumber].projectstatus == state, "Cannot carry out this operation!");
-        _;
-    }
-
 
 /*
     Project Owner Functions
@@ -82,22 +77,18 @@ contract Project {
         Project - Read 
     */
 
-    function readProjectTitle(uint256 projectNumber) public view 
-        checkValidProject(projectNumber)
-        atState(projectNumber, States.ProjectStatus.active)
-    returns (string memory)  {
-        return projects[projectNumber].title;
+    function readProjectTitle(uint256 projectNumber) public view returns (string memory) {
+        return (
+            projects[projectNumber].title
+        );
     }
 
     /*
-        Project - Update (only in active state)
+        Project - Update 
     */
     
-    function updateProject(uint256 projectNumber, string memory title, string memory description) public 
-        checkValidProject(projectNumber)
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function updateProject(uint256 projectNumber, string memory title, string memory description) public onlyOwner(projectNumber,msg.sender) {
+
         projects[projectNumber].title = title;
         projects[projectNumber].description = description;
 
@@ -105,18 +96,14 @@ contract Project {
     }
 
     /*
-        Project - Delete (only in active state)
+        Project - Delete 
     */
-    function deleteProject(uint256 projectNumber) public 
-        checkValidProject(projectNumber)
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    
+    function deleteProject(uint256 projectNumber) public onlyOwner(projectNumber,msg.sender) {
 
         projects[projectNumber].exist = false;
 
         projectTotal --;
-        setState(projectNumber, States.ProjectStatus.inactive);
         emit projectDeleted(projectNumber, msg.sender);
     }
 
@@ -136,10 +123,7 @@ contract Project {
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public 
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public {
         service.createService(projectNumber,title,description,price,payable(msg.sender));
     }
 
@@ -147,9 +131,7 @@ contract Project {
         Service - Read
     */
 
-    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view 
-        atState(projectNumber, States.ProjectStatus.active)
-    returns (string memory){
+    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns (string memory) {
         service.readServiceTitle(projectNumber,serviceNumber);
     }
 
@@ -157,10 +139,7 @@ contract Project {
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) public 
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) public {
         service.updateService(projectNumber,serviceNumber,title,description,price,status);
     }
 
@@ -168,10 +147,7 @@ contract Project {
         Service - Delete
     */
 
-    function deleteService(uint256 projectNumber, uint256 serviceNumber) public 
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
         service.deleteService(projectNumber,serviceNumber);
     }
 
@@ -180,9 +156,7 @@ contract Project {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external {
         service.acceptServiceRequest(projectNumber,serviceNumber,serviceRequester);
     }
 
@@ -191,9 +165,7 @@ contract Project {
         Function for project owner to reject a contractor's service 
     */
 
-    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external {
         service.rejectServiceRequest(projectNumber,serviceNumber,serviceRequester);   
     }
 
@@ -201,10 +173,7 @@ contract Project {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public 
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
         service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
     }
 
@@ -212,9 +181,7 @@ contract Project {
         Milestone - Read
     */   
 
-    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view 
-        atState(projectNumber, States.ProjectStatus.active)
-    returns (string memory) {
+    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (string memory) {
         service.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
     }
 
@@ -222,10 +189,7 @@ contract Project {
         Milestone - Update
     */
 
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public 
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public {
         service.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
     }
 
@@ -233,10 +197,7 @@ contract Project {
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public 
-        onlyOwner(projectNumber,msg.sender) 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
         service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
     }    
 
@@ -244,9 +205,7 @@ contract Project {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, uint256 totalVoters) external
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, uint256 totalVoters) external {
         service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,totalVoters);
     }
 
@@ -254,9 +213,7 @@ contract Project {
         Conflict - Update
     */
 
-    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
         service.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
     }
 
@@ -264,25 +221,15 @@ contract Project {
         Conflict - Delete
     */ 
 
-    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external  
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
         service.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
-    }
-
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
-        atState(projectNumber, States.ProjectStatus.active)
-    {
-        service.startVote(projectNumber, serviceNumber, milestoneNumber);
     }
 
     /*
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external 
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
         service.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
@@ -295,14 +242,6 @@ contract Project {
     }
 
 /*
-    Setter Functions
-*/
-
-    function setState(uint256 projectId, States.ProjectStatus state) internal {
-        projects[projectId].projectstatus = state;
-    }
-
-/*
     Service provider Functions
 */
 
@@ -311,9 +250,7 @@ contract Project {
         Function for contractor to request to start a service 
     */
     
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public  
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public {
         service.takeServiceRequest(projectNumber, serviceNumber, serviceProvider); 
     }
 
@@ -321,9 +258,7 @@ contract Project {
         Service - Complete service request
     */
 
-    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) external  
-        atState(projectNumber, States.ProjectStatus.active)
-    {
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) external {
         service.completeServiceRequest(projectNumber, serviceNumber, serviceProvider);      
     }
 
