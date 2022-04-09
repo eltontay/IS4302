@@ -89,8 +89,8 @@ contract Blocktractor {
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public {
-        project.createService(projectNumber,title,description,price);
+    function createService(uint256 projectNumber, string memory title, string memory description) public {
+        project.createService(projectNumber,title,description);
     }
 
     /*
@@ -123,7 +123,7 @@ contract Blocktractor {
     */
 
     function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
-        project.acceptServiceRequest(projectNumber,serviceNumber,msg.sender);
+        project.acceptServiceRequest(projectNumber,serviceNumber,payable(msg.sender));
     }
 
     /*
@@ -132,7 +132,7 @@ contract Blocktractor {
     */
 
     function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
-        project.rejectServiceRequest(projectNumber,serviceNumber,msg.sender);   
+        project.rejectServiceRequest(projectNumber,serviceNumber, payable(msg.sender));   
     }
 
 
@@ -248,5 +248,21 @@ contract Blocktractor {
     function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
         project.completeServiceRequest(projectNumber, serviceNumber, msg.sender);      
     }
+
+    /*
+        Milestone - Complete Milestone
+    */ 
+
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.completeMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }    
+
+    /*
+        Milestone - Verify Milestone
+    */ 
+
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }    
 
 }

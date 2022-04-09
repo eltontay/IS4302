@@ -7,8 +7,9 @@ import "./States.sol";
 contract Milestone {
 
     Conflict conflict;
+    address payable contractAddress = payable(msg.sender); 
 
-    constructor (Conflict conflictContract) {
+    constructor (Conflict conflictContract) payable {
         conflict = conflictContract;
     }
 
@@ -20,7 +21,7 @@ contract Milestone {
         string description;
         bool exist; // allowing updates such as soft delete of milestone   
         States.MilestoneStatus status; // Defaults at none
-                uint256 price;
+        uint256 price;
         address payable serviceRequester; // msg.sender
         address payable serviceProvider; // defaults to address(0)
     }
@@ -68,7 +69,7 @@ contract Milestone {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external 
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external payable
         requiredString(title)
         requiredString(description)
     {
@@ -80,12 +81,19 @@ contract Milestone {
         newMilestone.description = description;
         newMilestone.exist = true;
         newMilestone.status = States.MilestoneStatus.created;
+        newMilestone.price = msg.value;
+        newMilestone.serviceRequester = payable(msg.sender);  
 
         emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
 
         milestoneTotal++;
         milestoneNum++;
+
+        //Make payment to escrow
+        address payable escrow = payable(contractAddress);
+        escrow.transfer(msg.value);
     }
+
 
     /*
         Milestone - Read 
@@ -126,19 +134,23 @@ contract Milestone {
         milestoneTotal--;
         setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.terminated);
         emit milestoneDeleted(projectNumber, serviceNumber, milestoneNumber);
+
+
+        //TRANSFER PRICE BACK TO PROJECT OWNER FROM ESCROW WALLET
     }
 
     /*
         Milestone - Accept
     */
     
-    function acceptService(uint256 projectNumber, uint256 serviceNumber) external{
+    function acceptService(uint256 projectNumber, uint256 serviceNumber, address payable serviceProvider) external{
         // Accepts Service Contract, so all the Milestones are set to approved (locked in)
         for (uint i = 0; i < milestoneNum; i++){
             if(servicesMilestones[projectNumber][serviceNumber][i].status != States.MilestoneStatus.created ||
             servicesMilestones[projectNumber][serviceNumber][i].exist == false){ 
                 continue; 
             }
+            servicesMilestones[projectNumber][serviceNumber][i].serviceProvider = serviceProvider; 
             setState(projectNumber, serviceNumber, i, States.MilestoneStatus.approved);
             startNextMilestone(projectNumber, serviceNumber);
         }
@@ -168,7 +180,7 @@ contract Milestone {
     /*
         Milestone - Complete
     */
-    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public 
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started) // Must work on milestone in order
     {
@@ -179,12 +191,17 @@ contract Milestone {
     /*
         Milestone - Verify milestone
     */
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public 
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed) 
     {
         setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.verified);
-        
+
+        //MAKE PAYment of price from escrow wallet to service provider 
+        address payable receiver = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider);
+        uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
+        require(msg.value == price, "Amount paid incorrect");
+        receiver.transfer(msg.value);
     }
 
     /*
@@ -244,12 +261,38 @@ contract Milestone {
         conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
+    /*
+        Conflict - Resolve payments
+    */
+
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external payable
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+    {
+        uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);
+        address payable provider = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider);
+        address payable requester = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester);
+        uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
+        if (result == 2) {
+            //service provider wins
+        require(msg.value == price, "Amount paid incorrect");
+        provider.transfer(msg.value);
+        } else {
+            //split 50-50
+        require(msg.value == price/2, "Amount paid incorrect");//This does not work
+        provider.transfer(msg.value);
+        requester.transfer(msg.value);
+        }
+    }
+
+
 /*
     Getter Helper Functions
 */
 
     function getResults(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint) {
         return conflict.getResults(projectNumber,serviceNumber,milestoneNumber);
+
+        //If contractor wins, pay contractor full price. If contractor loses, pay contracto half price and pay service requester half price. 
     }
 
     function getConflictStatus(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns ( States.ConflictStatus ) {
@@ -262,6 +305,10 @@ contract Milestone {
 
     function getVotesforRequester(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
         return conflict.getVotesforRequester(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    function getMilestonePrice(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
+        return servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price;
     }
 
     function getVotesforProvider(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {

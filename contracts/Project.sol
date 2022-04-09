@@ -120,27 +120,15 @@ contract Project {
         emit projectDeleted(projectNumber, msg.sender);
     }
 
-    
-    /*
-        Project - Complete
-        Can add payment functions here 
-    */
-    
-    // function completeProject(uint256 projectNumber) public onlyOwner(projectNumber,msg.sender) {
-
-    // }
-
-
-
     /*
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public 
+    function createService(uint256 projectNumber, string memory title, string memory description) public 
         onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createService(projectNumber,title,description,price,payable(msg.sender));
+        service.createService(projectNumber,title,description,payable(msg.sender));
     }
 
     /*
@@ -161,7 +149,7 @@ contract Project {
         onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.updateService(projectNumber,serviceNumber,title,description,price,status);
+        service.updateService(projectNumber,serviceNumber,title,description);
     }
 
     /*
@@ -180,10 +168,10 @@ contract Project {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable serviceRequester) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.acceptServiceRequest(projectNumber,serviceNumber,serviceRequester);
+        service.acceptServiceRequest(projectNumber,serviceNumber,msg.sender, serviceRequester);
     }
 
     /*
@@ -191,7 +179,7 @@ contract Project {
         Function for project owner to reject a contractor's service 
     */
 
-    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester) external 
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable serviceRequester) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
         service.rejectServiceRequest(projectNumber,serviceNumber,serviceRequester);   
@@ -270,6 +258,9 @@ contract Project {
         service.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
     }
 
+    /*
+        Conflict - Start Vote
+    */
     function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
         atState(projectNumber, States.ProjectStatus.active)
     {
@@ -327,6 +318,26 @@ contract Project {
         service.completeServiceRequest(projectNumber, serviceNumber, serviceProvider);      
     }
 
+ 
+    /*
+        Milestone - Complete 
+    */
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        atState(projectNumber, States.ProjectStatus.active)
+    {
+        // To report the completion of the milestone
+        service.completeMilestone(projectNumber, serviceNumber, milestoneNumber);
+    }
+
+    /*
+        Milestone - Verify 
+    */
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+        atState(projectNumber, States.ProjectStatus.active)
+    {
+        // To report the completion of the milestone
+        service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber);
+    }
 
 
 }

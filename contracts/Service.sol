@@ -14,7 +14,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 */
 contract Service {
     Milestone milestone;
-    address payable escrow_wallet = payable(msg.sender);
 
     constructor (Milestone milestoneContract) public {
         milestone = milestoneContract;
@@ -158,14 +157,14 @@ contract Service {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester, address serviceProvider) external 
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester, address payable serviceProvider) external 
         onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.pending)
     {
         setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);  
         projectServices[projectNumber][serviceNumber].serviceProvider = payable(serviceProvider); 
-        milestone.acceptService (projectNumber, serviceNumber); //set status of all milestones
+        milestone.acceptService (projectNumber, serviceNumber, serviceProvider); //set status of all milestones
     }
 
     /*
@@ -200,9 +199,6 @@ contract Service {
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
-        uint256 fee = msg.value; 
-        //store fee in escrow wallet
-        escrow_wallet.transfer(fee);
         milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
     }
 

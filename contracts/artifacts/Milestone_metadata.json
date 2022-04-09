@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.7+commit.e28d00a7"
+		"version": "0.8.13+commit.abaa5c0e"
 	},
 	"language": "Solidity",
 	"output": {
@@ -13,7 +13,7 @@
 						"type": "address"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "constructor"
 			},
 			{
@@ -128,6 +128,52 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "address payable",
+						"name": "serviceProvider",
+						"type": "address"
+					}
+				],
+				"name": "acceptService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "completeMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
@@ -188,7 +234,7 @@
 				],
 				"name": "createMilestone",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -261,6 +307,35 @@
 						"internalType": "enum States.ConflictStatus",
 						"name": "",
 						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "getMilestonePrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -427,6 +502,52 @@
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
+					}
+				],
+				"name": "resolveConflictPayment",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "startVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
 					},
 					{
 						"internalType": "string",
@@ -493,6 +614,29 @@
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
+					}
+				],
+				"name": "verifyMilestone",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
 					},
 					{
 						"internalType": "address",
@@ -539,27 +683,27 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0xf05a73b60bf4d4f660cbeefff0d4f11ee51d0958fcaca53e89704da42364b82b",
+			"keccak256": "0x420f8b2bd026b4927b052cdddee1ef75fddd75cbefa3579039ad4015bb57a8a7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://77106ca549f3a84043c9cf53aed25e4de0989721cc17c3dbd73a82acd31ca1a2",
-				"dweb:/ipfs/QmfVW3qJxuMtiJFCZcoxkCiBGQqL4SU3MPt7UpT3Tfgq3G"
+				"bzz-raw://e6c91a80cc0b796b584e367143c3f3d755ad1518041393aeb12813b28113b940",
+				"dweb:/ipfs/QmeFMaXXLALX4HdXYUUHqYU7UCWApGFknD6CTpdd8c7Qfw"
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0x8623f52fc661f689b418712efe3896c159fccce231ec49e697016dc8078e20ad",
+			"keccak256": "0x4138a6c0949638ab72f0aaa743a521481f1c94eabdfc68f2e1a8acc61b306c54",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f0ed4c29fca4218bc0756d23a0641c248df36333e4517c5433c143d8154c985b",
-				"dweb:/ipfs/QmdjnVd4iFZPxU2oFhA3fdaccTxYypDju5wH2ByM21CsZU"
+				"bzz-raw://f21258f5737e4d1b67580230bc1540958a1e73e95665e3ca3dcb6e030b4f0975",
+				"dweb:/ipfs/QmYe2nJsMsRMigGhPPH1mG7tArzZMk3aKDCWKnWRZsL2fj"
 			]
 		},
 		"contracts/States.sol": {
-			"keccak256": "0xc8e39dbff16f02492119881933d70313c415896d22b408653013a2c653b3827a",
+			"keccak256": "0xa722c63bf1f61fceefdb8400952ad6c0c5d75237cd4fa4714512b32c5a85d8a2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://399457c7eb2989d83bd91ed3f81052229c8b19373688a3a2884a2dc9a18cf05b",
-				"dweb:/ipfs/QmXPceiyx85hcGNacn1QFD2AvwkeAU19XehYY58vgAfRBK"
+				"bzz-raw://172038eacb0ef74476debf7731afa896c47905b3a784d82cbfb473b64b9b3e08",
+				"dweb:/ipfs/QmTgfgFha7sgYL2hXUC2Zd8BsuNkbG3skcpvApksm588sU"
 			]
 		}
 	},
