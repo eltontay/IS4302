@@ -1,141 +1,252 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
-import "./Service.sol";
+import "./Project.sol";
+import "./States.sol";
+// Review -> Profile -> Blocktractor
+// Conflict -> Milestone -> Service -> Project -> Blocktractor 
+
+// Payments in blocktractor also needs to be done.
+
+
+
+// WorkFlow 1 
+// Step 1 : Create Profile
+// Step 2 : Create Project -- Project Owner (Service Requester)
+// Step 3 : Create Service(s) -- Project Owner (Service Requester)
+// Step 4 : Create Milestone(s) for each Service(s) -- Project Owner (Service Requester)
+
+// WorkFlow 2
+// Step 1 : Finish Project
+// Step 2 : Review Profile
+
+// Workflow 3
+// Step 1 : Finish Milestone -- Service Provider
+// Step 2 : Create Conflict -- Project Owner (Service Requester)
+
+// Once all completed, come together then do payments
 
 contract Blocktractor {
 
-    event serviceListed(uint256 serviceNumber);
-    event serviceDelisted(uint256 serviceNumber);
-
-    Profile profileContract;
-    Service serviceContract;
-
-    uint256[] listedServices; // list of listed services (by serviceNumber)
+    Profile profile;
+    Project project;
 
     address payable escrow_wallet = payable(msg.sender);
     address payable revenue_wallet = payable(msg.sender);
     uint256 public comissionFee;
 
-    constructor(Profile profileAddress, Service serviceAddress, uint256 fee) {
+    constructor(Profile profileContract, Project projectContract, uint256 fee) public {
+        profile = profileContract;
+        project = projectContract;
         comissionFee = fee;
-        profileContract = profileAddress;
-        serviceContract = serviceAddress;
     }
 
-    modifier onlyServiceProvider(uint256 serviceNumber){
-        // only allow service providers to perform the action
-        require(msg.sender == serviceContract.getServiceProvider(serviceNumber), "Only Service Providers can perform this action");
-        _;
-    }
+/*
+    Modifiers
+*/
 
-    modifier listedService(uint256 serviceNumber){
-        require(isListed(serviceNumber) == true,"Service is not listed");
-        _;
-    }
 
-    modifier notListedService(uint256 serviceNumber){
-        require(isListed(serviceNumber) == false,"Service is already listed");
-        _;
-    }
+// function in blocktractor , first filters out using a function from project to see if it is completed, enum status,
+// only then allows person to review the profile.
 
-    // Verified Profiles are allowed to create service
-    /*function createService(string memory title, string memory description, uint256 price) public payable { 
-        serviceContract.createService(title,description,price);
-    }
+// function 1 : Project 
+// function 2 : Review Profile in Review
 
-    function deleteService(uint256 serviceNumber) public{
-        serviceContract.deleteService(serviceNumber);
-    }*/
 
-    // Verified Profiles are allowed to list service
-    function listService(uint256 serviceNumber) public onlyServiceProvider(serviceNumber) notListedService(serviceNumber) {
-        //serviceContract.listService(serviceNumber);
-
-        listedServices.push(serviceNumber);
-        emit serviceListed(serviceNumber);
-    }
-
-    // Verified Profiles are allowed to delist service
-    function delistService(uint256 serviceNumber) public onlyServiceProvider(serviceNumber) listedService(serviceNumber) {
-        //serviceContract.delistService(serviceNumber);
-        // Ensure that service is listed
-        uint256 i;
-        for(i = 0; i < listedServices.length; i++){
-            if (listedServices[i] == serviceNumber){
-                break;
-            }
-        }
-
-        // Remove element from listedServices array
-        for(uint256 j = i; j < listedServices.length-1; j++){
-            listedServices[j] = listedServices[j+1]; //decrement the index
-        }
-        listedServices.pop(); // the last element is not supposed to be there
-
-        emit serviceDelisted(serviceNumber);
-    } 
+   /*
+        Project - Create 
+    */
     
-    // Requesting for a service
-    function requestService(uint256 serviceNumber) public {
-        serviceContract.requestService(serviceNumber);
+    function createProject(string memory title, string memory description) public {
+        project.createProject(title,description);
     }
 
-    // Cancelling requested service
-    function cancelRequestService(uint256 serviceNumber) public {
-        serviceContract.cancelRequestService(serviceNumber);
+    /*
+        Project - Read 
+    */
+
+    function readProjectTitle(uint256 projectNumber) public view returns (string memory) {
+        project.readProjectTitle(projectNumber);
     }
 
-    // Approving requested service request
-    function approveService(uint256 serviceNumber) public {
-        serviceContract.approveServiceRequest(serviceNumber);
+    /*
+        Project - Update 
+    */
+    
+    function updateProject(uint256 projectNumber, string memory title, string memory description) public  {
+        project.updateProject(projectNumber,title,description);
     }
 
-    // Reject requested service request
-    function rejectService(uint256 serviceNumber) public {
-        serviceContract.rejectServiceRequest(serviceNumber);
+    /*
+        Project - Delete 
+    */
+    
+    function deleteProject(uint256 projectNumber) public {
+        project.deleteProject(projectNumber);
     }
 
-    // 
-    function startRequestedService(uint256 serviceNumber) public payable {
-        require(msg.value >= (serviceContract.getServicePrice(serviceNumber) + comissionFee), "Insufficient gas provided");
-        require(serviceContract.isServiceApproved(serviceNumber),"Service is not approved");
-        revenue_wallet.transfer(comissionFee);
-        escrow_wallet.transfer(msg.value-comissionFee);
-        serviceContract.startRequestedService(serviceNumber);
+    /*
+        Service - Create
+    */
+
+    function createService(uint256 projectNumber, string memory title, string memory description, uint256 price) public {
+        project.createService(projectNumber,title,description,price);
     }
 
-    // Function that completes listed Service
-    function completeService(uint256 serviceNumber) public {
-        // Service provider completes service
-        serviceContract.completeService(serviceNumber);
+    /*
+        Service - Read
+    */
+
+    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns (string memory) {
+        project.readServiceTitle(projectNumber,serviceNumber);
     }
 
-    // Getter for service status
-    function statusService() public {
-        
-    }
-    // Registering user profile on marketplace
-    function registerProfile() public {
+    /*
+        Service - Update
+    */
 
-    }
-
-    // Removing user profile on marketplace
-    function removeProfile() public {
-
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) public {
+        project.updateService(projectNumber,serviceNumber,title,description,price,status);
     }
 
-    /* Getter Functions */
+    /*
+        Service - Delete
+    */
 
-    function isListed(uint256 serviceNumber) public view returns (bool){
-        bool listed = false;
-        for(uint256 i = 0; i < listedServices.length; i++){
-            if (listedServices[i] == serviceNumber){
-                listed=true;
-                break;
-            }
-        }
-        return listed;
+    function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
+        project.deleteService(projectNumber,serviceNumber);
+    }
+
+    /*
+        Service - Accept service request  
+        Function for project owner to accept a contractor's service 
+    */
+
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
+        project.acceptServiceRequest(projectNumber,serviceNumber,msg.sender);
+    }
+
+    /*
+        Service - Reject service request  
+        Function for project owner to reject a contractor's service 
+    */
+
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
+        project.rejectServiceRequest(projectNumber,serviceNumber,msg.sender);   
+    }
+
+
+    /*
+        Milestone - Create
+    */
+
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
+        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+    }
+
+    /*
+        Milestone - Read
+    */   
+
+    function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (string memory) {
+        project.readMilestoneTitle(projectNumber,serviceNumber,milestoneNumber);
+    }
+
+    /*
+        Milestone - Update
+    */
+
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public {
+        project.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
+    }
+
+    /*
+        Milestone - Delete
+    */ 
+
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }    
+
+    /*
+        Conflict - Create
+    */ 
+    
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, uint256 totalVoters) external {
+        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender,totalVoters);
+    }
+
+    /*
+        Conflict - Update
+    */
+
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        project.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
+    }
+
+    /*
+        Conflict - Delete
+    */ 
+
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        project.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Start Vote
+    */
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        project.startVote(projectNumber, serviceNumber, milestoneNumber);
+    }
+
+    /*
+        Conflict - Vote
+    */
+
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
+        project.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+    }
+
+    /*
+        Profile - Create
+    */
+    function createProfile(string memory name, string memory username, string memory password) public {
+        profile.createProfile(name, username, password, msg.sender);
+    }
+
+    /*
+        Profile - Delete
+    */
+    function deleteProfile() public {
+        profile.deleteProfile(msg.sender);
+    }
+
+    /*
+        Profile - Update
+    */
+    function updateProfileName(string memory name) public {
+        profile.updateProfileName(name, msg.sender);
+    }
+
+
+/*
+    Service provider functions 
+*/
+
+    /*
+        Service - Request to start service 
+        Function for contractor to request to start a service 
+    */
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.takeServiceRequest(projectNumber, serviceNumber, msg.sender);
+    }
+
+    /*
+        Service - Complete service request
+    */
+
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
+        project.completeServiceRequest(projectNumber, serviceNumber, msg.sender);      
     }
 
 }
