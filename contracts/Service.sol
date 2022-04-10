@@ -15,6 +15,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract Service {
     Milestone milestone;
 
+
     constructor (Milestone milestoneContract) public {
         milestone = milestoneContract;
     }
@@ -246,6 +247,7 @@ contract Service {
     /*
         Milestone - Verify 
     */
+
     function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
@@ -253,6 +255,15 @@ contract Service {
         // To report the completion of the milestone
         milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber);
     }
+
+    /*
+        Milestone - Verify 
+    */
+
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
+        milestone.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
+    }
+
 
     /*
         Conflict - Create
@@ -344,6 +355,16 @@ contract Service {
     {
         require(projectServices[projectNumber][serviceNumber].serviceProvider == serviceProvider, "You are not working on this Service!");
         setState(projectNumber, serviceNumber, States.ServiceStatus.completed);
+    }
+
+    // Star Rating getters
+    function getAvgServiceProviderStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return milestone.getAvgServiceProviderStarRating(projectNumber,serviceNumber);
+    }
+
+    // Star Rating getters
+    function getAvgServiceRequesterStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return milestone.getAvgServiceRequesterStarRating(projectNumber,serviceNumber);
     }
 
 }

@@ -2,15 +2,18 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "./Conflict.sol";
+import "./Review.sol";
 import "./States.sol";
 
 contract Milestone {
 
     Conflict conflict;
+    Review review;
     address payable contractAddress = payable(msg.sender); 
 
-    constructor (Conflict conflictContract) payable {
+    constructor (Conflict conflictContract, Review reviewContract) payable {
         conflict = conflictContract;
+        review = reviewContract;
     }
 
     struct milestone {
@@ -51,6 +54,12 @@ contract Milestone {
 
     modifier atState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.MilestoneStatus state){
         require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == state, "Cannot carry out this operation!");
+        _;
+    }
+
+    modifier isNeither(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address target) {
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester == payable(target) || 
+                servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider == payable(target) , "Invalid service requester or provider");
         _;
     }
 
@@ -205,6 +214,28 @@ contract Milestone {
     }
 
     /*
+        Milestone - Verify milestone
+        target - serviceProvider or serviceRequester
+    */
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public 
+        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
+        // atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed) // commmented out because stack is too deep
+        // isNeither(projectNumber,serviceNumber,milestoneNumber, _from)
+    {
+        milestone storage currMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNumber];
+        address payable milestoneServiceProvider = currMilestone.serviceProvider;
+        address payable milestoneServiceRequester = currMilestone.serviceRequester;
+        require(milestoneServiceProvider == _from || milestoneServiceRequester == _from , " Invalid");
+        require(currMilestone.status == States.MilestoneStatus.completed);
+
+        if (milestoneServiceProvider == payable(_from)) {
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,payable(_from),milestoneServiceRequester,review_input,States.Role.serviceProvider,star_rating);
+        } else {
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,payable(_from),milestoneServiceProvider,review_input,States.Role.serviceRequester,star_rating);
+        }
+    }
+
+    /*
         Conflict - Create
     */ 
     
@@ -285,6 +316,8 @@ contract Milestone {
     }
 
 
+
+
 /*
     Getter Helper Functions
 */
@@ -315,5 +348,14 @@ contract Milestone {
         return conflict.getVotesforProvider(projectNumber,serviceNumber,milestoneNumber);
     }
 
+    // Star Rating getters
+    function getAvgServiceProviderStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return review.getAvgServiceProviderStarRating(projectNumber,serviceNumber);
+    }
+
+    // Star Rating getters
+    function getAvgServiceRequesterStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return review.getAvgServiceRequesterStarRating(projectNumber,serviceNumber);
+    }
 
 }

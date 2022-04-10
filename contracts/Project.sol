@@ -339,5 +339,28 @@ contract Project {
         service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber);
     }
 
+    /*
+        Review - Create
+    */
+
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
+        service.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
+    }
+
+    /*
+        Review - Getter Provider Stars
+    */
+
+    function getAvgServiceProviderStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return service.getAvgServiceProviderStarRating(projectNumber,serviceNumber);
+    }
+
+    /*
+        Review - Getter Requester Stars
+    */
+
+    function getAvgServiceRequesterStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return service.getAvgServiceRequesterStarRating(projectNumber,serviceNumber);
+    }
 
 }

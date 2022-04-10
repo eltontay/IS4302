@@ -169,6 +169,14 @@ contract Blocktractor {
     }    
 
     /*
+        Review - Create 
+    */
+
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
+        project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
+    }
+
+    /*
         Conflict - Create
     */ 
     
@@ -264,5 +272,22 @@ contract Blocktractor {
     function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
         project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber);
     }    
+
+    /*
+        Review - Getter Provider Stars
+    */
+
+    function getAvgServiceProviderStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return project.getAvgServiceProviderStarRating(projectNumber,serviceNumber);
+    }
+
+    /*
+        Review - Getter Requester Stars
+    */
+
+    function getAvgServiceRequesterStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
+        return project.getAvgServiceRequesterStarRating(projectNumber,serviceNumber);
+    }
+
 
 }

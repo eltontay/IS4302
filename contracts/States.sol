@@ -11,4 +11,6 @@ library States {
 
     enum ProjectStatus { active, inactive, terminated } 
 
+    enum Role { serviceProvider, serviceRequester }  
+
 }
