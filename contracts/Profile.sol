@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-// take in review
-// changes need to be made from review
+// Profile smart contract serves just as a frontend , connected only to blocktractor
 
 contract Profile {
 
@@ -13,14 +12,10 @@ contract Profile {
         string password;
         address owner;
         bool created;
-        // store in review, mapping
     }
 
-    // constructor needs review
 
     mapping (address => profile) profileList; // list of profiles created in profile smart contract
-    mapping (address => mapping(uint256 => bool)) services; // list of profile addresses that contains a list of services provided
-    mapping (address => mapping(uint256 => uint256)) servicesRequested; // list of profile addresses that contains a list of services requested
 
     uint256 public numProfile = 0; // To keep count of the number of profiles existing
 
