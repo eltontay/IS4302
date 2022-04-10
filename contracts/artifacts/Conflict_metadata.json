@@ -236,6 +236,35 @@
 						"type": "uint256"
 					}
 				],
+				"name": "doesConflictExist",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					}
+				],
 				"name": "getConflictStatus",
 				"outputs": [
 					{
@@ -379,6 +408,29 @@
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
+					}
+				],
+				"name": "startVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
 					},
 					{
 						"internalType": "string",
@@ -415,7 +467,7 @@
 					},
 					{
 						"internalType": "address",
-						"name": "sender",
+						"name": "_from",
 						"type": "address"
 					},
 					{
@@ -458,19 +510,19 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0x0dce7a80100237bc00c20d34b8c00856887bf8799d652a9bcefff69b608ee44d",
+			"keccak256": "0xef6baad08a2b98686899ff4415a57282c9e3ec7668137aa308a85cc9e5bd759e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9c687274aea9145a75619c9893614c9828914db0ebcbaf49d6fb4046a97e9ba4",
-				"dweb:/ipfs/Qmawbg1d7LurmvMUthd6xrNCTygcqP4aVLm3sNWDiXRKqg"
+				"bzz-raw://313875d4ebbf86fa02df1029a86d84d1d7729624d0e427164dcbd758eaede85f",
+				"dweb:/ipfs/QmPo6FxT91qWNYUj1dPXPMknRpKgWP1f14hqR5bZe8PtSk"
 			]
 		},
 		"contracts/States.sol": {
-			"keccak256": "0xbb7d1d825edf97e18fab787805ba609cad44076179e4810949916c0ec541d657",
+			"keccak256": "0x1c0d210c18f7d890d9b3bd3fbf8c43336c8b57aed9cb02e704ca5ada8a17e21a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bad6dc32d5610619ca00b4f6750e651ad47958cdb02cbf1129266af90674205a",
-				"dweb:/ipfs/Qmd3HV6vDkMtrjHjVUZqaCgcabkmkfzYDFq73KGYdrtVXJ"
+				"bzz-raw://ad6c5fb7c5213f29b89a037035b75881b2d48b3b89443f1e4c95231a44e8a972",
+				"dweb:/ipfs/QmcyZt6CwRDYZwhXZ4mS9Hd2PjMiGz4ntTwtdo7WGozjoL"
 			]
 		}
 	},

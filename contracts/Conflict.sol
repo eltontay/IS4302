@@ -51,8 +51,9 @@ contract Conflict {
     }
 
     modifier canVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender){
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceRequester != sender , "You raised this conflict. You cannot vote on it.");
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].serviceProvider != sender, "You are involved in this conflict. You cannot vote on it.");
+        conflict storage currConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
+        require(currConflict.serviceRequester != sender , "You raised this conflict. You cannot vote on it.");
+        require(currConflict.serviceProvider != sender, "You are involved in this conflict. You cannot vote on it.");
         _;
     }
 
@@ -133,17 +134,19 @@ contract Conflict {
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) public 
-        // isValidConflict(projectNumber, serviceNumber, milestoneNumber) Removed this line to fix stack error
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) public 
+        isValidConflict(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.voting)
-        canVote(projectNumber, serviceNumber, milestoneNumber, sender)
     {
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].votesCollected < conflicts[projectNumber][serviceNumber][milestoneNumber].voters, "Enough votes have been collected");
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].votes[sender] == 0 , "You have already voted, you cannot vote again");
+        conflict storage currConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
+        require(currConflict.serviceRequester != _from , "You raised this conflict. You cannot vote on it.");
+        require(currConflict.serviceProvider != _from, "You are involved in this conflict. You cannot vote on it.");
+        require(currConflict.votesCollected < currConflict.voters, "Enough votes have been collected");
+        require(currConflict.votes[_from] == 0 , "You have already voted, you cannot vote again");
         require(vote == 1 || vote == 2, "You have not input a right vote. You can either vote 1 for Requester or 2 for Provider.");
 
         conflict storage C = conflicts[projectNumber][serviceNumber][milestoneNumber];
-        C.votes[sender] = vote;
+        C.votes[_from] = vote;
 
         if (vote == 1) { C.requesterVotes++; }
         if (vote == 2) { C.providerVotes++; }

@@ -63,6 +63,19 @@ contract Milestone {
         _;
     }
 
+    modifier checkDAO(uint256 projectNumber, uint256 serviceNumber, uint256 numMilestones, address _from) {
+        mapping(uint256 => milestone) storage currService = servicesMilestones[projectNumber][serviceNumber];
+        bool check = false;
+        for (uint8 i = 0; i < numMilestones; i++) {
+            milestone storage currMilestone = currService[i];
+            if (currMilestone.serviceProvider == payable(_from)) {
+                check = true;
+            }
+        }
+        require(check, "Invalid Service Provider, unable to vote");
+        _;
+    }
+
 /*
     Setter Functions
 */
@@ -214,13 +227,11 @@ contract Milestone {
     }
 
     /*
-        Milestone - Verify milestone
-        target - serviceProvider or serviceRequester
+        Milestone - Review milestone
     */
     function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
-        // atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed) // commmented out because stack is too deep
-        // isNeither(projectNumber,serviceNumber,milestoneNumber, _from)
+
     {
         milestone storage currMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNumber];
         address payable milestoneServiceProvider = currMilestone.serviceProvider;
@@ -240,7 +251,6 @@ contract Milestone {
     */ 
     
     function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external 
-        // isValidMilestone(projectNumber, serviceNumber, milestoneNumber)//REMOVED THIS FOR STACK ERROR
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed)
     {
         // Need to set requirement for service requestor?
@@ -273,23 +283,26 @@ contract Milestone {
 
     /*
         Conflict - Start Vote
+
     */
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address _from, address _to) external
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
     {
         conflict.startVote(projectNumber, serviceNumber, milestoneNumber);
     }
-
+    
     /*
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external 
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address _from, uint8 vote) external 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
+        checkDAO(projectNumber,serviceNumber,numMilestones,_from)
     {
-        conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+        conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
     }
 
     /*

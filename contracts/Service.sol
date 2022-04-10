@@ -29,6 +29,7 @@ contract Service {
         address payable serviceProvider; // defaults to address(0)
         bool exist; // allowing update such as soft delete of service
         States.ServiceStatus status; // Defaults at none
+        uint256 numMilestones;
     }
 
 /*
@@ -103,6 +104,7 @@ contract Service {
         newService.serviceProvider = payable(address(0));
         newService.exist = true;
         newService.status = States.ServiceStatus.created;
+        newService.numMilestones = 0;
 
         emit serviceCreated(projectNumber, serviceNum, title, description);
 
@@ -201,6 +203,7 @@ contract Service {
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
         milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+        projectServices[projectNumber][serviceNumber].numMilestones += 1;
     }
 
     /*
@@ -231,6 +234,7 @@ contract Service {
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {        
         milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+        projectServices[projectNumber][serviceNumber].numMilestones -= 1;
     }
 
     /*

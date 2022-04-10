@@ -211,10 +211,10 @@ contract Blocktractor {
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external {
-        project.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 vote) external {
+        project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
     }
-
+    
     /*
         Profile - Create
     */

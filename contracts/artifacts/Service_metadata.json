@@ -436,6 +436,11 @@
 						"internalType": "enum States.ServiceStatus",
 						"name": "status",
 						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "numMilestones",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -838,11 +843,11 @@
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0x61dfac2033a9ddf663e438e0543a61095dc98f565bca04991dbfa5d4078c7918",
+			"keccak256": "0x00afdb71942bf8ce4fe56ea9901eba49430f8a0223d9c415da85fad4220bd890",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d4b85b739c419540b7486269c2ba248ebd4a591f3787d6c61643dc160eb6fc0f",
-				"dweb:/ipfs/QmSL5AcpFUsePwfHoHzeSXqWfYxfiMWXN2sVCzPmix5iYM"
+				"bzz-raw://6bc4d8a0ef9384a00866680c728624e82378ce486279f8e186eb9c6a2c5537c7",
+				"dweb:/ipfs/QmVxNj9idJcjna7mUZ37sZ68n2jFEiixPvHTZkjThoAZQi"
 			]
 		},
 		"contracts/States.sol": {

@@ -2,7 +2,6 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Service.sol";
 import "./States.sol";
-import "./Profile.sol";
 
 /*
     Service Requester (Project Owner)
@@ -10,11 +9,9 @@ import "./Profile.sol";
 contract Project {
     
     Service service; 
-    Profile profile; 
 
-    constructor(Service serviceContract, Profile profileContract) public {
+    constructor(Service serviceContract) public {
         service = serviceContract;
-        profile = profileContract;
     }
     
 
@@ -137,9 +134,10 @@ contract Project {
 
     function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view 
         atState(projectNumber, States.ProjectStatus.active)
-    returns (string memory){
-        service.readServiceTitle(projectNumber,serviceNumber);
-    }
+            returns (string memory)
+            {
+                service.readServiceTitle(projectNumber,serviceNumber);
+            }
 
     /*
         Service - Update
