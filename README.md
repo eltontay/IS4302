@@ -7,6 +7,7 @@ Blocktractor.sol
 - Project.sol
 
 Profile.sol
+- Review.sol
 
 Project.sol
 - Service.sol
@@ -16,7 +17,6 @@ Service.sol
 
 Milestone.sol
 - Conflict.sol
-- Review.sol
 
 States.sol
 - Enum states of all the solidity files

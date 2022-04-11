@@ -4,26 +4,26 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Service.sol";
 import "./States.sol";
 
-// library SafeMath {
-//     /**
-//      * @dev Returns the integer division of two unsigned integers. Reverts on
-//      * division by zero. The result is rounded towards zero.
-//      *
-//      * Counterpart to Solidity's `/` operator. Note: this function uses a
-//      * `revert` opcode (which leaves remaining gas untouched) while Solidity
-//      * uses an invalid opcode to revert (consuming all remaining gas).
-//      *
-//      * Requirements:
-//      * - The divisor cannot be zero.
-//      */
-//     function div(uint256 a, uint256 b) internal pure returns (uint256) {
-//         return div(a, b);
-//     }
-// }
+library SafeMath {
+    /**
+     * @dev Returns the integer division of two unsigned integers. Reverts on
+     * division by zero. The result is rounded towards zero.
+     *
+     * Counterpart to Solidity's `/` operator. Note: this function uses a
+     * `revert` opcode (which leaves remaining gas untouched) while Solidity
+     * uses an invalid opcode to revert (consuming all remaining gas).
+     *
+     * Requirements:
+     * - The divisor cannot be zero.
+     */
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {
+        return div(a, b);
+    }
+}
 
 contract Review {
     
-    // using SafeMath for uint256;
+    using SafeMath for uint256;
 
     struct review {
         uint256 projectNumber;
@@ -81,7 +81,7 @@ contract Review {
             sum_star += serviceProviderReviews[projectNumber][serviceNumber][i].star_rating;
         }
 
-        return sum_star/ numberOfReviews;
+        return SafeMath.div(sum_star, numberOfReviews);
     }
 
     // Star Rating getters
@@ -92,7 +92,7 @@ contract Review {
             sum_star += serviceRequesterReviews[projectNumber][serviceNumber][i].star_rating;
         }
 
-        return sum_star/ numberOfReviews;
+        return SafeMath.div(sum_star, numberOfReviews);
     }
 
 }
