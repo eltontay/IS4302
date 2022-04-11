@@ -257,20 +257,20 @@ contract Project {
     /*
         Conflict - Start Vote
     */
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) external
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.startVote(projectNumber, serviceNumber, milestoneNumber);
+        service.startVote(projectNumber, serviceNumber, milestoneNumber,payable(_from));
     }
 
     /*
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external 
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+        service.voteConflict(projectNumber,serviceNumber,milestoneNumber,payable(_from),vote);
     }
 
 /*
@@ -318,21 +318,21 @@ contract Project {
     /*
         Milestone - Complete 
     */
-    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
         // To report the completion of the milestone
-        service.completeMilestone(projectNumber, serviceNumber, milestoneNumber);
+        service.completeMilestone(projectNumber, serviceNumber, milestoneNumber, payable(_from));
     }
 
     /*
         Milestone - Verify 
     */
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
         // To report the completion of the milestone
-        service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber);
+        service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber , payable(_from));
     }
 
     /*
@@ -340,7 +340,7 @@ contract Project {
     */
 
     function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
-        service.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
+        service.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,payable(_from),review_input,star_rating);
     }
 
     /*

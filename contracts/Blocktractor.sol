@@ -208,7 +208,7 @@ contract Blocktractor {
     */ 
 
     function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.completeMilestone(projectNumber,serviceNumber,milestoneNumber);
+        project.completeMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
     }    
 
     /*
@@ -216,7 +216,7 @@ contract Blocktractor {
     */ 
 
     function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber);
+        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
     } 
 
 /*
@@ -283,7 +283,7 @@ contract Blocktractor {
         Conflict - Start Vote
     */
     function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.startVote(projectNumber, serviceNumber, milestoneNumber);
+        project.startVote(projectNumber, serviceNumber, milestoneNumber,msg.sender);
     }
 
     /*

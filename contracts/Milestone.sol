@@ -209,7 +209,7 @@ contract Milestone {
     /*
         Milestone - Verify milestone
     */
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public payable
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) public payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed) 
     {
@@ -278,6 +278,7 @@ contract Milestone {
 
     /*
         Conflict - Start Vote
+        Checks DAO here.
     */
 
     function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address payable _from) external
@@ -290,6 +291,7 @@ contract Milestone {
     
     /*
         Conflict - Vote
+        Check DAO here.
     */
 
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address payable _from, uint8 vote) external 

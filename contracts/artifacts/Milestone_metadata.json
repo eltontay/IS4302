@@ -830,11 +830,11 @@
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0xb279d878aac6d37297eb5a6c7b46e8d2567836329c5da4fc287bda108616e372",
+			"keccak256": "0x1d32ef3bfb8c4d26f5e81c4d5f140f6ed02af1f9c25cec55e8e4f04a5c8d46be",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3641fc973fc4ba5e50f0413f8e080272658ff42dacc2c59423494099340c4038",
-				"dweb:/ipfs/QmNaGzYFHBwowr83VVBM4BhyF6tiN9hTLbdkTjqmtNrMjt"
+				"bzz-raw://32d7f14640470d8522da0125d4d28333d50feba19b9ade5006248ef69236e210",
+				"dweb:/ipfs/QmXur5sEKkxsG8cvvmwgWt5qYrBsKdVdZMgpspYs4eFpdw"
 			]
 		},
 		"contracts/Review.sol": {
