@@ -139,7 +139,7 @@ node_modules
 
 # testing
 ./build
-./contracts/artifacts
+./contracts/artifacts/
 
 
 # production
