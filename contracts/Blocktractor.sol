@@ -57,7 +57,7 @@ contract Blocktractor {
     */
     
     function createProject(string memory title, string memory description) public {
-        project.createProject(title,description);
+        project.createProject(title,description, msg.sender);
     }
 
     /*
@@ -121,8 +121,8 @@ contract Blocktractor {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
-        project.acceptServiceRequest(projectNumber,serviceNumber,payable(msg.sender));
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable serviceProvider) external {
+        project.acceptServiceRequest(projectNumber,serviceNumber,msg.sender ,payable(serviceProvider));
     }
 
     /*
@@ -140,7 +140,7 @@ contract Blocktractor {
     */
 
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price) public {
-        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price);
+        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, payable(msg.sender));
         //make payment to escrow
         erc20.transfer(escrow, price);
     }
@@ -166,7 +166,8 @@ contract Blocktractor {
     */ 
 
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, erc20);
+
     }    
 
     /*
@@ -219,7 +220,7 @@ contract Blocktractor {
     /*
         Conflict - Resolve conflict payment 
     */
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public {
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
         project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
     }
 
@@ -254,8 +255,8 @@ contract Blocktractor {
         Service - Request to start service 
         Function for contractor to request to start a service 
     */
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
-        project.takeServiceRequest(projectNumber, serviceNumber, msg.sender);
+    function createServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.createServiceRequest(projectNumber, serviceNumber, msg.sender);
     }
 
     /*
@@ -275,11 +276,11 @@ contract Blocktractor {
     }    
 
     /*
-        Milestone - Verify Milestone
+        Milestone - Make milestone payment
     */ 
 
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber, erc20);
+    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.makeMilestonePayment(projectNumber,serviceNumber,milestoneNumber, erc20);
     }    
 
     /*

@@ -61,17 +61,17 @@ contract Project {
         Project - Create 
     */
     
-    function createProject(string memory title, string memory description) public {
+    function createProject(string memory title, string memory description, address _from) public {
                 
         project storage newProject = projects[projectNum];
         newProject.projectNumber = projectNum;
         newProject.title = title;
         newProject.description = description;
-        newProject.projectOwner = msg.sender;
+        newProject.projectOwner =_from;
         newProject.exist = true;
         newProject.projectstatus = States.ProjectStatus.active;
 
-        emit projectCreated(projectNum, title, description, msg.sender);
+        emit projectCreated(projectNum, title, description, _from);
         projectTotal++;
         projectNum++;
     }
@@ -123,7 +123,7 @@ contract Project {
     */
 
     function createService(uint256 projectNumber, string memory title, string memory description) public 
-        onlyOwner(projectNumber,msg.sender) 
+        // onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
         service.createService(projectNumber,title,description,payable(msg.sender));
@@ -167,10 +167,10 @@ contract Project {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable serviceRequester) external 
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester,address serviceProvider) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.acceptServiceRequest(projectNumber,serviceNumber,msg.sender, serviceRequester);
+        service.acceptServiceRequest(projectNumber,serviceNumber, serviceRequester, payable(serviceProvider));
     }
 
     /*
@@ -188,11 +188,11 @@ contract Project {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone,uint256 price) public 
-        onlyOwner(projectNumber,msg.sender) 
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone,uint256 price, address payable _from) public 
+        onlyOwner(projectNumber, _from) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price);
+        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, _from);
     }
 
     /*
@@ -220,11 +220,11 @@ contract Project {
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public 
-        onlyOwner(projectNumber,msg.sender) 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public 
+        // onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, erc20);
     }    
 
     /*
@@ -308,10 +308,10 @@ contract Project {
         Function for contractor to request to start a service 
     */
     
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public  
+    function createServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public  
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.takeServiceRequest(projectNumber, serviceNumber, serviceProvider); 
+        service.createServiceRequest(projectNumber, serviceNumber, serviceProvider); 
     }
 
     /*
@@ -336,13 +336,13 @@ contract Project {
     }
 
     /*
-        Milestone - Verify 
+        Milestone - make milestone payment 
     */
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 ecr20) external 
+    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 ecr20) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
         // To report the completion of the milestone
-        service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber, ecr20);
+        service.makeMilestonePayment(projectNumber, serviceNumber, milestoneNumber, ecr20);
     }
 
     /*

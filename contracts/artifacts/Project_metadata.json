@@ -110,8 +110,13 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "address payable",
+						"internalType": "address",
 						"name": "serviceRequester",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "serviceProvider",
 						"type": "address"
 					}
 				],
@@ -235,6 +240,11 @@
 						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "_from",
+						"type": "address"
 					}
 				],
 				"name": "createMilestone",
@@ -253,6 +263,11 @@
 						"internalType": "string",
 						"name": "description",
 						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
 					}
 				],
 				"name": "createProject",
@@ -296,6 +311,29 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "address",
+						"name": "serviceProvider",
+						"type": "address"
+					}
+				],
+				"name": "createServiceRequest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
@@ -322,6 +360,11 @@
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
+					},
+					{
+						"internalType": "contract ERC20",
+						"name": "erc20",
+						"type": "address"
 					}
 				],
 				"name": "deleteMilestone",
@@ -425,6 +468,34 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "contract ERC20",
+						"name": "ecr20",
+						"type": "address"
+					}
+				],
+				"name": "makeMilestonePayment",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -610,6 +681,34 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "contract ERC20",
+						"name": "erc20",
+						"type": "address"
+					}
+				],
+				"name": "resolveConflictPayment",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "milestoneNumber",
+						"type": "uint256"
+					},
+					{
 						"internalType": "address",
 						"name": "_from",
 						"type": "address"
@@ -649,29 +748,6 @@
 					}
 				],
 				"name": "startVote",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "projectNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "serviceNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "serviceProvider",
-						"type": "address"
-					}
-				],
-				"name": "takeServiceRequest",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -821,34 +897,6 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "contract ERC20",
-						"name": "ecr20",
-						"type": "address"
-					}
-				],
-				"name": "verifyMilestone",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "projectNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "serviceNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "milestoneNumber",
-						"type": "uint256"
-					},
-					{
 						"internalType": "address",
 						"name": "sender",
 						"type": "address"
@@ -917,19 +965,19 @@
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0x7ddfa58c15029ed213f5bd5cad46e80bd87d4732ea53fe576e8d28405313ec01",
+			"keccak256": "0xe37d2fef5d748eb375fe92ea220e2561d7667ed8e05d8206e855955a1f04d5c0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://da5813b0f6ae81a8faf2e656907629f1da1f33d0c3769277e5a316f98108b3d1",
-				"dweb:/ipfs/QmeyhPQq32LnqiXu4WTfPiADhb7tMPMhmkiEDrusNUvbZj"
+				"bzz-raw://a402a757b69c2a488f81d73bd22dfaeb4def72c8f61cb68a9f8c98b11666c7e3",
+				"dweb:/ipfs/QmbG1FUhJNUcaniXMg2T7nLGVaMzFAHBrCfxUHZicNLhMU"
 			]
 		},
 		"contracts/Project.sol": {
-			"keccak256": "0xe3fe94c5f6bda6c5e9007faf7739fd61933ce1b7083e103c36285d20d2298ea7",
+			"keccak256": "0x359402775554d165d7e58829796906067809c576512cada5540940b7f61c8ee4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6ee8fb5e1416a5f015ea53009ef8bdb6b4b0b92c39e06900c7e18ea35f26e194",
-				"dweb:/ipfs/QmWToCnGCZnckfhp48nwkwMyCRxkfLrHoKiMiYuo7EsZrt"
+				"bzz-raw://40bbc0145f59815588dae3c45a81fb4455526ddc3b1694a0a05c58b348cadae1",
+				"dweb:/ipfs/QmXJvoMcqtR7iYwaXTSnR44kriahHeREbAYjSkp2g1C1K8"
 			]
 		},
 		"contracts/Review.sol": {
@@ -941,11 +989,11 @@
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0xde02576077b20dbd3cecf5b2e8b5fa2297b643db5e2d15aff1df69c58287ffbb",
+			"keccak256": "0xde8b48231f55f174efd15bb32fa75e4fc5271cd2f0479b182754ad48dfb341a6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://eda64239631ee8f030dadab96753f5e10c87f4d4b578e961611f3498de70f546",
-				"dweb:/ipfs/QmbPfFp6jWYmTbxdLGa8praizCaKShs22odfZn7PaMVsuU"
+				"bzz-raw://77bec1eb3a4cda0450fbe4af2598a3ebd528e737edf5ac15accc6654fe74bf04",
+				"dweb:/ipfs/QmZe9U4Hru2dEpthxtWmNP6Zo5PJucWaueDUFQL9SanxKM"
 			]
 		},
 		"contracts/States.sol": {

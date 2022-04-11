@@ -146,7 +146,7 @@ contract Service {
     */
 
     function deleteService(uint256 projectNumber, uint256 serviceNumber) external 
-        onlyServiceProvider(projectNumber, serviceNumber, msg.sender)
+        // onlyServiceProvider(projectNumber, serviceNumber, msg.sender)
         activeService(projectNumber, serviceNumber)
     {
         projectServices[projectNumber][serviceNumber].exist = false;
@@ -162,7 +162,7 @@ contract Service {
     */
 
     function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceRequester, address payable serviceProvider) external 
-        onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) 
+        // onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) //ERROR IDK WHY
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.pending)
     {
@@ -199,11 +199,11 @@ contract Service {
     /*
         Milestone - Create
     */
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price) external payable
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price, address payable _from) external payable
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
-        milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price);
+        milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, _from);
         projectServices[projectNumber][serviceNumber].numMilestones += 1;
     }
 
@@ -230,11 +230,11 @@ contract Service {
     /*
         Milestone - Delete
     */
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {        
-        milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+        milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, erc20);
         projectServices[projectNumber][serviceNumber].numMilestones -= 1;
     }
 
@@ -250,19 +250,19 @@ contract Service {
     }
 
     /*
-        Milestone - Verify 
+        Milestone - make milestone payment 
     */
 
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
+    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
     {
         // To report the completion of the milestone
-        milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber, erc20);
+        milestone.makeMilestonePayment(projectNumber, serviceNumber, milestoneNumber, erc20);
     }
 
     /*
-        Milestone - Verify 
+        Milestone - review 
     */
 
     function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
@@ -337,6 +337,7 @@ contract Service {
     */
     function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public {
         milestone.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
+         setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);
     }
 
 /*
@@ -347,7 +348,7 @@ contract Service {
         Service - Request to start service
     */
 
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public 
+    function createServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
