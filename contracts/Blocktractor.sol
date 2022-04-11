@@ -113,14 +113,6 @@ contract Blocktractor {
     }
 
     /*
-        Service - Read
-    */
-
-    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns (string memory) {
-        project.readServiceTitle(projectNumber,serviceNumber);
-    }
-
-    /*
         Service - Update
     */
 
@@ -170,6 +162,14 @@ contract Blocktractor {
     function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
         project.completeServiceRequest(projectNumber, serviceNumber, msg.sender);      
     }
+
+    function getServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
+        project.getServiceTitle(projectNumber,serviceNumber);
+    }
+
+    function getServiceDescription(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
+        project.getServiceDescription(projectNumber,serviceNumber);
+    }   
 
 /*
 

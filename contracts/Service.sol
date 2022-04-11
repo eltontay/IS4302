@@ -113,17 +113,6 @@ contract Service {
     }
 
     /*
-        Service - Read 
-    */
-
-    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) external view 
-        activeService(projectNumber, serviceNumber)
-        returns (string memory) 
-    {
-        return projectServices[projectNumber][serviceNumber].title;
-    }
-
-    /*
         Service - Update
     */
 
@@ -182,6 +171,41 @@ contract Service {
         setState(projectNumber, serviceNumber, States.ServiceStatus.created);
         projectServices[projectNumber][serviceNumber].serviceProvider = payable(address(0));
     }
+
+    /*
+        Service - Request to start service
+    */
+
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) public 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {
+        require(projectServices[projectNumber][serviceNumber].serviceProvider == payable(address(0)), "This Service is already taken!");
+        require(projectServices[projectNumber][serviceNumber].serviceRequester != _from, "You cannot work on your own project");
+        setState(projectNumber, serviceNumber, States.ServiceStatus.pending); 
+    }
+
+    /*
+        Service - Complete service request
+    */
+
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) external 
+        onlyServiceProvider(projectNumber,serviceNumber,_from) 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
+    {
+        require(projectServices[projectNumber][serviceNumber].serviceProvider == _from, "You are not working on this Service!");
+        setState(projectNumber, serviceNumber, States.ServiceStatus.completed);
+    }
+
+
+    function getServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
+        projectServices[projectNumber][serviceNumber].title;
+    }
+
+    function getServiceDescription(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
+        projectServices[projectNumber][serviceNumber].description;
+    }   
 
 
     /*
@@ -326,35 +350,6 @@ contract Service {
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,projectServices[projectNumber][serviceNumber].numMilestones,_from,vote);
     }
 
-/*
-    Service provider Functions
-*/
-
-    /*
-        Service - Request to start service
-    */
-
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) public 
-        activeService(projectNumber, serviceNumber)
-        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
-    {
-        require(projectServices[projectNumber][serviceNumber].serviceProvider == payable(address(0)), "This Service is already taken!");
-        require(projectServices[projectNumber][serviceNumber].serviceRequester != _from, "You cannot work on your own project");
-        setState(projectNumber, serviceNumber, States.ServiceStatus.pending); 
-    }
-
-    /*
-        Service - Complete service request
-    */
-
-    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) external 
-        onlyServiceProvider(projectNumber,serviceNumber,_from) 
-        activeService(projectNumber, serviceNumber)
-        atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
-    {
-        require(projectServices[projectNumber][serviceNumber].serviceProvider == _from, "You are not working on this Service!");
-        setState(projectNumber, serviceNumber, States.ServiceStatus.completed);
-    }
 
     // Star Rating getters
     function getAvgServiceProviderStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {

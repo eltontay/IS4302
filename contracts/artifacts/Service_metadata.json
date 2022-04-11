@@ -401,6 +401,54 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "getServiceDescription",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serviceNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "getServiceTitle",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
 					},
@@ -480,30 +528,6 @@
 					}
 				],
 				"name": "readMilestoneTitle",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "projectNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "serviceNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "readServiceTitle",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -878,11 +902,11 @@
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0xc7d1d90f82db14f99ae0bd43e7a8b611d9b97cb76e97e5aabb447d1db75bdefc",
+			"keccak256": "0xcb59289de65789cfb60571373ad74de328d92e9b055a0798c61f836d5fd90e53",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://cfa933356269943f541db3da2661d310944f377ba341c77ee5b7266b3191da79",
-				"dweb:/ipfs/QmZG9H5S6GQ7A1BUHsCjen8kwmw9UmNqL2c2uactSzKJD4"
+				"bzz-raw://2feff7f2f5119b41f9bc95cdb32fc36b3631d66e80513cba0c00732cfe7ab90a",
+				"dweb:/ipfs/QmRCcJ7czn82m45BZUEtpRpCK4UyjQjcoUkoprnnLeUvKK"
 			]
 		},
 		"contracts/States.sol": {

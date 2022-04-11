@@ -141,17 +141,6 @@ contract Project {
     }
 
     /*
-        Service - Read
-    */
-
-    function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view 
-        atState(projectNumber, States.ProjectStatus.active)
-        returns (string memory)
-    {
-        service.readServiceTitle(projectNumber,serviceNumber);
-    }
-
-    /*
         Service - Update
     */
 
@@ -192,6 +181,16 @@ contract Project {
     {
         service.rejectServiceRequest(projectNumber,serviceNumber,payable(_from));   
     }
+
+
+    function getServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
+        service.getServiceTitle(projectNumber,serviceNumber);
+    }
+
+    function getServiceDescription(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
+        service.getServiceDescription(projectNumber,serviceNumber);
+    }   
+
 
     /*
         Milestone - Create
