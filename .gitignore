@@ -138,6 +138,9 @@ dist
 node_modules
 
 # testing
+./build
+./contracts/artifacts
+
 
 # production
 build
