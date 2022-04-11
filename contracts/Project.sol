@@ -2,6 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Service.sol";
 import "./States.sol";
+import "./ERC20.sol";
 
 /*
     Service Requester (Project Owner)
@@ -187,11 +188,11 @@ contract Project {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public 
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone,uint256 price) public 
         onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price);
     }
 
     /*
@@ -275,6 +276,13 @@ contract Project {
         service.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
     }
 
+    /*
+        Conflict - Resolve conflict payment 
+    */
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public {
+        service.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
+    }
+
 /*
     Getter Helper Functions
 */
@@ -330,11 +338,11 @@ contract Project {
     /*
         Milestone - Verify 
     */
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 ecr20) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
         // To report the completion of the milestone
-        service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber);
+        service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber, ecr20);
     }
 
     /*

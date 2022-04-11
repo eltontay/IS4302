@@ -2,6 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Milestone.sol";
 import "./States.sol";
+import "./ERC20.sol";
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 
@@ -198,11 +199,11 @@ contract Service {
     /*
         Milestone - Create
     */
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) external payable
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price) external payable
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
-        milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+        milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price);
         projectServices[projectNumber][serviceNumber].numMilestones += 1;
     }
 
@@ -252,12 +253,12 @@ contract Service {
         Milestone - Verify 
     */
 
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
     {
         // To report the completion of the milestone
-        milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber);
+        milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber, erc20);
     }
 
     /*
@@ -329,6 +330,13 @@ contract Service {
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
     {
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+    }
+
+    /*
+        Conflict - Resolve conflict payment 
+    */
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public {
+        milestone.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
     }
 
 /*

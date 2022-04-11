@@ -6,8 +6,10 @@
 	"output": {
 		"abi": [],
 		"devdoc": {
+			"details": "Math operations with safety checks that throw on error",
 			"kind": "dev",
 			"methods": {},
+			"title": "SafeMath",
 			"version": 1
 		},
 		"userdoc": {
@@ -18,7 +20,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Review.sol": "SafeMath"
+			"contracts/ERC20.sol": "SafeMath"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -32,52 +34,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"@openzeppelin/contracts/utils/Strings.sol": {
-			"keccak256": "0x32c202bd28995dd20c4347b7c6467a6d3241c74c8ad3edcbb610cd9205916c45",
+		"contracts/ERC20.sol": {
+			"keccak256": "0x7861746e661b9741b6dd5e82224f12d15d408baf50513e0622978b663f3d7835",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8179c356adb19e70d6b31a1eedc8c5c7f0c00e669e2540f4099e3844c6074d30",
-				"dweb:/ipfs/QmWFbivarEobbqhS1go64ootVuHfVohBseerYy9FTEd1W2"
-			]
-		},
-		"contracts/Conflict.sol": {
-			"keccak256": "0x420f8b2bd026b4927b052cdddee1ef75fddd75cbefa3579039ad4015bb57a8a7",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://e6c91a80cc0b796b584e367143c3f3d755ad1518041393aeb12813b28113b940",
-				"dweb:/ipfs/QmeFMaXXLALX4HdXYUUHqYU7UCWApGFknD6CTpdd8c7Qfw"
-			]
-		},
-		"contracts/Milestone.sol": {
-			"keccak256": "0x722eb6bdb52bff6403ba54f80cf31fa2c6ac12107dcf98db3d8ad09bfacd4a04",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://43deb9470a27188b6a7dec838c72a187fe5f73050d89ae2ca94ecc5820ef3a26",
-				"dweb:/ipfs/QmQy5QeBYvLEsS1jKm5iAwRZKCe5gKFhrzgDEZbw5sMuWy"
-			]
-		},
-		"contracts/Review.sol": {
-			"keccak256": "0x993c7c8f5c18c56338b2bd7fdeec0694f91e3fafadcd93cf8bd10b150fc75d02",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://8e35e2a00c865d8a4517890b8adab9dbcf0b8c26ccfd935aa32d733f1a60fbf1",
-				"dweb:/ipfs/QmXFs1rsi2UUr6EMoPp2R5r9gtQM5tANab8mvyPsHcLVzf"
-			]
-		},
-		"contracts/Service.sol": {
-			"keccak256": "0x61dfac2033a9ddf663e438e0543a61095dc98f565bca04991dbfa5d4078c7918",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://d4b85b739c419540b7486269c2ba248ebd4a591f3787d6c61643dc160eb6fc0f",
-				"dweb:/ipfs/QmSL5AcpFUsePwfHoHzeSXqWfYxfiMWXN2sVCzPmix5iYM"
-			]
-		},
-		"contracts/States.sol": {
-			"keccak256": "0x1c0d210c18f7d890d9b3bd3fbf8c43336c8b57aed9cb02e704ca5ada8a17e21a",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://ad6c5fb7c5213f29b89a037035b75881b2d48b3b89443f1e4c95231a44e8a972",
-				"dweb:/ipfs/QmcyZt6CwRDYZwhXZ4mS9Hd2PjMiGz4ntTwtdo7WGozjoL"
+				"bzz-raw://2199fbf8fc57fcc58982b0c5489ad117561afe11b6efc6c9235d1f3cef73f407",
+				"dweb:/ipfs/QmUKSLvQX6QAkQzaNuJsCRxJNQ92hs9EALkDJHDbs2Xumh"
 			]
 		}
 	},
