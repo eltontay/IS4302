@@ -446,12 +446,50 @@
 						"type": "uint256"
 					}
 				],
+				"name": "getProjectDescription",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectId",
+						"type": "uint256"
+					}
+				],
 				"name": "getProjectOwner",
 				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectId",
+						"type": "uint256"
+					}
+				],
+				"name": "getProjectTitle",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -546,25 +584,6 @@
 					}
 				],
 				"name": "readMilestoneTitle",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "projectNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "readProjectTitle",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -967,11 +986,11 @@
 			]
 		},
 		"contracts/Project.sol": {
-			"keccak256": "0x174698d6abb3a9d2f36f6481732c6e52903f5cf3d86b9efd9f865f52db58a2ee",
+			"keccak256": "0x864fd1185319500b3cd0c32171d0fafacfd37b271a0c4371222b259d2badc9f1",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d89f0d5d84383dc551cba4eb7e24d83457b51d51a4cfcf5fbf46408aec4067a9",
-				"dweb:/ipfs/QmVbPoXkqrDw6FLaQ1XxGZZwE3e2w4v6Z1WhcfengUsPi2"
+				"bzz-raw://278b35ea8c66bb502cb0f79ac44f56184ca6816200d8e8ff1af799f57fdc7123",
+				"dweb:/ipfs/QmX8CRQ6cHzSoPmZ9XSn8JTqACLpbEAXAeKeiQhVih3QTL"
 			]
 		},
 		"contracts/Review.sol": {

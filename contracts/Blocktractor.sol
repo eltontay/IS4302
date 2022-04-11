@@ -67,14 +67,6 @@ contract Blocktractor {
     function createProject(string memory title, string memory description) public {
         project.createProject(title,description, msg.sender);
     }
-    
-    /*
-        Project - Read 
-    */
-
-    function readProjectTitle(uint256 projectNumber) public view returns (string memory) {
-        project.readProjectTitle(projectNumber);
-    }
 
     /*
         Project - Update 
@@ -91,6 +83,20 @@ contract Blocktractor {
     function deleteProject(uint256 projectNumber) public {
         project.deleteProject(projectNumber,msg.sender);
     }
+
+
+    function getProjectOwner(uint256 projectId) public view returns(address) {
+        project.getProjectOwner(projectId);
+    }
+
+    function getProjectTitle(uint256 projectId) public view returns(string memory) {
+        project.getProjectTitle(projectId);
+    }
+
+    function getProjectDescription(uint256 projectId) public view returns(string memory) {
+        project.getProjectDescription(projectId);
+    }
+
 
 /*
 

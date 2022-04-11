@@ -76,18 +76,6 @@ contract Project {
     }
 
     /*
-        Project - Read 
-    */
-
-    function readProjectTitle(uint256 projectNumber) public view 
-        checkValidProject(projectNumber)
-        atState(projectNumber, States.ProjectStatus.active)
-        returns (string memory)  
-    {
-            return projects[projectNumber].title;
-    }
-
-    /*
         Project - Update (only in active state)
     */
     
@@ -116,6 +104,30 @@ contract Project {
         projectTotal --;
         setState(projectNumber, States.ProjectStatus.inactive);
         emit projectDeleted(projectNumber, _from);
+    }
+
+/*
+    Getter Helper Functions
+*/
+
+    function getProjectOwner(uint256 projectId) public view returns(address) {
+        projects[projectId].projectOwner;
+    }
+
+    function getProjectTitle(uint256 projectId) public view returns(string memory) {
+        projects[projectId].title;
+    }
+
+    function getProjectDescription(uint256 projectId) public view returns(string memory) {
+        projects[projectId].description;
+    }
+
+/*
+    Setter Functions
+*/
+
+    function setState(uint256 projectId, States.ProjectStatus state) internal {
+        projects[projectId].projectstatus = state;
     }
 
     /*
@@ -273,21 +285,6 @@ contract Project {
         service.voteConflict(projectNumber,serviceNumber,milestoneNumber,payable(_from),vote);
     }
 
-/*
-    Getter Helper Functions
-*/
-
-    function getProjectOwner(uint256 projectId) public view returns(address) {
-        projects[projectId].projectOwner;
-    }
-
-/*
-    Setter Functions
-*/
-
-    function setState(uint256 projectId, States.ProjectStatus state) internal {
-        projects[projectId].projectstatus = state;
-    }
 
 /*
     Service provider Functions
