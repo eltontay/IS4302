@@ -6,17 +6,67 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"name": "checkValidProfile",
-				"outputs": [
+				"anonymous": false,
+				"inputs": [
 					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "password",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
 					}
 				],
-				"stateMutability": "view",
-				"type": "function"
+				"name": "profileCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "profileDeleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "password",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "profileUpdated",
+				"type": "event"
 			},
 			{
 				"inputs": [
@@ -27,17 +77,12 @@
 					},
 					{
 						"internalType": "string",
-						"name": "username",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
 						"name": "password",
 						"type": "string"
 					},
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "owner",
 						"type": "address"
 					}
 				],
@@ -50,7 +95,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "owner",
 						"type": "address"
 					}
 				],
@@ -60,7 +105,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
 				"name": "getName",
 				"outputs": [
 					{
@@ -89,12 +140,17 @@
 				"inputs": [
 					{
 						"internalType": "string",
-						"name": "newName",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "password",
 						"type": "string"
 					},
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "owner",
 						"type": "address"
 					}
 				],
@@ -132,11 +188,11 @@
 	},
 	"sources": {
 		"contracts/Profile.sol": {
-			"keccak256": "0xc0f95d07d13d216b7c5d1e295d3f3eb2de6a6e393523c3fb57b8fd5394bc2c60",
+			"keccak256": "0x95859bfa3c8511473dd82b2620319344b1d17b290ab8699e5a2a2a528b9cc56c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b9cea76459925ed486836d992801117841c9f87393c3babeb1573f8d201467b6",
-				"dweb:/ipfs/QmczSYrdzFQs7bv3PqMgt5uiQsvGCrvjbbuHxWRH6b5ZzB"
+				"bzz-raw://a7b2f91eef75542ac28ff684938f21bbe421f65d3a8633574c8fe0915f5a3e8e",
+				"dweb:/ipfs/Qmd56NP2k3hmG8HKE7ThQpH2xfSjS4TcjAQNQYbkCV2Q2F"
 			]
 		}
 	},
