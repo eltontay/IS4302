@@ -173,11 +173,6 @@
 					},
 					{
 						"internalType": "string",
-						"name": "username",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
 						"name": "password",
 						"type": "string"
 					}
@@ -614,6 +609,11 @@
 						"internalType": "string",
 						"name": "name",
 						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "password",
+						"type": "string"
 					}
 				],
 				"name": "updateProfileName",
@@ -770,11 +770,11 @@
 			]
 		},
 		"contracts/Blocktractor.sol": {
-			"keccak256": "0x38692e45631ce4f7e804cee0f6ba74c539e776cbf80551a2ad92f4fb83481f6d",
+			"keccak256": "0xc4cb0b8c86d566126a22e8bf2d18dea723036b1ac65e6cbfcb3c14283d5c8147",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://09d209e3153dfef0182468db753b62f9d939f50677ae96ef6488ed1515059313",
-				"dweb:/ipfs/QmZTuuTVn3hUCM1v9QCHP8DEYfvqWxnedv1h8PLtLey33G"
+				"bzz-raw://56ec438a3223f2d1029a84f160dd27541787eafa6e14a6c7edad8fb2fa4248aa",
+				"dweb:/ipfs/QmZquCmduniH8UNFG4FtJ6VGetuNypDdMTV6qU734K2sDQ"
 			]
 		},
 		"contracts/Conflict.sol": {
@@ -794,11 +794,11 @@
 			]
 		},
 		"contracts/Profile.sol": {
-			"keccak256": "0x9bdeaa19d4a435ebb94bfa5abe00029086e9820df386b2e92984207cce8ddc34",
+			"keccak256": "0x95859bfa3c8511473dd82b2620319344b1d17b290ab8699e5a2a2a528b9cc56c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c69485738994e39822115fd6619006811a533de190d47b1fdbf7399e83ad3d3e",
-				"dweb:/ipfs/QmUs8R5XBT9uBWtNJUpbpj59LtGgba9T975BZGpEJpVTSB"
+				"bzz-raw://a7b2f91eef75542ac28ff684938f21bbe421f65d3a8633574c8fe0915f5a3e8e",
+				"dweb:/ipfs/Qmd56NP2k3hmG8HKE7ThQpH2xfSjS4TcjAQNQYbkCV2Q2F"
 			]
 		},
 		"contracts/Project.sol": {

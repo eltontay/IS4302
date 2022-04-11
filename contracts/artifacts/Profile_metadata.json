@@ -6,15 +6,73 @@
 	"output": {
 		"abi": [
 			{
+				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": false,
 						"internalType": "string",
 						"name": "name",
 						"type": "string"
 					},
 					{
+						"indexed": false,
 						"internalType": "string",
-						"name": "ownername",
+						"name": "password",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "profileCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "profileDeleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "password",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "profileUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
 						"type": "string"
 					},
 					{
@@ -82,7 +140,12 @@
 				"inputs": [
 					{
 						"internalType": "string",
-						"name": "newName",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "password",
 						"type": "string"
 					},
 					{
@@ -125,11 +188,11 @@
 	},
 	"sources": {
 		"contracts/Profile.sol": {
-			"keccak256": "0x9bdeaa19d4a435ebb94bfa5abe00029086e9820df386b2e92984207cce8ddc34",
+			"keccak256": "0x95859bfa3c8511473dd82b2620319344b1d17b290ab8699e5a2a2a528b9cc56c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c69485738994e39822115fd6619006811a533de190d47b1fdbf7399e83ad3d3e",
-				"dweb:/ipfs/QmUs8R5XBT9uBWtNJUpbpj59LtGgba9T975BZGpEJpVTSB"
+				"bzz-raw://a7b2f91eef75542ac28ff684938f21bbe421f65d3a8633574c8fe0915f5a3e8e",
+				"dweb:/ipfs/Qmd56NP2k3hmG8HKE7ThQpH2xfSjS4TcjAQNQYbkCV2Q2F"
 			]
 		}
 	},

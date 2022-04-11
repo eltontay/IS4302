@@ -8,7 +8,6 @@ contract Profile {
     // The main structure of the profile
     struct profile {
         string name;
-        string ownername;
         string password;
         address owner;
         bool created;
@@ -16,6 +15,10 @@ contract Profile {
 
 
     mapping (address => profile) profileList; // list of profiles created in profile smart contract
+
+    event profileCreated(string name, string password, address owner);
+    event profileDeleted(address owner);
+    event profileUpdated(string name, string password, address owner);
 
     uint256 public numProfile = 0; // To keep count of the number of profiles existing
     
@@ -27,11 +30,12 @@ contract Profile {
     /*
         Profile - Create 
     */
-    function createProfile(string memory name, string memory ownername, string memory password, address owner)  external {
+    function createProfile(string memory name, string memory password, address owner)  external {
         require(profileList[owner].created == false, "Cannot create more than 1 profile");
-        profile memory newProfile = profile(name,ownername,password,owner,true);
+        profile memory newProfile = profile(name,password,owner,true);
         profileList[owner] = newProfile;
         numProfile = numProfile + 1;
+        emit profileCreated( name, password, owner);
     }
 
     /*
@@ -40,13 +44,16 @@ contract Profile {
     function deleteProfile(address owner) external validProfile (owner) {
         profileList[owner].created = false; //soft delete 
         numProfile = numProfile - 1; 
+        emit profileDeleted(owner);
     }
 
     /*
         Profile - Update  
     */
-    function updateProfileName(string memory newName, address owner) external validProfile (owner) {
-        profileList[owner].name = newName; 
+    function updateProfileName(string memory name, string memory password,address owner) external validProfile (owner) {
+        profileList[owner].name = name; 
+        profileList[owner].password = password; 
+        emit profileUpdated(name, password, owner);
     }
 
 

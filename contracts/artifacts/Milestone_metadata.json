@@ -740,6 +740,11 @@
 						"internalType": "uint256",
 						"name": "milestoneNumber",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "_from",
+						"type": "address"
 					}
 				],
 				"name": "verifyMilestone",
@@ -830,11 +835,11 @@
 			]
 		},
 		"contracts/Milestone.sol": {
-			"keccak256": "0x1d32ef3bfb8c4d26f5e81c4d5f140f6ed02af1f9c25cec55e8e4f04a5c8d46be",
+			"keccak256": "0x0cd0688f049cf0695751da327251f14579caa65317bbe1c84c4e16458a3676ac",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://32d7f14640470d8522da0125d4d28333d50feba19b9ade5006248ef69236e210",
-				"dweb:/ipfs/QmXur5sEKkxsG8cvvmwgWt5qYrBsKdVdZMgpspYs4eFpdw"
+				"bzz-raw://ed3ca5529facd884fc2bb1dcba99f448a75ad84f28435dcd744f7db3d22be8b6",
+				"dweb:/ipfs/QmR75gSvHUSpdPLtDLSTRHnsB3Z4kNwDGjSWYbGNtCnoVr"
 			]
 		},
 		"contracts/Review.sol": {
@@ -846,11 +851,11 @@
 			]
 		},
 		"contracts/Service.sol": {
-			"keccak256": "0xbeefa2be1ebe498def5d59a653ee0c2ab77691d6ed738dff7105c2a2c8d3791f",
+			"keccak256": "0xc7d1d90f82db14f99ae0bd43e7a8b611d9b97cb76e97e5aabb447d1db75bdefc",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b34bc0a6b0b78c924603a9db5146adc2a5a546121478aa01c04881447dced1d0",
-				"dweb:/ipfs/QmNuWtZwXx4Lo5k5LPh7TUQNtGKdB6vdmZKbDLQX3QC1Zm"
+				"bzz-raw://cfa933356269943f541db3da2661d310944f377ba341c77ee5b7266b3191da79",
+				"dweb:/ipfs/QmZG9H5S6GQ7A1BUHsCjen8kwmw9UmNqL2c2uactSzKJD4"
 			]
 		},
 		"contracts/States.sol": {

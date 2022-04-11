@@ -30,8 +30,8 @@ contract Blocktractor {
     /*
         Profile - Create
     */
-    function createProfile(string memory name, string memory username, string memory password) public {
-        profile.createProfile(name, username, password, msg.sender);
+    function createProfile(string memory name, string memory password) public {
+        profile.createProfile(name, password, msg.sender);
     }
 
     /*
@@ -44,8 +44,8 @@ contract Blocktractor {
     /*
         Profile - Update
     */
-    function updateProfileName(string memory name) public {
-        profile.updateProfileName(name, msg.sender);
+    function updateProfileName(string memory name, string memory password ) public {
+        profile.updateProfileName(name, password, msg.sender);
     }
 
 
