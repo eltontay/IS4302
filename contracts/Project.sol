@@ -60,17 +60,17 @@ contract Project {
         Project - Create 
     */
     
-    function createProject(string memory title, string memory description) public {
+    function createProject(string memory title, string memory description, address _from ) public {
                 
         project storage newProject = projects[projectNum];
         newProject.projectNumber = projectNum;
         newProject.title = title;
         newProject.description = description;
-        newProject.projectOwner = msg.sender;
+        newProject.projectOwner = _from;
         newProject.exist = true;
         newProject.projectstatus = States.ProjectStatus.active;
 
-        emit projectCreated(projectNum, title, description, msg.sender);
+        emit projectCreated(projectNum, title, description, _from);
         projectTotal++;
         projectNum++;
     }
@@ -82,31 +82,32 @@ contract Project {
     function readProjectTitle(uint256 projectNumber) public view 
         checkValidProject(projectNumber)
         atState(projectNumber, States.ProjectStatus.active)
-    returns (string memory)  {
-        return projects[projectNumber].title;
+        returns (string memory)  
+    {
+            return projects[projectNumber].title;
     }
 
     /*
         Project - Update (only in active state)
     */
     
-    function updateProject(uint256 projectNumber, string memory title, string memory description) public 
+    function updateProject(uint256 projectNumber, string memory title, string memory description, address _from ) public 
         checkValidProject(projectNumber)
-        onlyOwner(projectNumber,msg.sender) 
+        onlyOwner(projectNumber,_from) 
         atState(projectNumber, States.ProjectStatus.active)
     {
         projects[projectNumber].title = title;
         projects[projectNumber].description = description;
 
-        emit projectUpdated(projectNumber, title, description, msg.sender);
+        emit projectUpdated(projectNumber, title, description, _from);
     }
 
     /*
         Project - Delete (only in active state)
     */
-    function deleteProject(uint256 projectNumber) public 
+    function deleteProject(uint256 projectNumber , address _from) public 
         checkValidProject(projectNumber)
-        onlyOwner(projectNumber,msg.sender) 
+        onlyOwner(projectNumber, _from) 
         atState(projectNumber, States.ProjectStatus.active)
     {
 
@@ -114,18 +115,17 @@ contract Project {
 
         projectTotal --;
         setState(projectNumber, States.ProjectStatus.inactive);
-        emit projectDeleted(projectNumber, msg.sender);
+        emit projectDeleted(projectNumber, _from);
     }
 
     /*
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description) public 
-        onlyOwner(projectNumber,msg.sender) 
+    function createService(uint256 projectNumber, string memory title, string memory description, address _from) public 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createService(projectNumber,title,description,payable(msg.sender));
+        service.createService(projectNumber,title,description,payable(_from));
     }
 
     /*
@@ -134,31 +134,29 @@ contract Project {
 
     function readServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view 
         atState(projectNumber, States.ProjectStatus.active)
-            returns (string memory)
-            {
-                service.readServiceTitle(projectNumber,serviceNumber);
-            }
+        returns (string memory)
+    {
+        service.readServiceTitle(projectNumber,serviceNumber);
+    }
 
     /*
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) public 
-        onlyOwner(projectNumber,msg.sender) 
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status, address _from) public 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.updateService(projectNumber,serviceNumber,title,description);
+        service.updateService(projectNumber,serviceNumber,title,description,payable(_from));
     }
 
     /*
         Service - Delete
     */
 
-    function deleteService(uint256 projectNumber, uint256 serviceNumber) public 
-        onlyOwner(projectNumber,msg.sender) 
+    function deleteService(uint256 projectNumber, uint256 serviceNumber, address _from) public 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.deleteService(projectNumber,serviceNumber);
+        service.deleteService(projectNumber,serviceNumber,payable(_from));
     }
 
     /*
@@ -166,10 +164,10 @@ contract Project {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable serviceRequester) external 
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.acceptServiceRequest(projectNumber,serviceNumber,msg.sender, serviceRequester);
+        service.acceptServiceRequest(projectNumber,serviceNumber,payable(_from));
     }
 
     /*
@@ -177,21 +175,21 @@ contract Project {
         Function for project owner to reject a contractor's service 
     */
 
-    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable serviceRequester) external 
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.rejectServiceRequest(projectNumber,serviceNumber,serviceRequester);   
+        service.rejectServiceRequest(projectNumber,serviceNumber,payable(_from));   
     }
 
     /*
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public 
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, address _from) public 
         onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, payable(_from));
     }
 
     /*
@@ -208,22 +206,22 @@ contract Project {
         Milestone - Update
     */
 
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public 
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone, address _from) public 
         onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
+        service.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone, payable(_from));
     }
 
     /*
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) public 
         onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, payable(_from));
     }    
 
     /*
@@ -300,20 +298,20 @@ contract Project {
         Function for contractor to request to start a service 
     */
     
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public  
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) public  
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.takeServiceRequest(projectNumber, serviceNumber, serviceProvider); 
+        service.takeServiceRequest(projectNumber, serviceNumber, payable(_from)); 
     }
 
     /*
         Service - Complete service request
     */
 
-    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) external  
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) external  
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.completeServiceRequest(projectNumber, serviceNumber, serviceProvider);      
+        service.completeServiceRequest(projectNumber, serviceNumber, payable(_from));      
     }
 
  

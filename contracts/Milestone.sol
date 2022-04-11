@@ -47,6 +47,11 @@ contract Milestone {
         _;
     }
 
+    modifier isServiceRequester(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from){
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester == _from, "Invalid Service Requester");
+        _;    
+    }
+
     modifier isValidMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber){
         require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].exist, "This Milestone does not exist ya dummy!");
         _;
@@ -57,18 +62,18 @@ contract Milestone {
         _;
     }
 
-    modifier isNeither(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address target) {
-        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester == payable(target) || 
-                servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider == payable(target) , "Invalid service requester or provider");
+    modifier isNeither(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) {
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester == _from || 
+                servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider == _from , "Invalid service requester or provider");
         _;
     }
 
-    modifier checkDAO(uint256 projectNumber, uint256 serviceNumber, uint256 numMilestones, address _from) {
+    modifier checkDAO(uint256 projectNumber, uint256 serviceNumber, uint256 numMilestones, address payable _from) {
         mapping(uint256 => milestone) storage currService = servicesMilestones[projectNumber][serviceNumber];
         bool check = false;
         for (uint8 i = 0; i < numMilestones; i++) {
             milestone storage currMilestone = currService[i];
-            if (currMilestone.serviceProvider == payable(_from)) {
+            if (currMilestone.serviceProvider == _from) {
                 check = true;
             }
         }
@@ -91,7 +96,7 @@ contract Milestone {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external payable
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, address payable _from ) external payable
         requiredString(title)
         requiredString(description)
     {
@@ -104,7 +109,7 @@ contract Milestone {
         newMilestone.exist = true;
         newMilestone.status = States.MilestoneStatus.created;
         newMilestone.price = msg.value;
-        newMilestone.serviceRequester = payable(msg.sender);  
+        newMilestone.serviceRequester = _from;  
 
         emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
 
@@ -123,7 +128,8 @@ contract Milestone {
 
     function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
-    returns (string memory) {
+        returns (string memory) 
+    {
         return (servicesMilestones[projectNumber][serviceNumber][milestoneNumber].title);
     }
 
@@ -131,8 +137,8 @@ contract Milestone {
         Milestone - Update
     */
 
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external 
-        // isValidMilestone(projectNumber, serviceNumber, milestoneNumber)//REMOVED FOR STACK ERROR
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable _from) external 
+        isServiceRequester(projectNumber,serviceNumber,milestoneNumber,_from)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
         requiredString(title)
         requiredString(description)
@@ -148,7 +154,8 @@ contract Milestone {
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from ) external 
+        isServiceRequester(projectNumber,serviceNumber,milestoneNumber,_from)
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
     {
@@ -165,14 +172,16 @@ contract Milestone {
         Milestone - Accept
     */
     
-    function acceptService(uint256 projectNumber, uint256 serviceNumber, address payable serviceProvider) external{
+    function acceptService(uint256 projectNumber, uint256 serviceNumber, address payable _from) external
+    {
+        
         // Accepts Service Contract, so all the Milestones are set to approved (locked in)
         for (uint i = 0; i < milestoneNum; i++){
             if(servicesMilestones[projectNumber][serviceNumber][i].status != States.MilestoneStatus.created ||
             servicesMilestones[projectNumber][serviceNumber][i].exist == false){ 
                 continue; 
             }
-            servicesMilestones[projectNumber][serviceNumber][i].serviceProvider = serviceProvider; 
+            servicesMilestones[projectNumber][serviceNumber][i].serviceProvider = _from; 
             setState(projectNumber, serviceNumber, i, States.MilestoneStatus.approved);
             startNextMilestone(projectNumber, serviceNumber);
         }
@@ -184,25 +193,19 @@ contract Milestone {
 
     function startNextMilestone(uint256 projectNumber, uint256 serviceNumber) internal {
         for (uint i = 0; i < milestoneNum; i++){
-            if(servicesMilestones[projectNumber][serviceNumber][i].status == States.MilestoneStatus.approved &&
-            servicesMilestones[projectNumber][serviceNumber][i].exist){ 
-                startMilestone(projectNumber, serviceNumber, i);
-                return ;
+            if(
+            servicesMilestones[projectNumber][serviceNumber][i].status == States.MilestoneStatus.approved &&
+            servicesMilestones[projectNumber][serviceNumber][i].exist)
+            { 
+                setState(projectNumber, serviceNumber, i, States.MilestoneStatus.started);
+                return;
             }
         }
     }
-
-    function startMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) private
-        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
-        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.approved)
-    {
-        setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started);
-    }
-
     /*
         Milestone - Complete
     */
-    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) public
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started) // Must work on milestone in order
     {
@@ -229,7 +232,7 @@ contract Milestone {
     /*
         Milestone - Review milestone
     */
-    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public 
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, string memory review_input, uint star_rating) public 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
 
     {
@@ -239,10 +242,10 @@ contract Milestone {
         require(milestoneServiceProvider == _from || milestoneServiceRequester == _from , " Invalid");
         require(currMilestone.status == States.MilestoneStatus.completed);
 
-        if (milestoneServiceProvider == payable(_from)) {
-            review.createReview(projectNumber,serviceNumber,milestoneNumber,payable(_from),milestoneServiceRequester,review_input,States.Role.serviceProvider,star_rating);
+        if (milestoneServiceProvider == _from) {
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceRequester,review_input,States.Role.serviceProvider,star_rating);
         } else {
-            review.createReview(projectNumber,serviceNumber,milestoneNumber,payable(_from),milestoneServiceProvider,review_input,States.Role.serviceRequester,star_rating);
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceProvider,review_input,States.Role.serviceRequester,star_rating);
         }
     }
 

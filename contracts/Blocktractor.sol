@@ -66,7 +66,7 @@ contract Blocktractor {
     */
     
     function createProject(string memory title, string memory description) public {
-        project.createProject(title,description);
+        project.createProject(title,description, msg.sender);
     }
     
     /*
@@ -82,7 +82,7 @@ contract Blocktractor {
     */
     
     function updateProject(uint256 projectNumber, string memory title, string memory description) public  {
-        project.updateProject(projectNumber,title,description);
+        project.updateProject(projectNumber,title,description,msg.sender);
     }
 
     /*
@@ -90,7 +90,7 @@ contract Blocktractor {
     */
     
     function deleteProject(uint256 projectNumber) public {
-        project.deleteProject(projectNumber);
+        project.deleteProject(projectNumber,msg.sender);
     }
 
     /*
@@ -98,7 +98,7 @@ contract Blocktractor {
     */
 
     function createService(uint256 projectNumber, string memory title, string memory description) public {
-        project.createService(projectNumber,title,description);
+        project.createService(projectNumber,title,description,msg.sender);
     }
 
     /*
@@ -114,7 +114,7 @@ contract Blocktractor {
     */
 
     function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status) public {
-        project.updateService(projectNumber,serviceNumber,title,description,price,status);
+        project.updateService(projectNumber,serviceNumber,title,description,price,status,msg.sender);
     }
 
     /*
@@ -122,7 +122,7 @@ contract Blocktractor {
     */
 
     function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
-        project.deleteService(projectNumber,serviceNumber);
+        project.deleteService(projectNumber,serviceNumber,msg.sender);
     }
 
     /*
@@ -130,8 +130,8 @@ contract Blocktractor {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
-        project.acceptServiceRequest(projectNumber,serviceNumber,payable(msg.sender));
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.acceptServiceRequest(projectNumber,serviceNumber,msg.sender);
     }
 
     /*
@@ -139,8 +139,8 @@ contract Blocktractor {
         Function for project owner to reject a contractor's service 
     */
 
-    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
-        project.rejectServiceRequest(projectNumber,serviceNumber, payable(msg.sender));   
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.rejectServiceRequest(projectNumber,serviceNumber,msg.sender);   
     }
 
 
@@ -149,7 +149,7 @@ contract Blocktractor {
     */
 
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
-        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone,msg.sender);
     }
 
     /*
@@ -165,7 +165,7 @@ contract Blocktractor {
     */
 
     function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone) public {
-        project.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone);
+        project.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone,msg.sender);
     }
 
     /*
@@ -173,7 +173,7 @@ contract Blocktractor {
     */ 
 
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
+        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
     }    
 
     /*
