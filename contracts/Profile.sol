@@ -8,7 +8,7 @@ contract Profile {
     // The main structure of the profile
     struct profile {
         string name;
-        string username;
+        string ownername;
         string password;
         address owner;
         bool created;
@@ -18,47 +18,41 @@ contract Profile {
     mapping (address => profile) profileList; // list of profiles created in profile smart contract
 
     uint256 public numProfile = 0; // To keep count of the number of profiles existing
+    
+    modifier validProfile (address owner) {
+        require(profileList[owner].created == true, "Profile does not exist");
+        _;
+    }
 
-   /*
+    /*
         Profile - Create 
     */
-    function createProfile(string memory name, string memory username, string memory password, address user)  external {
-        require(profileList[user].created == false, "Cannot create more than 1 profile");
-        profile memory newProfile = profile(name,username,password,user,true);
-        profileList[user] = newProfile;
+    function createProfile(string memory name, string memory ownername, string memory password, address owner)  external {
+        require(profileList[owner].created == false, "Cannot create more than 1 profile");
+        profile memory newProfile = profile(name,ownername,password,owner,true);
+        profileList[owner] = newProfile;
         numProfile = numProfile + 1;
     }
 
     /*
         Profile - Delete  
     */
-    function deleteProfile(address user) external {
-        require(profileList[user].created == true, "Profile does not exist");
-        profileList[user].created = false; //soft delete 
+    function deleteProfile(address owner) external validProfile (owner) {
+        profileList[owner].created = false; //soft delete 
         numProfile = numProfile - 1; 
     }
 
     /*
         Profile - Update  
     */
-    function updateProfileName(string memory newName, address user) external {
-        require(profileList[user].created == true, "Profile does not exist");
-        profileList[user].name = newName; 
+    function updateProfileName(string memory newName, address owner) external validProfile (owner) {
+        profileList[owner].name = newName; 
     }
 
-    modifier validProfile {
-        require(profileList[msg.sender].created == true);
-        _;
-    }
 
     // Getter for name of profile given that it is valid
-    function getName() external validProfile view returns ( string memory) {
-        return profileList[msg.sender].name;
-    }
-
-    // Boolean function to check validity of profile
-    function checkValidProfile() public view returns (bool) {
-        return profileList[msg.sender].created ? true : false;
+    function getName(address owner) external validProfile (owner) view returns ( string memory) {
+        return profileList[owner].name;
     }
 
 }

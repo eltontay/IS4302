@@ -6,19 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"name": "checkValidProfile",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "string",
@@ -27,7 +14,7 @@
 					},
 					{
 						"internalType": "string",
-						"name": "username",
+						"name": "ownername",
 						"type": "string"
 					},
 					{
@@ -37,7 +24,7 @@
 					},
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "owner",
 						"type": "address"
 					}
 				],
@@ -50,7 +37,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "owner",
 						"type": "address"
 					}
 				],
@@ -60,7 +47,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
 				"name": "getName",
 				"outputs": [
 					{
@@ -94,7 +87,7 @@
 					},
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "owner",
 						"type": "address"
 					}
 				],
@@ -132,11 +125,11 @@
 	},
 	"sources": {
 		"contracts/Profile.sol": {
-			"keccak256": "0xc0f95d07d13d216b7c5d1e295d3f3eb2de6a6e393523c3fb57b8fd5394bc2c60",
+			"keccak256": "0x9bdeaa19d4a435ebb94bfa5abe00029086e9820df386b2e92984207cce8ddc34",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b9cea76459925ed486836d992801117841c9f87393c3babeb1573f8d201467b6",
-				"dweb:/ipfs/QmczSYrdzFQs7bv3PqMgt5uiQsvGCrvjbbuHxWRH6b5ZzB"
+				"bzz-raw://c69485738994e39822115fd6619006811a533de190d47b1fdbf7399e83ad3d3e",
+				"dweb:/ipfs/QmUs8R5XBT9uBWtNJUpbpj59LtGgba9T975BZGpEJpVTSB"
 			]
 		}
 	},

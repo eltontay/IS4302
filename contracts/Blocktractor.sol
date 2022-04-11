@@ -8,24 +8,6 @@ import "./States.sol";
 
 // Payments in blocktractor also needs to be done.
 
-
-
-// WorkFlow 1 
-// Step 1 : Create Profile
-// Step 2 : Create Project -- Project Owner (Service Requester)
-// Step 3 : Create Service(s) -- Project Owner (Service Requester)
-// Step 4 : Create Milestone(s) for each Service(s) -- Project Owner (Service Requester)
-
-// WorkFlow 2
-// Step 1 : Finish Project
-// Step 2 : Review Profile
-
-// Workflow 3
-// Step 1 : Finish Milestone -- Service Provider
-// Step 2 : Create Conflict -- Project Owner (Service Requester)
-
-// Once all completed, come together then do payments
-
 contract Blocktractor {
 
     Profile profile;
@@ -45,14 +27,40 @@ contract Blocktractor {
     Modifiers
 */
 
+/*
+    Profile Frontend
+*/
 
-// function in blocktractor , first filters out using a function from project to see if it is completed, enum status,
-// only then allows person to review the profile.
+    /*
+        Profile - Create
+    */
+    function createProfile(string memory name, string memory username, string memory password) public {
+        profile.createProfile(name, username, password, msg.sender);
+    }
 
-// function 1 : Project 
-// function 2 : Review Profile in Review
+    /*
+        Profile - Delete
+    */
+    function deleteProfile() public {
+        profile.deleteProfile(msg.sender);
+    }
+
+    /*
+        Profile - Update
+    */
+    function updateProfileName(string memory name) public {
+        profile.updateProfileName(name, msg.sender);
+    }
 
 
+    // Getter for name of profile given that it is valid
+    function getName() public view returns ( string memory) {
+        return profile.getName(msg.sender);
+    }
+
+/*
+    Service Requester functions 
+*/
    /*
         Project - Create 
     */
@@ -60,7 +68,7 @@ contract Blocktractor {
     function createProject(string memory title, string memory description) public {
         project.createProject(title,description);
     }
-
+    
     /*
         Project - Read 
     */
@@ -215,26 +223,7 @@ contract Blocktractor {
         project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
     }
     
-    /*
-        Profile - Create
-    */
-    function createProfile(string memory name, string memory username, string memory password) public {
-        profile.createProfile(name, username, password, msg.sender);
-    }
 
-    /*
-        Profile - Delete
-    */
-    function deleteProfile() public {
-        profile.deleteProfile(msg.sender);
-    }
-
-    /*
-        Profile - Update
-    */
-    function updateProfileName(string memory name) public {
-        profile.updateProfileName(name, msg.sender);
-    }
 
 
 /*
