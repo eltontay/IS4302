@@ -175,12 +175,12 @@
 						"type": "string"
 					},
 					{
-						"internalType": "address",
+						"internalType": "address payable",
 						"name": "serviceRequester",
 						"type": "address"
 					},
 					{
-						"internalType": "address",
+						"internalType": "address payable",
 						"name": "serviceProvider",
 						"type": "address"
 					},
@@ -510,11 +510,11 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0xef6baad08a2b98686899ff4415a57282c9e3ec7668137aa308a85cc9e5bd759e",
+			"keccak256": "0xf5370e8ead5d11b561d05e303105733dd90d434d5ab3e5ce2efe875786ba02c5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://313875d4ebbf86fa02df1029a86d84d1d7729624d0e427164dcbd758eaede85f",
-				"dweb:/ipfs/QmPo6FxT91qWNYUj1dPXPMknRpKgWP1f14hqR5bZe8PtSk"
+				"bzz-raw://12555bb7e7b7dcc60aa6b5c9ad65f17ebeef349d63119d381359e792d7df5ce9",
+				"dweb:/ipfs/QmbSgzYFatYgEzFsunHatXTPKxAeE4pQAdRfXD3BY1WU6D"
 			]
 		},
 		"contracts/States.sol": {

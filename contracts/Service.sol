@@ -130,7 +130,6 @@ contract Service {
     function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, address payable _from) external 
         onlyServiceRequester(projectNumber, serviceNumber, _from)
         activeService(projectNumber, serviceNumber)
-        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
         requiredString(title)
         requiredString(description)
     {
@@ -189,6 +188,7 @@ contract Service {
         Milestone - Create
     */
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, address payable _from) external payable
+        onlyServiceRequester(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
@@ -209,6 +209,7 @@ contract Service {
         Milestone - Update
     */
     function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone, address payable _from) external 
+        onlyServiceRequester(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
@@ -220,6 +221,7 @@ contract Service {
         Milestone - Delete
     */
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber,address payable _from) external 
+        onlyServiceRequester(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {        
@@ -231,6 +233,7 @@ contract Service {
         Milestone - Complete 
     */
     function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) external 
+        onlyServiceProvider(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
     {
@@ -254,8 +257,8 @@ contract Service {
         Milestone - Verify 
     */
 
-    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
-        milestone.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,payable(_from),review_input,star_rating);
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, string memory review_input, uint star_rating) public {
+        milestone.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
     }
 
 
@@ -263,7 +266,7 @@ contract Service {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester,  uint256 totalVoters) external 
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable serviceRequester,  uint256 totalVoters) external 
         // onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) //REMOVED FOR STACK ERROR
         // activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
@@ -271,7 +274,7 @@ contract Service {
         requiredString(description)
 
     {
-        address serviceProvider = projectServices[projectNumber][serviceNumber].serviceProvider;
+        address payable serviceProvider = projectServices[projectNumber][serviceNumber].serviceProvider;
         milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
         setState(projectNumber, serviceNumber, States.ServiceStatus.conflict);
     }
@@ -304,21 +307,21 @@ contract Service {
     /*
         Conflict - Start Vote
     */
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) external
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
     {
-        milestone.startVote(projectNumber, serviceNumber, milestoneNumber);
+        milestone.startVote(projectNumber, serviceNumber, milestoneNumber, projectServices[projectNumber][serviceNumber].numMilestones, _from);
     }
 
     /*
         Conflict - Vote
     */
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address sender, uint8 vote) external 
-        activeService(projectNumber, serviceNumber)
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, uint8 vote) external 
+        // activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
     {
-        milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,sender,vote);
+        milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,projectServices[projectNumber][serviceNumber].numMilestones,_from,vote);
     }
 
 /*

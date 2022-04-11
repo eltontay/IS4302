@@ -231,7 +231,7 @@ contract Project {
     function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, uint256 totalVoters) external
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,totalVoters);
+        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,payable(serviceRequester),totalVoters);
     }
 
     /*

@@ -47,11 +47,6 @@ contract Milestone {
         _;
     }
 
-    modifier isServiceRequester(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from){
-        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester == _from, "Invalid Service Requester");
-        _;    
-    }
-
     modifier isValidMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber){
         require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].exist, "This Milestone does not exist ya dummy!");
         _;
@@ -138,7 +133,6 @@ contract Milestone {
     */
 
     function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable _from) external 
-        isServiceRequester(projectNumber,serviceNumber,milestoneNumber,_from)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
         requiredString(title)
         requiredString(description)
@@ -155,7 +149,6 @@ contract Milestone {
     */ 
 
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from ) external 
-        isServiceRequester(projectNumber,serviceNumber,milestoneNumber,_from)
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
     {
@@ -172,7 +165,7 @@ contract Milestone {
         Milestone - Accept
     */
     
-    function acceptService(uint256 projectNumber, uint256 serviceNumber, address payable _from) external
+    function acceptMilestone(uint256 projectNumber, uint256 serviceNumber, address payable _from) external
     {
         
         // Accepts Service Contract, so all the Milestones are set to approved (locked in)
@@ -204,6 +197,7 @@ contract Milestone {
     }
     /*
         Milestone - Complete
+        -- service provider
     */
     function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) public
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
@@ -253,7 +247,8 @@ contract Milestone {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external 
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable serviceRequester, address payable serviceProvider,  uint256 totalVoters) external 
+
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed)
     {
         // Need to set requirement for service requestor?
@@ -286,12 +281,12 @@ contract Milestone {
 
     /*
         Conflict - Start Vote
-
     */
 
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address _from, address _to) external
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address payable _from) external
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
+        checkDAO(projectNumber,serviceNumber,numMilestones,_from)
     {
         conflict.startVote(projectNumber, serviceNumber, milestoneNumber);
     }
@@ -300,7 +295,7 @@ contract Milestone {
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address _from, uint8 vote) external 
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address payable _from, uint8 vote) external 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
         checkDAO(projectNumber,serviceNumber,numMilestones,_from)
@@ -312,20 +307,20 @@ contract Milestone {
         Conflict - Resolve payments
     */
 
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external payable
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 value) external payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
     {
         uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);
-        address payable provider = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider);
-        address payable requester = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester);
+        address payable provider = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider;
+        address payable requester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester;
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
         if (result == 2) {
             //service provider wins
-        require(msg.value == price, "Amount paid incorrect");
+        require(value == price, "Amount paid incorrect");
         provider.transfer(msg.value);
         } else {
             //split 50-50
-        require(msg.value == price/2, "Amount paid incorrect");//This does not work
+        require(value == price/2, "Amount paid incorrect");//This does not work
         provider.transfer(msg.value);
         requester.transfer(msg.value);
         }
