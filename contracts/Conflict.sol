@@ -36,7 +36,7 @@ contract Conflict {
         Modifiers
     */
     modifier isValidConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber){
-        require(doesConflictExist(projectNumber, serviceNumber, milestoneNumber) == true, "This Conflict does not exist.");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].exist, "This Conflict does not exist.");
         _;
     }
 
@@ -73,9 +73,8 @@ contract Conflict {
         requiredString(title)
         requiredString(description)
     {
-        require(doesConflictExist(projectNumber, serviceNumber, milestoneNumber) == false, "Conflict has already been created for this particular Milestone."); //bool defaults to false
-
         conflict storage newConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
+        require(newConflict.exist == false, "Conflict has already been created for this particular Milestone."); //bool defaults to false
         newConflict.projectNumber = projectNumber;     
         newConflict.serviceNumber = serviceNumber;        
         newConflict.milestoneNumber = milestoneNumber;
@@ -188,10 +187,6 @@ contract Conflict {
 
     function getVotesforProvider(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint256) {
         return conflicts[projectNumber][serviceNumber][milestoneNumber].providerVotes;
-    }
-
-    function doesConflictExist(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (bool){
-        return conflicts[projectNumber][serviceNumber][milestoneNumber].exist;
     }
 
 }

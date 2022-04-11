@@ -307,6 +307,7 @@ contract Service {
     /*
         Conflict - Start Vote
     */
+
     function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) external
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
@@ -317,6 +318,7 @@ contract Service {
     /*
         Conflict - Vote
     */
+    
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, uint8 vote) external 
         // activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)

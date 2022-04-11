@@ -3,10 +3,6 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
 import "./States.sol";
-// Review -> Profile -> Blocktractor
-// Conflict -> Milestone -> Service -> Project -> Blocktractor 
-
-// Payments in blocktractor also needs to be done.
 
 contract Blocktractor {
 
@@ -28,7 +24,7 @@ contract Blocktractor {
 */
 
 /*
-    Profile Frontend
+    Profile Functions - Frontend 
 */
 
     /*
@@ -59,9 +55,12 @@ contract Blocktractor {
     }
 
 /*
-    Service Requester functions 
+
+    Project Functions
+
 */
-   /*
+
+    /*
         Project - Create 
     */
     
@@ -92,6 +91,12 @@ contract Blocktractor {
     function deleteProject(uint256 projectNumber) public {
         project.deleteProject(projectNumber,msg.sender);
     }
+
+/*
+
+    Service Functions 
+
+*/
 
     /*
         Service - Create
@@ -143,6 +148,28 @@ contract Blocktractor {
         project.rejectServiceRequest(projectNumber,serviceNumber,msg.sender);   
     }
 
+    /*
+        Service - Request to start service 
+        Function for contractor to request to start a service 
+    */
+
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.takeServiceRequest(projectNumber, serviceNumber, msg.sender);
+    }
+
+    /*
+        Service - Complete service request
+    */
+
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.completeServiceRequest(projectNumber, serviceNumber, msg.sender);      
+    }
+
+/*
+
+    Milestone Functions
+
+*/
 
     /*
         Milestone - Create
@@ -174,77 +201,7 @@ contract Blocktractor {
 
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
         project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
-    }    
-
-    /*
-        Review - Create 
-    */
-
-    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
-        project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
-    }
-
-    /*
-        Conflict - Create
-    */ 
-    
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, uint256 totalVoters) external {
-        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender,totalVoters);
-    }
-
-    /*
-        Conflict - Update
-    */
-
-    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
-        project.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
-    }
-
-    /*
-        Conflict - Delete
-    */ 
-
-    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
-        project.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
-    }
-
-    /*
-        Conflict - Start Vote
-    */
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
-        project.startVote(projectNumber, serviceNumber, milestoneNumber);
-    }
-
-    /*
-        Conflict - Vote
-    */
-
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 vote) external {
-        project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
-    }
-    
-
-
-
-/*
-    Service provider functions 
-*/
-
-    /*
-        Service - Request to start service 
-        Function for contractor to request to start a service 
-    */
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
-        project.takeServiceRequest(projectNumber, serviceNumber, msg.sender);
-    }
-
-    /*
-        Service - Complete service request
-    */
-
-    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
-        project.completeServiceRequest(projectNumber, serviceNumber, msg.sender);      
-    }
+    } 
 
     /*
         Milestone - Complete Milestone
@@ -260,7 +217,21 @@ contract Blocktractor {
 
     function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
         project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber);
-    }    
+    } 
+
+/*
+
+    Review Functions
+
+*/
+
+    /*
+        Review - Create 
+    */
+
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
+        project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
+    }
 
     /*
         Review - Getter Provider Stars
@@ -278,5 +249,49 @@ contract Blocktractor {
         return project.getAvgServiceRequesterStarRating(projectNumber,serviceNumber);
     }
 
+/*
+
+    Conflict Functions
+
+*/
+
+    /*
+        Conflict - Create
+    */ 
+    
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, uint256 totalVoters) public {
+        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender,totalVoters);
+    }
+
+    /*
+        Conflict - Update
+    */
+
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) public {
+        project.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
+    }
+
+    /*
+        Conflict - Delete
+    */ 
+
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Start Vote
+    */
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.startVote(projectNumber, serviceNumber, milestoneNumber);
+    }
+
+    /*
+        Conflict - Vote
+    */
+
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 vote) public {
+        project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
+    }
 
 }

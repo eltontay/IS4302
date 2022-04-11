@@ -236,35 +236,6 @@
 						"type": "uint256"
 					}
 				],
-				"name": "doesConflictExist",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "projectNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "serviceNumber",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "milestoneNumber",
-						"type": "uint256"
-					}
-				],
 				"name": "getConflictStatus",
 				"outputs": [
 					{
@@ -510,11 +481,11 @@
 	},
 	"sources": {
 		"contracts/Conflict.sol": {
-			"keccak256": "0xf5370e8ead5d11b561d05e303105733dd90d434d5ab3e5ce2efe875786ba02c5",
+			"keccak256": "0x77bde8c8a429b0b76ab454a940bcba367f4d3b00aac47ab074c28b6576b5ffd3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://12555bb7e7b7dcc60aa6b5c9ad65f17ebeef349d63119d381359e792d7df5ce9",
-				"dweb:/ipfs/QmbSgzYFatYgEzFsunHatXTPKxAeE4pQAdRfXD3BY1WU6D"
+				"bzz-raw://70481cdb67175a788da404f02b2806633377b9cde558a12c4b4241b22a674959",
+				"dweb:/ipfs/QmS3aWmiyzK9WE8uuGyCpjMq9n7CoUsiJX5tTjG7b8oorR"
 			]
 		},
 		"contracts/States.sol": {
