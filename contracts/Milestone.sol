@@ -3,13 +3,14 @@ pragma solidity >=0.4.22 <0.9.0;
 
 import "./Conflict.sol";
 import "./Review.sol";
+import "./ERC20.sol";
 import "./States.sol";
 
 contract Milestone {
 
     Conflict conflict;
     Review review;
-    address payable contractAddress = payable(msg.sender); 
+    // address payable contractAddress = payable(msg.sender); 
 
     constructor (Conflict conflictContract, Review reviewContract) payable {
         conflict = conflictContract;
@@ -91,7 +92,7 @@ contract Milestone {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description) external payable
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price) external payable
         requiredString(title)
         requiredString(description)
     {
@@ -103,17 +104,13 @@ contract Milestone {
         newMilestone.description = description;
         newMilestone.exist = true;
         newMilestone.status = States.MilestoneStatus.created;
-        newMilestone.price = msg.value;
+        newMilestone.price = price;
         newMilestone.serviceRequester = payable(msg.sender);  
 
         emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
 
         milestoneTotal++;
         milestoneNum++;
-
-        //Make payment to escrow
-        address payable escrow = payable(contractAddress);
-        escrow.transfer(msg.value);
     }
 
 
@@ -213,7 +210,7 @@ contract Milestone {
     /*
         Milestone - Verify milestone
     */
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public payable
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed) 
     {
@@ -222,8 +219,7 @@ contract Milestone {
         //MAKE PAYment of price from escrow wallet to service provider 
         address payable receiver = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider);
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
-        require(msg.value == price, "Amount paid incorrect");
-        receiver.transfer(msg.value);
+        erc20.transfer(receiver, price);
     }
 
     /*
@@ -286,7 +282,7 @@ contract Milestone {
 
     */
 
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address _from, address _to) external
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
     {
@@ -297,10 +293,10 @@ contract Milestone {
         Conflict - Vote
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address _from, uint8 vote) external 
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) external 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
-        checkDAO(projectNumber,serviceNumber,numMilestones,_from)
+        // checkDAO(projectNumber,serviceNumber,numMilestones,_from)
     {
         conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
     }
@@ -309,7 +305,7 @@ contract Milestone {
         Conflict - Resolve payments
     */
 
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external payable
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
     {
         uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);
@@ -318,13 +314,11 @@ contract Milestone {
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
         if (result == 2) {
             //service provider wins
-        require(msg.value == price, "Amount paid incorrect");
-        provider.transfer(msg.value);
+            erc20.transfer(provider, price);
         } else {
             //split 50-50
-        require(msg.value == price/2, "Amount paid incorrect");//This does not work
-        provider.transfer(msg.value);
-        requester.transfer(msg.value);
+            erc20.transfer(provider, price/2); 
+            erc20.transfer(requester, price/2);
         }
     }
 

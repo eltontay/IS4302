@@ -3,6 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
 import "./States.sol";
+import "./ERC20.sol";
 // Review -> Profile -> Blocktractor
 // Conflict -> Milestone -> Service -> Project -> Blocktractor 
 
@@ -30,15 +31,13 @@ contract Blocktractor {
 
     Profile profile;
     Project project;
-
-    address payable escrow_wallet = payable(msg.sender);
-    address payable revenue_wallet = payable(msg.sender);
-    uint256 public comissionFee;
+    ERC20 erc20; 
+    address payable escrow = payable(msg.sender); 
 
     constructor(Profile profileContract, Project projectContract, uint256 fee) public {
         profile = profileContract;
         project = projectContract;
-        comissionFee = fee;
+        erc20 = new ERC20(); 
     }
 
 /*
@@ -140,8 +139,10 @@ contract Blocktractor {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
-        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone);
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price) public {
+        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price);
+        //make payment to escrow
+        erc20.transfer(escrow, price);
     }
 
     /*
@@ -214,6 +215,14 @@ contract Blocktractor {
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 vote) external {
         project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
     }
+
+    /*
+        Conflict - Resolve conflict payment 
+    */
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public {
+        project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
+    }
+
     
     /*
         Profile - Create
@@ -270,7 +279,7 @@ contract Blocktractor {
     */ 
 
     function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber);
+        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber, erc20);
     }    
 
     /*
@@ -287,6 +296,34 @@ contract Blocktractor {
 
     function getAvgServiceRequesterStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
         return project.getAvgServiceRequesterStarRating(projectNumber,serviceNumber);
+    }
+
+/*
+    ERC20 Token functions
+*/
+
+    /*
+        ERC20 - Mint
+    */
+
+    function mintTokens() public payable {
+        erc20.mint(msg.sender, msg.value);
+    }
+
+    /*
+        ERC20 - transfer
+    */
+
+    function transfer(address receiver, uint256 value) public  {
+        erc20.transfer(receiver, value);
+    }
+
+    /*
+        ERC20 - Get balance 
+    */
+
+    function getBalance() public view returns (uint256) {
+        return erc20.balanceOf(msg.sender);
     }
 
 
