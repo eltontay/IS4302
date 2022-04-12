@@ -2,7 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Milestone.sol";
 import "./States.sol";
-
+import "./ERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 /*
