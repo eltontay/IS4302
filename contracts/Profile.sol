@@ -13,7 +13,6 @@ contract Profile {
         bool created;
     }
 
-
     mapping (address => profile) profileList; // list of profiles created in profile smart contract
 
     event profileCreated(string name, string password, address owner);
