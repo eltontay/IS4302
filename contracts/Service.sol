@@ -274,6 +274,19 @@ contract Service {
     }
 
     /*
+        Milestone - Verify 
+    */
+
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) external 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
+    {
+        // To report the completion of the milestone
+        milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber, _from);
+    }
+
+
+    /*
         Milestone - review 
     */
 

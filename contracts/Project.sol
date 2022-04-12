@@ -274,15 +274,14 @@ contract Project {
     }
 
     /*
-        Milestone - make milestone payment 
+        Milestone - Verify 
     */
-
-    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) external 
+        atState(projectNumber, States.ProjectStatus.active)
     {
         // To report the completion of the milestone
-        service.makeMilestonePayment(projectNumber, serviceNumber, milestoneNumber, erc20);
+        service.verifyMilestone(projectNumber, serviceNumber, milestoneNumber , _from);
     }
-
 
 /*
 

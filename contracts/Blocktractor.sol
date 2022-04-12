@@ -2,27 +2,23 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
-import "./ERC20.sol";
 import "./States.sol";
-import "./ERC20.sol";
+import "./Token.sol";
 
 contract Blocktractor {
 
     Profile profile;
     Project project;
-    ERC20 erc20;
+    Token token;
 
-
-    address payable escrow;
     // address payable revenue_wallet = payable(msg.sender);
     uint256 public comissionFee;
 
-    constructor(Profile profileContract, Project projectContract, uint256 fee) public {
+    constructor(Profile profileContract, Project projectContract, Token tokenContract, uint256 fee) public {
         profile = profileContract;
         project = projectContract;
-        escrow = payable(msg.sender);
+        token = tokenContract;
         comissionFee = fee;
-        erc20 = new ERC20(); 
     }
 
 /*
@@ -189,8 +185,8 @@ contract Blocktractor {
 
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price) public {
         project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, msg.sender);
-        //make payment to escrow
-        erc20.transfer(escrow, price);
+        // //make payment to escrow
+        // erc20.transfer(escrow, price);
     }
 
     /*
@@ -225,6 +221,13 @@ contract Blocktractor {
         project.makeMilestonePayment(projectNumber,serviceNumber,milestoneNumber, erc20);
     }    
 
+    /*
+        Milestone - Verify Milestone
+    */ 
+
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
+    } 
 /*
 
     Conflict Functions
@@ -283,22 +286,22 @@ contract Blocktractor {
 */
 
     /*
-        ERC20 - Mint
+        ERC20 - Mint (TODO NEED TEST)
     */
     function mintTokens() public payable {
-        erc20.mint(msg.sender, msg.value);
+        token.getCredit();
     }
     /*
-        ERC20 - transfer
+        ERC20 - transfer between users
     */
     function transfer(address receiver, uint256 value) public  {
-        erc20.transfer(receiver, value);
+        token.transferCredit(receiver, value);
     }
     /*
         ERC20 - Get balance 
     */
     function getBalance() public view returns (uint256) {
-        return erc20.balanceOf(msg.sender);
+        return token.checkBalance(msg.sender);
     }
 
 /*

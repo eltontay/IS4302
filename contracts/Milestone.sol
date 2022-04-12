@@ -3,8 +3,9 @@ pragma solidity >=0.4.22 <0.9.0;
 
 import "./Conflict.sol";
 import "./Review.sol";
-import "./ERC20.sol";
 import "./States.sol";
+import "./Token.sol";
+import "./SafeMath.sol";
 
 /*
     Overview
@@ -24,14 +25,19 @@ import "./States.sol";
 
 
 contract Milestone {
+    
+    using SafeMath for uint256;
 
     Conflict conflict;
     Review review;
-    address payable contractAddress = payable(msg.sender); 
+    Token token;
 
-    constructor (Conflict conflictContract, Review reviewContract) payable {
+    // address payable contractAddress = payable(msg.sender); 
+
+    constructor (Conflict conflictContract, Review reviewContract, Token tokenContract) payable {
         conflict = conflictContract;
         review = reviewContract;
+        token = tokenContract;
     }
 
     struct milestone {
@@ -112,6 +118,7 @@ contract Milestone {
         requiredString(title)
         requiredString(description)
     {
+        require(token.checkBalance(_from) >= price , "You do not have enough tokens to create this milestone.");
         milestone storage newMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNum];
         newMilestone.projectNumber = projectNumber;
         newMilestone.serviceNumber = serviceNumber;
@@ -123,7 +130,9 @@ contract Milestone {
         newMilestone.price = price;
         newMilestone.serviceRequester = _from;  
 
-        emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
+        token.transferToEscrow(_from, price);
+
+        emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description, price);
 
         milestoneTotal++;
         milestoneNum++;
@@ -151,19 +160,24 @@ contract Milestone {
         check service requester done in service
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
     {
+        uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price;
+        require(token.checkBalanceEscrow() >= price, "The Escrow has been breached. It does not have enough funds");
+
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].exist = false;        
         milestoneTotal--;
         setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.terminated);
         emit milestoneDeleted(projectNumber, serviceNumber, milestoneNumber);
+
         //transfer price back to requester 
         address payable requester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester; 
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
-        erc20.transfer(requester, price);
+
+        token.transferFromEscrow(requester, price);
     }
 
     /*
@@ -212,10 +226,11 @@ contract Milestone {
         startNextMilestone(projectNumber, serviceNumber);
     }
 
+    
     /*
-        Milestone - make milestone payment
+        Milestone - Verify milestone
     */
-    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public payable
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) public payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed) 
     {
@@ -224,8 +239,8 @@ contract Milestone {
         //MAKE PAYment of price from escrow wallet to service provider 
         address payable receiver = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider);
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
-        require(msg.value == price, "Amount paid incorrect");
-        receiver.transfer(msg.value);
+  
+        token.transferFromEscrow(receiver, price);
     }
 
 /*
@@ -300,7 +315,7 @@ contract Milestone {
         Conflict - Resolve payments
     */
 
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external payable
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) internal
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
     {
         uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);
@@ -309,11 +324,14 @@ contract Milestone {
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
         if (result == 2) {
             //service provider wins
-            erc20.transfer(provider, price);
+            token.transferFromEscrow(provider, price);
+            setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.verified);
         } else {
             //split 50-50
-            erc20.transfer(provider, price/2); 
-            erc20.transfer(requester, price/2);
+            uint256 split_price = price.div(2);
+            token.transferFromEscrow(provider, split_price); 
+            token.transferFromEscrow(requester, split_price);
+            setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.terminated);
         }
     }
 
