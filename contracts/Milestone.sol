@@ -3,14 +3,13 @@ pragma solidity >=0.4.22 <0.9.0;
 
 import "./Conflict.sol";
 import "./Review.sol";
-import "./ERC20.sol";
 import "./States.sol";
 
 contract Milestone {
 
     Conflict conflict;
     Review review;
-    // address payable contractAddress = payable(msg.sender); 
+    address payable contractAddress = payable(msg.sender); 
 
     constructor (Conflict conflictContract, Review reviewContract) payable {
         conflict = conflictContract;
@@ -58,23 +57,22 @@ contract Milestone {
         _;
     }
 
-    modifier isNeither(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address target) {
-        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester == payable(target) || 
-                servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider == payable(target) , "Invalid service requester or provider");
+    modifier isNeither(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) {
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester == _from || 
+                servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider == _from , "Invalid service requester or provider");
         _;
     }
 
-    modifier checkDAO(uint256 projectNumber, uint256 serviceNumber, uint256 numMilestones, address _from) {
+    function checkDAO(uint256 projectNumber, uint256 serviceNumber, uint256 numMilestones, address payable _from) internal returns (bool) {
         mapping(uint256 => milestone) storage currService = servicesMilestones[projectNumber][serviceNumber];
         bool check = false;
         for (uint8 i = 0; i < numMilestones; i++) {
             milestone storage currMilestone = currService[i];
-            if (currMilestone.serviceProvider == payable(_from)) {
+            if (currMilestone.serviceProvider == _from) {
                 check = true;
             }
         }
-        require(check, "Invalid Service Provider, unable to vote");
-        _;
+        return check;
     }
 
 /*
@@ -111,6 +109,10 @@ contract Milestone {
 
         milestoneTotal++;
         milestoneNum++;
+
+        //Make payment to escrow
+        address payable escrow = payable(contractAddress);
+        escrow.transfer(price);
     }
 
 
@@ -120,7 +122,8 @@ contract Milestone {
 
     function readMilestoneTitle(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external view 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
-    returns (string memory) {
+        returns (string memory) 
+    {
         return (servicesMilestones[projectNumber][serviceNumber][milestoneNumber].title);
     }
 
@@ -128,8 +131,7 @@ contract Milestone {
         Milestone - Update
     */
 
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external 
-        // isValidMilestone(projectNumber, serviceNumber, milestoneNumber)//REMOVED FOR STACK ERROR
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable _from) external 
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
         requiredString(title)
         requiredString(description)
@@ -163,14 +165,16 @@ contract Milestone {
         Milestone - Accept
     */
     
-    function acceptService(uint256 projectNumber, uint256 serviceNumber, address payable serviceProvider) external{
+    function acceptMilestone(uint256 projectNumber, uint256 serviceNumber, address payable _from) external
+    {
+        
         // Accepts Service Contract, so all the Milestones are set to approved (locked in)
         for (uint i = 0; i < milestoneNum; i++){
             if(servicesMilestones[projectNumber][serviceNumber][i].status != States.MilestoneStatus.created ||
             servicesMilestones[projectNumber][serviceNumber][i].exist == false){ 
                 continue; 
             }
-            servicesMilestones[projectNumber][serviceNumber][i].serviceProvider = serviceProvider; 
+            servicesMilestones[projectNumber][serviceNumber][i].serviceProvider = _from; 
             setState(projectNumber, serviceNumber, i, States.MilestoneStatus.approved);
             startNextMilestone(projectNumber, serviceNumber);
         }
@@ -182,25 +186,20 @@ contract Milestone {
 
     function startNextMilestone(uint256 projectNumber, uint256 serviceNumber) internal {
         for (uint i = 0; i < milestoneNum; i++){
-            if(servicesMilestones[projectNumber][serviceNumber][i].status == States.MilestoneStatus.approved &&
-            servicesMilestones[projectNumber][serviceNumber][i].exist){ 
-                startMilestone(projectNumber, serviceNumber, i);
-                return ;
+            if(
+            servicesMilestones[projectNumber][serviceNumber][i].status == States.MilestoneStatus.approved &&
+            servicesMilestones[projectNumber][serviceNumber][i].exist)
+            { 
+                setState(projectNumber, serviceNumber, i, States.MilestoneStatus.started);
+                return;
             }
         }
     }
-
-    function startMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) private
-        isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
-        atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.approved)
-    {
-        setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started);
-    }
-
     /*
         Milestone - Complete
+        -- service provider
     */
-    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) public
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started) // Must work on milestone in order
     {
@@ -220,13 +219,14 @@ contract Milestone {
         //MAKE PAYment of price from escrow wallet to service provider 
         address payable receiver = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider);
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
-        erc20.transfer(receiver, price);
+        require(msg.value == price, "Amount paid incorrect");
+        receiver.transfer(msg.value);
     }
 
     /*
         Milestone - Review milestone
     */
-    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public 
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, string memory review_input, uint star_rating) public 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
 
     {
@@ -236,10 +236,10 @@ contract Milestone {
         require(milestoneServiceProvider == _from || milestoneServiceRequester == _from , " Invalid");
         require(currMilestone.status == States.MilestoneStatus.completed);
 
-        if (milestoneServiceProvider == payable(_from)) {
-            review.createReview(projectNumber,serviceNumber,milestoneNumber,payable(_from),milestoneServiceRequester,review_input,States.Role.serviceProvider,star_rating);
+        if (milestoneServiceProvider == _from) {
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceRequester,review_input,States.Role.serviceProvider,star_rating);
         } else {
-            review.createReview(projectNumber,serviceNumber,milestoneNumber,payable(_from),milestoneServiceProvider,review_input,States.Role.serviceRequester,star_rating);
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceProvider,review_input,States.Role.serviceRequester,star_rating);
         }
     }
 
@@ -247,10 +247,9 @@ contract Milestone {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, address serviceProvider,  uint256 totalVoters) external 
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable serviceRequester, address payable serviceProvider,  uint256 totalVoters) external 
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed)
     {
-        // Need to set requirement for service requestor?
         conflict.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
         setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict);
     }
@@ -280,25 +279,27 @@ contract Milestone {
 
     /*
         Conflict - Start Vote
-
+        Checks DAO here.
     */
 
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address payable _from) external
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
-    {
+    {   
+        require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
         conflict.startVote(projectNumber, serviceNumber, milestoneNumber);
     }
     
     /*
         Conflict - Vote
+        Check DAO here.
     */
 
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) external 
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 numMilestones, address payable _from, uint8 vote) external 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
-        // checkDAO(projectNumber,serviceNumber,numMilestones,_from)
     {
+        require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
         conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
     }
 
@@ -306,20 +307,22 @@ contract Milestone {
         Conflict - Resolve payments
     */
 
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external payable
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 value) external payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
     {
         uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);
-        address payable provider = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider);
-        address payable requester = payable(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester);
+        address payable provider = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider;
+        address payable requester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester;
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
         if (result == 2) {
             //service provider wins
-            erc20.transfer(provider, price);
+        require(value == price, "Amount paid incorrect");
+        provider.transfer(msg.value);
         } else {
             //split 50-50
-            erc20.transfer(provider, price/2); 
-            erc20.transfer(requester, price/2);
+        require(value == price/2, "Amount paid incorrect");//This does not work
+        provider.transfer(msg.value);
+        requester.transfer(msg.value);
         }
     }
 
