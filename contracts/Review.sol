@@ -42,7 +42,6 @@ contract Review {
     function createReview(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address  _from, address  _to, string memory review_input, States.Role role, uint star_rating) public
         check_starrating(star_rating) 
     {
-
         review memory newReview = review(projectNumber,serviceNumber,milestoneNumber,_to,_from,role,review_input,star_rating);
 
         if (role == States.Role.serviceProvider) { 

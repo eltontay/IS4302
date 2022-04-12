@@ -285,8 +285,8 @@ contract Blocktractor {
         Review - Create 
     */
 
-    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
-        project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory review_input, uint star_rating) public {
+        project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender,review_input,star_rating);
     }
 
     /*

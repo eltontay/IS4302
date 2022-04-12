@@ -354,16 +354,15 @@ contract Milestone {
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
 
     {
-        milestone storage currMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNumber];
-        address  milestoneServiceProvider = currMilestone.serviceProvider;
-        address  milestoneServiceRequester = currMilestone.serviceRequester;
+        address  milestoneServiceProvider = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider;
+        address  milestoneServiceRequester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester;
         require(milestoneServiceProvider == _from || milestoneServiceRequester == _from , " Invalid");
-        require(currMilestone.status == States.MilestoneStatus.completed);
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == States.MilestoneStatus.completed);
 
         if (milestoneServiceProvider == _from) {
-            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceRequester,review_input,States.Role.serviceProvider,star_rating);
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceRequester,review_input,States.Role.serviceRequester,star_rating);
         } else {
-            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceProvider,review_input,States.Role.serviceRequester,star_rating);
+            review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceProvider,review_input,States.Role.serviceProvider,star_rating);
         }
     }
 
