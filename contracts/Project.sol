@@ -21,6 +21,7 @@ contract Project {
         string description;
         address projectOwner; // defaults to address(0) , service requester
         bool exist; // allowing update such as soft delete of project - projectNum
+        int num_providers; // keeping track of the number of accepted Service Providers  (increment when service is accepted)
         States.ProjectStatus projectstatus;
     }
 
@@ -68,6 +69,7 @@ contract Project {
         newProject.description = description;
         newProject.projectOwner = _from;
         newProject.exist = true;
+        newProject.num_providers = 0;
         newProject.projectstatus = States.ProjectStatus.active;
 
         emit projectCreated(projectNum, title, description, _from);
@@ -111,15 +113,15 @@ contract Project {
 */
 
     function getProjectOwner(uint256 projectId) public view returns(address) {
-        projects[projectId].projectOwner;
+        return projects[projectId].projectOwner;
     }
 
     function getProjectTitle(uint256 projectId) public view returns(string memory) {
-        projects[projectId].title;
+        return projects[projectId].title;
     }
 
     function getProjectDescription(uint256 projectId) public view returns(string memory) {
-        projects[projectId].description;
+        return projects[projectId].description;
     }
 
 /*
@@ -169,6 +171,7 @@ contract Project {
         atState(projectNumber, States.ProjectStatus.active)
     {
         service.acceptServiceRequest(projectNumber,serviceNumber,payable(_from));
+        num_providers++;
     }
 
     /*
@@ -239,10 +242,11 @@ contract Project {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester, uint256 totalVoters) external
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester) external
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,payable(serviceRequester),totalVoters);
+        require(projects[projectNumber].num_providers >= 0, "You have to accept a service request from a service Provider before you can create a conflict");
+        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,payable(serviceRequester),projects[projectNumber].num_providers-1);
     }
 
     /*
