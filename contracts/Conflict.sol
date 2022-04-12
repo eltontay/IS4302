@@ -13,8 +13,8 @@ contract Conflict {
         uint256 milestoneNumber;
         string title;
         string description;
-        address payable serviceRequester; // Project Owner
-        address payable serviceProvider; 
+        address  serviceRequester; // Project Owner
+        address  serviceProvider; 
         States.ConflictStatus conflictStatus;
         uint256 voters;
         uint256 votesCollected;
@@ -69,7 +69,7 @@ contract Conflict {
         Conflict - Create
     */
 
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable serviceRequester, address payable serviceProvider, uint256 totalVoters) public 
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address  serviceRequester, address serviceProvider, uint256 totalVoters) public 
         requiredString(title)
         requiredString(description)
     {
@@ -148,21 +148,20 @@ contract Conflict {
         require(currConflict.votes[_from] == 0 , "You have already voted, you cannot vote again");
         require(vote == 1 || vote == 2, "You have not input a right vote. You can either vote 1 for Requester or 2 for Provider.");
 
-        conflict storage C = conflicts[projectNumber][serviceNumber][milestoneNumber];
-        C.votes[_from] = vote;
+        currConflict.votes[_from] = vote;
 
-        if (vote == 1) { C.requesterVotes++; }
-        if (vote == 2) { C.providerVotes++; }
-        C.votesCollected++;
+        if (vote == 1) { currConflict.requesterVotes++; }
+        if (vote == 2) { currConflict.providerVotes++; }
+        currConflict.votesCollected++;
 
         emit conflictVoted(projectNumber, serviceNumber, milestoneNumber, msg.sender, vote);
 
-        if (C.votesCollected == C.voters) {
-            if (C.providerVotes > C.requesterVotes) {C.result = 2; }
-            else {C.result = 1;} //if there is tie vote, service Requester will win the vote
+        if (currConflict.votesCollected == currConflict.voters) {
+        if (currConflict.providerVotes > currConflict.requesterVotes) {currConflict.result = 2; }
+            else {currConflict.result = 1;} //if there is tie vote, service Requester will win the vote
             setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.completed);
 
-            emit conflictResult(projectNumber, serviceNumber, milestoneNumber, C.result);
+            emit conflictResult(projectNumber, serviceNumber, milestoneNumber, currConflict.result);
             return true;
         }
         return false;

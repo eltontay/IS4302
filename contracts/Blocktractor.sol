@@ -127,7 +127,7 @@ contract Blocktractor {
     */
 
     function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
-        project.deleteService(projectNumber,serviceNumber,msg.sender,erc20);
+        project.deleteService(projectNumber,serviceNumber,msg.sender);
     }
 
     /*
@@ -202,7 +202,7 @@ contract Blocktractor {
     */ 
 
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender,erc20);
+        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
     } 
 
     /*
@@ -213,13 +213,13 @@ contract Blocktractor {
         project.completeMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
     }    
 
-    /*
-        Milestone - Make milestone payment
-    */ 
+    // /*
+    //     Milestone - Make milestone payment
+    // */ 
 
-    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.makeMilestonePayment(projectNumber,serviceNumber,milestoneNumber, erc20);
-    }    
+    // function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+    //     project.makeMilestonePayment(projectNumber,serviceNumber,milestoneNumber);
+    // }    
 
     /*
         Milestone - Verify Milestone
@@ -262,7 +262,7 @@ contract Blocktractor {
         Conflict - Start Vote
     */
     function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
-        project.startVote(projectNumber, serviceNumber, milestoneNumber);
+        project.startVote(projectNumber, serviceNumber, milestoneNumber, msg.sender);
     }
 
     /*
@@ -273,39 +273,13 @@ contract Blocktractor {
         project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
     }
 
-   /*
-        Conflict - Resolve conflict payment 
-    */
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
-    }
-
-
+//    /*
+//         Conflict - Resolve conflict payment 
+//     */
+//     function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+//         project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
+//     }
 /*
-    ERC20 Token functions
-*/
-
-    /*
-        ERC20 - Mint (TODO NEED TEST)
-    */
-    function mintTokens() public payable {
-        token.getCredit();
-    }
-    /*
-        ERC20 - transfer between users
-    */
-    function transfer(address receiver, uint256 value) public  {
-        token.transferCredit(receiver, value);
-    }
-    /*
-        ERC20 - Get balance 
-    */
-    function getBalance() public view returns (uint256) {
-        return token.checkBalance(msg.sender);
-    }
-
-/*
-
     Review Functions
 
 */

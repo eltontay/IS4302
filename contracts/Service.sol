@@ -2,8 +2,8 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Milestone.sol";
 import "./States.sol";
-import "./ERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "./SafeMath.sol";
 
 /*
     1. Service Requester (Project Owner)
@@ -13,6 +13,9 @@ import "@openzeppelin/contracts/utils/Strings.sol";
     Each Milestone allows conflict(s) to be raised by the service requester.
 */
 contract Service {
+    
+    using SafeMath for uint256;
+    
     Milestone milestone;
 
 
@@ -25,8 +28,8 @@ contract Service {
         uint256 serviceNumber;
         string title;
         string description;
-        address payable serviceRequester; // msg.sender
-        address payable serviceProvider; // defaults to address(0)
+        address  serviceRequester; // msg.sender
+        address  serviceProvider; // defaults to address(0)
         bool exist; // allowing update such as soft delete of service
         States.ServiceStatus status; // Defaults at none
         uint256 numMilestones;
@@ -90,7 +93,7 @@ contract Service {
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, address payable projectOwner) external 
+    function createService(uint256 projectNumber, string memory title, string memory description, address  projectOwner) external 
         requiredString(title) 
         requiredString(description) 
     {        
@@ -101,7 +104,7 @@ contract Service {
         newService.title = title;
         newService.description = description;
         newService.serviceRequester = projectOwner;
-        newService.serviceProvider = payable(address(0));
+        newService.serviceProvider = address(0);
         newService.exist = true;
         newService.status = States.ServiceStatus.created;
         newService.numMilestones = 0;
@@ -116,7 +119,7 @@ contract Service {
         Service - Update
     */
 
-    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, address payable _from) external 
+    function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, address  _from) external 
         onlyServiceRequester(projectNumber, serviceNumber, _from)
         activeService(projectNumber, serviceNumber)
         requiredString(title)
@@ -134,7 +137,7 @@ contract Service {
         Service - Delete
     */
 
-    function deleteService(uint256 projectNumber, uint256 serviceNumber, address payable _from, ERC20 erc20) external 
+    function deleteService(uint256 projectNumber, uint256 serviceNumber, address  _from) external 
         onlyServiceRequester(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
     {
@@ -150,12 +153,14 @@ contract Service {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) external 
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) external 
         onlyServiceRequester(projectNumber,serviceNumber,_from) 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.pending)
     {
-        setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);  
+        setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);
+        address provider = projectServices[projectNumber][serviceNumber].serviceProvider;
+        milestone.acceptMilestone(projectNumber, serviceNumber,provider);
     }
 
     /*
@@ -163,33 +168,34 @@ contract Service {
         Function for project owner to reject a contractor's service 
     */
 
-    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) external 
+    function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address  _from) external 
         onlyServiceRequester(projectNumber,serviceNumber,_from) 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.pending)
     {
         setState(projectNumber, serviceNumber, States.ServiceStatus.created);
-        projectServices[projectNumber][serviceNumber].serviceProvider = payable(address(0));
+        projectServices[projectNumber][serviceNumber].serviceProvider = address(0);
     }
 
     /*
         Service - Request to start service
     */
 
-    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) public 
+    function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) public 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
-        require(projectServices[projectNumber][serviceNumber].serviceProvider == payable(address(0)), "This Service is already taken!");
+        require(projectServices[projectNumber][serviceNumber].serviceProvider == address(0), "This Service is already taken!");
         require(projectServices[projectNumber][serviceNumber].serviceRequester != _from, "You cannot work on your own project");
-        setState(projectNumber, serviceNumber, States.ServiceStatus.pending); 
+        setState(projectNumber, serviceNumber, States.ServiceStatus.pending);
+        projectServices[projectNumber][serviceNumber].serviceProvider = _from;
     }
 
     /*
         Service - Complete service request
     */
 
-    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable _from) external 
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address  _from) external 
         onlyServiceProvider(projectNumber,serviceNumber,_from) 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
@@ -216,7 +222,7 @@ contract Service {
     /*
         Milestone - Create
     */
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price, address payable _from) external payable
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price, address  _from) external 
         onlyServiceRequester(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         // atState(projectNumber, serviceNumber, States.ServiceStatus.created)
@@ -228,7 +234,7 @@ contract Service {
     /*
         Milestone - Update
     */
-    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone, address payable _from) external 
+    function updateMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory titleMilestone, string memory descriptionMilestone, address  _from) external 
         onlyServiceRequester(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
@@ -240,19 +246,19 @@ contract Service {
     /*
         Milestone - Delete
     */
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber,address payable _from, ERC20 erc20) external 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber,address  _from) external 
         onlyServiceRequester(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {        
-        milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber,erc20);
+        milestone.deleteMilestone(projectNumber,serviceNumber,milestoneNumber);
         projectServices[projectNumber][serviceNumber].numMilestones -= 1;
     }
 
     /*
         Milestone - Complete 
     */
-    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) external 
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address  _from) external 
         onlyServiceProvider(projectNumber, serviceNumber,_from)
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
@@ -261,17 +267,17 @@ contract Service {
         milestone.completeMilestone(projectNumber, serviceNumber, milestoneNumber, _from);
     }
 
-    /*
-        Milestone - make milestone payment 
-    */
+    // /*
+    //     Milestone - make milestone payment 
+    // */
 
-    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
-        activeService(projectNumber, serviceNumber)
-        atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
-    {
-        // To report the completion of the milestone
-        milestone.makeMilestonePayment(projectNumber, serviceNumber, milestoneNumber, erc20);
-    }
+    // function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external 
+    //     activeService(projectNumber, serviceNumber)
+    //     atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
+    // {
+    //     // To report the completion of the milestone
+    //     milestone.makeMilestonePayment(projectNumber, serviceNumber, milestoneNumber);
+    // }
 
     /*
         Milestone - Verify 
@@ -281,8 +287,10 @@ contract Service {
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
     {
+        address requester = projectServices[projectNumber][serviceNumber].serviceRequester;
+        require(_from == requester, "You are not the requester of this service. You cannot verify.");
         // To report the completion of the milestone
-        milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber, _from);
+        milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber);
     }
 
 
@@ -290,7 +298,7 @@ contract Service {
         Milestone - review 
     */
 
-    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, string memory review_input, uint star_rating) public {
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address  _from, string memory review_input, uint star_rating) public {
         milestone.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
     }
 
@@ -304,7 +312,7 @@ contract Service {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address payable serviceRequester,  uint256 totalVoters) external 
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address _from,  uint256 totalVoters) external 
         // onlyServiceRequester(projectNumber,serviceNumber,serviceRequester) //REMOVED FOR STACK ERROR
         // activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
@@ -312,8 +320,10 @@ contract Service {
         requiredString(description)
 
     {
-        address payable serviceProvider = projectServices[projectNumber][serviceNumber].serviceProvider;
-        milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,serviceRequester,serviceProvider,totalVoters);
+        address requester = projectServices[projectNumber][serviceNumber].serviceRequester;
+        require(_from == requester, "You are not the requester of this service. You cannot verify.");
+
+        milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,totalVoters);
         setState(projectNumber, serviceNumber, States.ServiceStatus.conflict);
     }
 
@@ -346,7 +356,7 @@ contract Service {
         Conflict - Start Vote
     */
 
-    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) external
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address  _from) external
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
     {
@@ -357,20 +367,20 @@ contract Service {
         Conflict - Vote
     */
     
-    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, uint8 vote) external 
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) external 
         // activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.conflict)
     {
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,projectServices[projectNumber][serviceNumber].numMilestones,_from,vote);
     }
 
-    /*
-        Conflict - Resolve conflict payment 
-    */
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public {
-        milestone.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
-        setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);
-    }
+    // /*
+    //     Conflict - Resolve conflict payment 
+    // */
+    // function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+    //     milestone.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
+    //     setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);
+    // }
 
 
     // Star Rating getters
@@ -381,6 +391,16 @@ contract Service {
     // Star Rating getters
     function getAvgServiceRequesterStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {
         return milestone.getAvgServiceRequesterStarRating(projectNumber,serviceNumber);
+    }
+
+    // Get Service Requester
+    function getServiceRequester(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (address) {
+        return projectServices[projectNumber][serviceNumber].serviceRequester;
+    }
+
+    // Get Service Provider
+    function getServiceProvider(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (address) {
+        return projectServices[projectNumber][serviceNumber].serviceProvider;
     }
 
 }

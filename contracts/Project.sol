@@ -147,7 +147,7 @@ contract Project {
         // onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createService(projectNumber,title,description,payable(_from));
+        service.createService(projectNumber,title,description,_from);
     }
 
     /*
@@ -157,17 +157,17 @@ contract Project {
     function updateService(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, States.ServiceStatus status, address _from) public 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.updateService(projectNumber,serviceNumber,title,description,payable(_from));
+        service.updateService(projectNumber,serviceNumber,title,description,_from);
     }
 
     /*
         Service - Delete
     */
 
-    function deleteService(uint256 projectNumber, uint256 serviceNumber, address _from, ERC20 erc20) public 
+    function deleteService(uint256 projectNumber, uint256 serviceNumber, address _from) public 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.deleteService(projectNumber,serviceNumber,payable(_from),erc20);
+        service.deleteService(projectNumber,serviceNumber,_from);
     }
 
     /*
@@ -178,8 +178,8 @@ contract Project {
     function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.acceptServiceRequest(projectNumber,serviceNumber,payable(_from));
-        num_providers++;
+        service.acceptServiceRequest(projectNumber,serviceNumber,_from);
+        projects[projectNumber].num_providers++;
     }
 
     /*
@@ -190,7 +190,7 @@ contract Project {
     function takeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) public  
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.takeServiceRequest(projectNumber, serviceNumber, payable(_from)); 
+        service.takeServiceRequest(projectNumber, serviceNumber, _from); 
     }
 
     /*
@@ -201,7 +201,7 @@ contract Project {
     function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) external  
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.completeServiceRequest(projectNumber, serviceNumber, payable(_from));      
+        service.completeServiceRequest(projectNumber, serviceNumber, _from);      
     }
 
     /*
@@ -212,7 +212,7 @@ contract Project {
     function rejectServiceRequest(uint256 projectNumber, uint256 serviceNumber, address _from) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.rejectServiceRequest(projectNumber,serviceNumber,payable(_from));   
+        service.rejectServiceRequest(projectNumber,serviceNumber,_from);   
     }
 
 
@@ -238,7 +238,7 @@ contract Project {
         onlyOwner(projectNumber, _from) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, payable(_from));
+        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, _from);
     }
 
     /*
@@ -249,18 +249,18 @@ contract Project {
         onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone, payable(_from));
+        service.updateMilestone(projectNumber,serviceNumber,milestoneNumber,titleMilestone,descriptionMilestone, _from);
     }
 
     /*
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, ERC20 erc20) public 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) public 
         // onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, payable(_from), erc20);
+        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, _from);
     }    
 
     /*
@@ -270,7 +270,7 @@ contract Project {
         atState(projectNumber, States.ProjectStatus.active)
     {
         // To report the completion of the milestone
-        service.completeMilestone(projectNumber, serviceNumber, milestoneNumber, payable(_from));
+        service.completeMilestone(projectNumber, serviceNumber, milestoneNumber, _from);
     }
 
     /*
@@ -294,11 +294,12 @@ contract Project {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address serviceRequester) external
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, address _from) external
         atState(projectNumber, States.ProjectStatus.active)
     {
         require(projects[projectNumber].num_providers >= 0, "You have to accept a service request from a service Provider before you can create a conflict");
-        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,payable(serviceRequester),projects[projectNumber].num_providers-1);
+        uint256 total_voters = SafeMath.sub(uint256(projects[projectNumber].num_providers), 1);
+        service.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,_from,total_voters);
     }
 
     /*
@@ -327,7 +328,7 @@ contract Project {
     function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) external
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.startVote(projectNumber, serviceNumber, milestoneNumber,payable(_from));
+        service.startVote(projectNumber, serviceNumber, milestoneNumber,_from);
     }
 
     /*
@@ -337,7 +338,7 @@ contract Project {
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) external 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.voteConflict(projectNumber,serviceNumber,milestoneNumber,payable(_from),vote);
+        service.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
     }
 
 /*
@@ -351,7 +352,7 @@ contract Project {
     */
 
     function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
-        service.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,payable(_from),review_input,star_rating);
+        service.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
     }
 
     /*
