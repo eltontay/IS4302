@@ -3,22 +3,19 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
 import "./States.sol";
-import "./Token.sol";
 
 contract Blocktractor {
 
     Profile profile;
     Project project;
-    Token token;
 
     // address payable revenue_wallet = payable(msg.sender);
     uint256 public comissionFee;
 
-    constructor(Profile profileContract, Project projectContract, Token tokenContract, uint256 fee) public {
+    constructor(Profile profileContract, Project projectContract) public {
         profile = profileContract;
         project = projectContract;
-        token = tokenContract;
-        comissionFee = fee;
+        // comissionFee = fee;
     }
 
 /*
