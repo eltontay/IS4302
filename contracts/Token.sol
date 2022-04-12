@@ -10,7 +10,7 @@ contract Token {
     uint256 total_pool;
     address owner;
 
-    constructor () public {
+    constructor() public {
 
         ERC20 e = new ERC20();
         erc20Contract = e;
