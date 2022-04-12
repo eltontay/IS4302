@@ -133,8 +133,8 @@ contract Blocktractor {
         Function for project owner to accept a contractor's service 
     */
 
-    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
-        project.acceptServiceRequest(projectNumber,serviceNumber,msg.sender);
+    function acceptServiceRequest(uint256 projectNumber, uint256 serviceNumber, address payable serviceProvider) external {
+        project.acceptServiceRequest(projectNumber,serviceNumber,msg.sender ,payable(serviceProvider));
     }
 
     /*
@@ -181,8 +181,10 @@ contract Blocktractor {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone) public {
-        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone,msg.sender);
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price) public {
+        project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, msg.sender);
+        //make payment to escrow
+        erc20.transfer(escrow, price);
     }
 
     /*
@@ -238,6 +240,111 @@ contract Blocktractor {
     function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
         project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
     }
+
+    /*
+        Conflict - Create
+    */ 
+    
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, uint256 totalVoters) external {
+        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender,totalVoters);
+    }
+
+    /*
+        Conflict - Update
+    */
+
+    function updateConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+        project.updateConflict(projectNumber,serviceNumber,milestoneNumber,title,description);
+    }
+
+    /*
+        Conflict - Delete
+    */ 
+
+    function deleteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        project.deleteConflict(projectNumber,serviceNumber,milestoneNumber);  
+    }
+
+    /*
+        Conflict - Start Vote
+    */
+    function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
+        project.startVote(projectNumber, serviceNumber, milestoneNumber);
+    }
+
+    /*
+        Conflict - Vote
+    */
+
+    function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 vote) external {
+        project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
+    }
+
+    /*
+        Conflict - Resolve conflict payment 
+    */
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
+    }
+
+    
+    /*
+        Profile - Create
+    */
+    function createProfile(string memory name, string memory username, string memory password) public {
+        profile.createProfile(name, username, password, msg.sender);
+    }
+
+    /*
+        Profile - Delete
+    */
+    function deleteProfile() public {
+        profile.deleteProfile(msg.sender);
+    }
+
+    /*
+        Profile - Update
+    */
+    function updateProfileName(string memory name) public {
+        profile.updateProfileName(name, msg.sender);
+    }
+
+
+/*
+    Service provider functions 
+*/
+
+    /*
+        Service - Request to start service 
+        Function for contractor to request to start a service 
+    */
+    function createServiceRequest(uint256 projectNumber, uint256 serviceNumber) public {
+        project.createServiceRequest(projectNumber, serviceNumber, msg.sender);
+    }
+
+    /*
+        Service - Complete service request
+    */
+
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber) external {
+        project.completeServiceRequest(projectNumber, serviceNumber, msg.sender);      
+    }
+
+    /*
+        Milestone - Complete Milestone
+    */ 
+
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.completeMilestone(projectNumber,serviceNumber,milestoneNumber);
+    }    
+
+    /*
+        Milestone - Make milestone payment
+    */ 
+
+    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.makeMilestonePayment(projectNumber,serviceNumber,milestoneNumber, erc20);
+    }    
 
     /*
         Review - Getter Provider Stars

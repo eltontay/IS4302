@@ -211,12 +211,11 @@ contract Service {
     /*
         Milestone - Create
     */
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, address payable _from) external payable
-        onlyServiceRequester(projectNumber, serviceNumber,_from)
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price, address payable _from) external payable
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.created)
     {
-        milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone,_from);
+        milestone.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, _from);
         projectServices[projectNumber][serviceNumber].numMilestones += 1;
     }
 
@@ -266,19 +265,19 @@ contract Service {
     }
 
     /*
-        Milestone - Verify 
+        Milestone - make milestone payment 
     */
 
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) external 
+    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
         activeService(projectNumber, serviceNumber)
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
     {
         // To report the completion of the milestone
-        milestone.verifyMilestone(projectNumber, serviceNumber, milestoneNumber, _from);
+        milestone.makeMilestonePayment(projectNumber, serviceNumber, milestoneNumber, erc20);
     }
 
     /*
-        Milestone - Verify 
+        Milestone - review 
     */
 
     function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from, string memory review_input, uint star_rating) public {
@@ -350,6 +349,43 @@ contract Service {
         milestone.voteConflict(projectNumber,serviceNumber,milestoneNumber,projectServices[projectNumber][serviceNumber].numMilestones,_from,vote);
     }
 
+    /*
+        Conflict - Resolve conflict payment 
+    */
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public {
+        milestone.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
+         setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);
+    }
+
+/*
+    Service provider Functions
+*/
+
+    /*
+        Service - Request to start service
+    */
+
+    function createServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) public 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.created)
+    {
+        require(projectServices[projectNumber][serviceNumber].serviceProvider == address(0), "This Service is already taken!");
+        require(projectServices[projectNumber][serviceNumber].serviceRequester != serviceProvider, "You cannot work on your own project");
+        setState(projectNumber, serviceNumber, States.ServiceStatus.pending); 
+    }
+
+    /*
+        Service - Complete service request
+    */
+
+    function completeServiceRequest(uint256 projectNumber, uint256 serviceNumber, address serviceProvider) external 
+        onlyServiceProvider(projectNumber,serviceNumber,serviceProvider) 
+        activeService(projectNumber, serviceNumber)
+        atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
+    {
+        require(projectServices[projectNumber][serviceNumber].serviceProvider == serviceProvider, "You are not working on this Service!");
+        setState(projectNumber, serviceNumber, States.ServiceStatus.completed);
+    }
 
     // Star Rating getters
     function getAvgServiceProviderStarRating(uint256 projectNumber, uint256 serviceNumber) public view returns (uint256) {

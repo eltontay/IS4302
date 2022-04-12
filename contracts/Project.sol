@@ -60,13 +60,13 @@ contract Project {
         Project - Create 
     */
     
-    function createProject(string memory title, string memory description, address _from ) public {
+    function createProject(string memory title, string memory description, address _from) public {
                 
         project storage newProject = projects[projectNum];
         newProject.projectNumber = projectNum;
         newProject.title = title;
         newProject.description = description;
-        newProject.projectOwner = _from;
+        newProject.projectOwner =_from;
         newProject.exist = true;
         newProject.projectstatus = States.ProjectStatus.active;
 
@@ -134,7 +134,8 @@ contract Project {
         Service - Create
     */
 
-    function createService(uint256 projectNumber, string memory title, string memory description, address _from) public 
+    function createService(uint256 projectNumber, string memory title, string memory description) public 
+        // onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
         service.createService(projectNumber,title,description,payable(_from));
@@ -196,11 +197,11 @@ contract Project {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, address _from) public 
-        onlyOwner(projectNumber,msg.sender) 
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone,uint256 price, address payable _from) public 
+        onlyOwner(projectNumber, _from) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, payable(_from));
+        service.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, _from);
     }
 
     /*
@@ -228,11 +229,11 @@ contract Project {
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) public 
-        onlyOwner(projectNumber,msg.sender) 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public 
+        // onlyOwner(projectNumber,msg.sender) 
         atState(projectNumber, States.ProjectStatus.active)
     {
-        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, payable(_from));
+        service.deleteMilestone(projectNumber,serviceNumber,milestoneNumber, erc20);
     }    
 
     /*
@@ -322,7 +323,7 @@ contract Project {
     }
 
     /*
-        Milestone - Verify 
+        Milestone - make milestone payment 
     */
     function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from) external 
         atState(projectNumber, States.ProjectStatus.active)

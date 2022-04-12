@@ -90,7 +90,7 @@ contract Milestone {
         Milestone - Create
     */
 
-    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, address payable _from ) external payable
+    function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory title, string memory description, uint256 price, address payable _from) external payable
         requiredString(title)
         requiredString(description)
     {
@@ -102,7 +102,7 @@ contract Milestone {
         newMilestone.description = description;
         newMilestone.exist = true;
         newMilestone.status = States.MilestoneStatus.created;
-        newMilestone.price = msg.value;
+        newMilestone.price = price;
         newMilestone.serviceRequester = _from;  
 
         emit milestoneCreated(projectNumber, serviceNumber, milestoneNum, title, description);
@@ -112,7 +112,7 @@ contract Milestone {
 
         //Make payment to escrow
         address payable escrow = payable(contractAddress);
-        escrow.transfer(msg.value);
+        escrow.transfer(price);
     }
 
 
@@ -147,7 +147,7 @@ contract Milestone {
         Milestone - Delete
     */ 
 
-    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from ) external 
+    function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) external 
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.created)
     {
@@ -155,9 +155,10 @@ contract Milestone {
         milestoneTotal--;
         setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.terminated);
         emit milestoneDeleted(projectNumber, serviceNumber, milestoneNumber);
-
-
-        //TRANSFER PRICE BACK TO PROJECT OWNER FROM ESCROW WALLET
+        //transfer price back to requester 
+        address payable requester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester; 
+        uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
+        erc20.transfer(requester, price);
     }
 
     /*
@@ -207,9 +208,9 @@ contract Milestone {
     }
 
     /*
-        Milestone - Verify milestone
+        Milestone - make milestone payment
     */
-    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address payable _from) public payable
+    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, ERC20 erc20) public payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.completed) 
     {
