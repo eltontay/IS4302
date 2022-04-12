@@ -299,14 +299,16 @@ contract Milestone {
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
     {
         require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
-        conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
+        bool flag_resolve = conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
+
+        if (flag_resolve) {resolveConflictPayment(projectNumber, serviceNumber, milestoneNumber);}
     }
 
     /*
         Conflict - Resolve payments
     */
 
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint256 value) external payable
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) private payable
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
     {
         uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);
@@ -315,13 +317,12 @@ contract Milestone {
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
         if (result == 2) {
             //service provider wins
-        require(value == price, "Amount paid incorrect");
-        provider.transfer(msg.value);
+            provider.transfer(price);
         } else {
             //split 50-50
-        require(value == price/2, "Amount paid incorrect");//This does not work
-        provider.transfer(msg.value);
-        requester.transfer(msg.value);
+            split = price/2;
+            provider.transfer(split);
+            requester.transfer(split);
         }
     }
 

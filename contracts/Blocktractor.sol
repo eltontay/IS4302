@@ -3,11 +3,14 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
 import "./States.sol";
+import "./ERC20.sol";
 
 contract Blocktractor {
 
     Profile profile;
-    Project project;
+    Project project;    
+    ERC20 erc20;     
+    address payable escrow = payable(msg.sender); 
 
     address payable escrow_wallet = payable(msg.sender);
     address payable revenue_wallet = payable(msg.sender);
@@ -17,6 +20,7 @@ contract Blocktractor {
         profile = profileContract;
         project = projectContract;
         comissionFee = fee;
+        erc20 = new ERC20(); 
     }
 
 /*
@@ -265,8 +269,8 @@ contract Blocktractor {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description, uint256 totalVoters) public {
-        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender,totalVoters);
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) public {
+        project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender);
     }
 
     /*
@@ -298,6 +302,31 @@ contract Blocktractor {
 
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, uint8 vote) public {
         project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
+    }
+
+
+
+/*
+    ERC20 Token functions
+*/
+
+    /*
+        ERC20 - Mint
+    */
+    function mintTokens() public payable {
+        erc20.mint(msg.sender, msg.value);
+    }
+    /*
+        ERC20 - transfer
+    */
+    function transfer(address receiver, uint256 value) public  {
+        erc20.transfer(receiver, value);
+    }
+    /*
+        ERC20 - Get balance 
+    */
+    function getBalance() public view returns (uint256) {
+        return erc20.balanceOf(msg.sender);
     }
 
 }

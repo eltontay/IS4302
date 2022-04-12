@@ -91,6 +91,11 @@ contract Conflict {
         newConflict.result = 0;
 
         emit conflictCreated(projectNumber, serviceNumber, milestoneNumber, serviceRequester, serviceProvider, totalVoters);
+
+        if (newConflict.voters == 0) {
+
+        }
+
     }
 
     /*
@@ -135,7 +140,7 @@ contract Conflict {
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) public 
         isValidConflict(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.voting)
-    {
+    returns (bool) {
         conflict storage currConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
         require(currConflict.serviceRequester != _from , "You raised this conflict. You cannot vote on it.");
         require(currConflict.serviceProvider != _from, "You are involved in this conflict. You cannot vote on it.");
@@ -158,8 +163,10 @@ contract Conflict {
             setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.completed);
 
             emit conflictResult(projectNumber, serviceNumber, milestoneNumber, C.result);
+            return true;
         }
-    }
+        return false;
+    }     
 
 
 /*
