@@ -13,8 +13,8 @@ contract Review {
         uint256 projectNumber;
         uint256 serviceNumber;
         uint256 milestoneNumber;
-        address reviewee;
         address reviewer;
+        address reviewee;
         States.Role role;
         string review;
         uint star_rating;
@@ -25,6 +25,7 @@ contract Review {
     mapping (uint256 => mapping(uint256 => mapping(uint256 => review))) serviceRequesterReviews; // list of reviews received for each profile for each service received (review id, milestone completed, star rating out of 5) 
     mapping (uint256 => mapping(uint256 => uint256)) serviceProviderStarRating;
     mapping (uint256 => mapping(uint256 => uint256)) serviceRequesterStarRating;
+
     event reviewCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address reviewee, address reviewer, States.Role role, string review_input, uint star_rating);
 
     uint256 public numReview = 0;
@@ -42,7 +43,7 @@ contract Review {
     function createReview(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address  _from, address  _to, string memory review_input, States.Role role, uint star_rating) public
         check_starrating(star_rating) 
     {
-        review memory newReview = review(projectNumber,serviceNumber,milestoneNumber,_to,_from,role,review_input,star_rating);
+        review memory newReview = review(projectNumber,serviceNumber,milestoneNumber,_from,_to,role,review_input,star_rating);
 
         if (role == States.Role.serviceProvider) { 
             serviceProviderReviews[projectNumber][serviceNumber][milestoneNumber] = newReview;

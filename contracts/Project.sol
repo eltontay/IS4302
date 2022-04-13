@@ -48,7 +48,7 @@ contract Project {
     }
 
     modifier atState(uint256 projectNumber, States.ProjectStatus state){
-        require(projects[projectNumber].projectstatus == state, "Cannot carry out this operation!");
+        require(projects[projectNumber].projectstatus == state, "Cannot carry out this operation! -Project");
         _;
     }
 

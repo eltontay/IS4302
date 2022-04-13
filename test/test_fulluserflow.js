@@ -1,8 +1,6 @@
 const _deploy_contracts = require("../migrations/2_deploy_contract");
 const truffleAssert = require("truffle-assertions");
-const {
-  expectEvent, // Assertions for emitted events
-} = require("@openzeppelin/test-helpers");
+const { expectEvent } = require('@openzeppelin/test-helpers');
 var assert = require("assert");
 const { create } = require("domain");
 const { profile } = require("console");
@@ -35,7 +33,6 @@ contract("TestUserFlow", function (accounts) {
 
   it("Project Owner & Service Providers - Creating Profiles", async () => {
     let projectOwnerProfile = await blocktractorInstance.createProfile(
-      "Project Owner",
       "projectowner",
       "123456789",
       {
@@ -44,11 +41,11 @@ contract("TestUserFlow", function (accounts) {
     );
 
     assert.equal(
-      await profileInstance.checkValidProfile({ from: projectOwner }, true)
+      await profileInstance.checkValidProfile({ from: projectOwner }), true
     );
+    await expectEvent.inTransaction(projectOwnerProfile.tx, Profile, 'profileCreated', {name:"projectowner", owner:projectOwner});
 
     let serviceProvider1Profile = await blocktractorInstance.createProfile(
-      "Service Provider 1",
       "serviceprovider1",
       "123456789",
       {
@@ -57,11 +54,12 @@ contract("TestUserFlow", function (accounts) {
     );
 
     assert.equal(
-      await profileInstance.checkValidProfile({ from: serviceProvider1 }, true)
+      await profileInstance.checkValidProfile({ from: serviceProvider1 }), true
     );
+    await expectEvent.inTransaction(serviceProvider1Profile.tx, Profile, 'profileCreated', {name:"serviceprovider1", owner:serviceProvider1});
+
 
     let serviceProvider2Profile = await blocktractorInstance.createProfile(
-      "Service Provider 2",
       "serviceprovider2",
       "123456789",
       {
@@ -70,11 +68,13 @@ contract("TestUserFlow", function (accounts) {
     );
 
     assert.equal(
-      await profileInstance.checkValidProfile({ from: serviceProvider2 }, true)
+      await profileInstance.checkValidProfile({ from: serviceProvider2 }), true
     );
+    await expectEvent.inTransaction(serviceProvider2Profile.tx, Profile, 'profileCreated', {name:"serviceprovider2", owner:serviceProvider2});
+
   });
 
-  // Test that the service can be created
+
   it("Project Owner - Create Project", async () => {
     let createProject = await blocktractorInstance.createProject(
       "Launching an NFT",
@@ -83,19 +83,15 @@ contract("TestUserFlow", function (accounts) {
         from: projectOwner,
       }
     );
-
-    // Check that serviceCreated event is emitted
-    /*
-        serviceCreated is an event that belongs to Service.sol and not Blocktractor.sol,
-        so it will not be picked up by eventEmitted as an emitted event by the Blocktractor contract
-        Hence we use the openzeppelin testhelpers library to help us detect this event emission
-        */
-    //await expectEvent.inTransaction(createService1.tx, Service, 'serviceCreated');
-
-    truffleAssert.eventEmitted(createProject, "serviceCreated", (ev) => {
-      return ev.projectOwner == projectOwner && ev.title == "Launching an NFT";
+       
+    await expectEvent.inTransaction(createProject.tx, Project, 'projectCreated', 
+    {
+      projectNumber: '0',
+      projectOwner:projectOwner, title:"Launching an NFT"
     });
+
   });
+
 
   it("Project Owner - Create Services", async () => {
     let createService1 = await blocktractorInstance.createService(
@@ -106,9 +102,13 @@ contract("TestUserFlow", function (accounts) {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(createService1, "serviceCreated", (ev) => {
-      return ev.projectOwner == projectOwner && ev.title == "NFT Design";
+    await expectEvent.inTransaction(createService1.tx, Service, 'serviceCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'0',
+      title:"NFT Design"
     });
+
 
     let createService2 = await blocktractorInstance.createService(
       0,
@@ -118,143 +118,168 @@ contract("TestUserFlow", function (accounts) {
         from: projectOwner,
       }
     );
-
-    truffleAssert.eventEmitted(createService2, "serviceCreated", (ev) => {
-      return (
-        ev.projectOwner == projectOwner &&
-        ev.title == "Smart Contract Development"
-      );
+    await expectEvent.inTransaction(createService2.tx, Service, 'serviceCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      title:"Smart Contract Development"
     });
   });
 
-  it("Project Owner - Create Milesontes", async () => {
+
+  it("Project Owner - Creates Tokens and Approve Blocktractor to move tokens", async () => {
+    await tokenInstance.getCredit(
+      {
+        from: projectOwner,
+        value: 2000000000000000000,
+      }
+    );
+    assert.equal( await tokenInstance.checkBalance(projectOwner, { from: projectOwner }), 200 );
+
+    await tokenInstance.approveContractFunds(
+      100,
+      {
+        from: projectOwner,
+      }
+    );
+    assert.equal( await tokenInstance.getApproved(projectOwner, projectOwner, {from: projectOwner}), 100);
+  });
+
+
+  it("Project Owner - Create Milestones", async () => {
     let createMilestone1 = await blocktractorInstance.createMilestone(
       0,
       0,
       "Artwork Design",
       "The artwork has to be of a giraffe",
-      20,
+      25,
       {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(createMilestone1, "milestoneCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 0 &&
-        ev.title == "Artwork Design"
-      );
+    await expectEvent.inTransaction(createMilestone1.tx, Milestone, 'milestoneCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'0',
+      milestoneNumber:'0',
+      title:"Artwork Design",
+      price:"25"
     });
+    assert.equal( await tokenInstance.checkFrozen(projectOwner, {from: projectOwner}), 25);
+    assert.equal( await tokenInstance.checkBalance(projectOwner, { from: projectOwner }), 200 );
+
 
     let createMilestone2 = await blocktractorInstance.createMilestone(
       0,
       1,
       "Writing the smart contract",
       "The smart contract must be logic",
-      20,
+      25,
       {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(createMilestone3, "milestoneCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.title == "Writing the smart contract"
-      );
+    await expectEvent.inTransaction(createMilestone2.tx, Milestone, 'milestoneCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'1',
+      title:"Writing the smart contract",
+      price:'25'
     });
+    assert.equal( await tokenInstance.checkFrozen(projectOwner, {from: projectOwner}), 50);
+
 
     let createMilestone3 = await blocktractorInstance.createMilestone(
       0,
       1,
       "Testing the smart contract",
       "The smart contract must pass all test cases",
-      20,
+      25,
       {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(createMilestone3, "milestoneCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 0 &&
-        ev.title == "Testing the smart contract"
-      );
+    await expectEvent.inTransaction(createMilestone3.tx, Milestone, 'milestoneCreated', 
+    {      
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'2',
+      title:"Testing the smart contract",
+      price:'25'
     });
+    assert.equal( await tokenInstance.checkFrozen(projectOwner, {from: projectOwner}), 75);
 
     let createMilestone4 = await blocktractorInstance.createMilestone(
       0,
       1,
       "Deploying the smart contract",
       "The smart contract must be deployed onto the etherum network",
-      20,
+      25,
       {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(createMilestone4, "milestoneCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 0 &&
-        ev.title == "Deploying the smart contract"
-      );
+    await expectEvent.inTransaction(createMilestone4.tx, Milestone, 'milestoneCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'3',
+      title:"Deploying the smart contract",
+      price:'25'
     });
-
-    // TODO: Would like to use a retrieve function here to ensure that the milestones created align
-
-    // TODO: I NEED SOME WAY TO TEST PAYMENT FOR THE MILESTONE IS BEING MADE HERE
+    assert.equal( await tokenInstance.checkFrozen(projectOwner, {from: projectOwner}), 100);
   });
+
 
   it("Service Provider - Take Service Requests && Project Owner - Accept Service Requests", async () => {
     // For Service 1: NFT Design
-    let takeServiceRequest1 = await blocktractorInstance.takeServiceRequest(
+    await blocktractorInstance.takeServiceRequest(
       0, // Project Number
       0, // Service Number
       {
         from: serviceProvider1,
       }
     );
-    // I NEED SOME WAY TO TEST THIS
-    // const value = await blocktractorInstance.();
-    // truffleAssert.eventEmitted(takeServiceRequest1, "")
+    assert.equal( await serviceInstance.getState(0,0, {from: serviceProvider1}), 1); // state pending
+    assert.equal( await serviceInstance.getServiceProvider(0,0, {from: serviceProvider1}), serviceProvider1);
 
-    let acceptServiceRequest1 = await blocktractorInstance.acceptServiceRequest(
+    await blocktractorInstance.acceptServiceRequest(
       0, // Project Number
       0, // Service Number
       {
         from: projectOwner,
       }
     );
-    // I NEED SOME WAY TO TEST THIS
-    // const value = await blocktractorInstance.();
-    // truffleAssert.eventEmitted(takeServiceRequest1, "")
+    assert.equal( await serviceInstance.getState(0,0, {from: serviceProvider1}), 2); // state accepted
+    assert.equal( await milestoneInstance.getServiceProvider(0,0,0, {from: serviceProvider1}), serviceProvider1);
 
     // For Service 2: Smart Contract Development
-    let takeServiceRequest2 = await blocktractorInstance.takeServiceRequest(
+    await blocktractorInstance.takeServiceRequest(
       0, // Project Number
       1, // Service Number
       {
         from: serviceProvider2,
       }
     );
-    // I NEED SOME WAY TO TEST THIS
-    // const value = await blocktractorInstance.();
-    // truffleAssert.eventEmitted(takeServiceRequest2, "")
+    assert.equal( await serviceInstance.getState(0,1, {from: serviceProvider1}), 1); // state pending
+    assert.equal( await serviceInstance.getServiceProvider(0,1, {from: serviceProvider2}), serviceProvider2);
 
-    let acceptServiceRequest2 = await blocktractorInstance.acceptServiceRequest(
+    await blocktractorInstance.acceptServiceRequest(
       0, // Project Number
       1, // Service Number
       {
         from: projectOwner,
       }
     );
-    // I NEED SOME WAY TO TEST THIS
-    // const value = await blocktractorInstance.();
-    // truffleAssert.eventEmitted(takeServiceRequest2, "")
+    assert.equal( await serviceInstance.getState(0,1, {from: serviceProvider2}), 2); // state accepted
+    assert.equal( await milestoneInstance.getServiceProvider(0,1,1, {from: serviceProvider2}), serviceProvider2);
+
   });
+
 
   it("Service Provider1 - Complete Milestone && Project Owner - Verifies && Payment is released", async () => {
-    let completeMilestone1 = await blocktractorInstance.completeMilestone(
+    await blocktractorInstance.completeMilestone(
       0,
       0,
       0,
@@ -262,91 +287,91 @@ contract("TestUserFlow", function (accounts) {
         from: serviceProvider1,
       }
     );
-    // TODO: I NEED SOME WAY TO TEST THIS
-    // const value = await blocktractorInstance.();
-    // truffleAssert.eventEmitted(completeMilestone1, "")
-    let verifyMilestone1 = await blocktractorInstance.verifyMilestone(0, 0, 0, {
-      from: projectOwner,
-    });
-    // TODO: I NEED SOME WAY TO TEST THIS
-    // const value = await blocktractorInstance.();
-    // truffleAssert.eventEmitted(completeMilestone1, "")
+    assert.equal( await milestoneInstance.getState(0,0,0, {from: serviceProvider1}), 4); //completed
 
-    // TODO: I NEED SOME WAY TO TEST PAYMENT FOR THE MILESTONE IS BEING MADE FROM CONTRACT TO PROVIDER
-  });
-
-  it("Service Provider1 - Service is marked as completed since all milestones should be completed", async () => {
-    let completeServiceRequest = blocktractorInstance.completeServiceRequest(
-      0,
-      0,
+    await blocktractorInstance.verifyMilestone(
+      0, 
+      0, 
+      0, 
       {
-        from: serviceProvider1,
+        from: projectOwner,
       }
-    );
-    // TODO: I NEED SOMETHING TO TEST THIS PLS
+    );    
+    assert.equal( await milestoneInstance.getState(0,0,0, {from: serviceProvider1}), 5); //verified      
+    assert.equal( await tokenInstance.checkBalance(projectOwner, { from: projectOwner }), 175 ); // tokens left in owners wallet after paying
+    assert.equal( await tokenInstance.checkFrozen(projectOwner, { from: projectOwner }), 75 ); // amount of frozen tokens
+    assert.equal( await tokenInstance.getApproved(projectOwner, projectOwner, { from: projectOwner }), 75 ); //ensure that escrow can shift lesser tokens now
+    assert.equal( await tokenInstance.checkBalance(serviceProvider1, { from: projectOwner }), 25 ); // tokens in providers wallet after finishing
+    
   });
+
 
   it("Service Provider1 - Leaves a review && Project Owner - Leaves a review", async () => {
     let reviewProjectOwner = await blocktractorInstance.reviewMilestone(
       0,
       0,
       0,
-      serviceProvider1, // ???
       "The project owner is really good and clear with his instructions.",
-      5, // Star input
+      5, 
       {
         from: serviceProvider1,
       }
     );
-    truffleAssert.eventEmitted(reviewProjectOwner, "reviewCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 0 &&
-        ev.milestoneNumber == 0 &&
-        ev.reviewer == serviceProvider1 &&
-        ev.reviewee == projectOwner &&
-        ev.star_rating == 5
-      );
+    
+    await expectEvent.inTransaction(reviewProjectOwner.tx, Review, 'reviewCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'0',
+      milestoneNumber:'0',
+      reviewee:projectOwner,
+      reviewer:serviceProvider1, 
+      role:"1",
+      review_input:"The project owner is really good and clear with his instructions.", 
+      star_rating:"5"
     });
+
 
     let reviewServiceProvider1 = await blocktractorInstance.reviewMilestone(
       0,
       0,
       0,
-      projectOwner, // ???
       "The service provider is very talent and I am happy with my artwork.",
       5, // Star input
       {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(reviewMilestone1, "reviewCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 0 &&
-        ev.milestoneNumber == 0 &&
-        ev.reviewee == serviceProvider1 &&
-        ev.reviewer == projectOwner &&
-        ev.star_rating == 5
-      );
+    await expectEvent.inTransaction(reviewServiceProvider1.tx, Review, 'reviewCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'0',
+      milestoneNumber:'0',
+      reviewee:serviceProvider1,
+      reviewer:projectOwner, 
+      role:"0",
+      review_input:"The service provider is very talent and I am happy with my artwork.", 
+      star_rating:"5"
     });
   });
 
+
   it("Service Provider1 - Complete Service Request for Service 0: NFT Design (only has 1 milestone)", async () => {
-    let completeServiceRequest1 =
-      await blocktractorInstance.completeServiceRequest(0, 0, {
+    await blocktractorInstance.completeServiceRequest(
+      0,
+      0,
+      {
         from: serviceProvider1,
-      });
-    // I NEED SOME WAY TO TEST THIS
-    // const value = await blocktractorInstance.();
-    // truffleAssert.eventEmitted(completeServiceRequest1, "")
+      }
+    );    
+    assert.equal( await serviceInstance.getState(0,0, {from: serviceProvider1}), 3); //completed
   });
 
+
   it("Service Provider2 - Completes Milestone 1 for Service 2 && Project Owner - Creates a Conflict & Starts Voting", async () => {
-    let completeMilestone1 = await blocktractorInstance.completeMilestone(
+    await blocktractorInstance.completeMilestone(
       0,
       1,
-      0,
+      1,
       {
         from: serviceProvider2,
       }
@@ -354,132 +379,135 @@ contract("TestUserFlow", function (accounts) {
     let createConflict1 = await blocktractorInstance.createConflict(
       0,
       1,
-      0,
+      1,
       "Conflict for Milestone 1: Writing a smart contract",
       "The smart contract is did not fulfill its requirements",
-      projectOwner,
-      serviceProvider2,
-      1, // total voters ???
       {
         from: projectOwner,
       }
     );
+    
+    await expectEvent.inTransaction(createConflict1.tx, Conflict, 'conflictCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'1',
+      serviceRequester:projectOwner,
+      serviceProvider:serviceProvider2,
+      totalVoters:'1',
+    });    
+    assert.equal( await milestoneInstance.getState(0,1,1, {from: projectOwner}), 6); //conflict
 
-    truffleAssert.eventEmitted(createConflict1, "conflictCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 0 &&
-        ev.serviceRequester == projectOwner &&
-        ev.serviceProvider == serviceProvider2 &&
-        ev.totalVoters == 1
-      );
-    });
-
-    let startVote1 = await blocktractorInstance.startVote(0, 1, 0, {
+    await blocktractorInstance.startVote(0, 1, 1, {
       from: projectOwner,
     });
-    // I NEED SOME WAY TO TEST THIS
-    // truffleAssert.eventEmitted(startVote1, "", (ev) => {})
+    
+    assert.equal( await conflictInstance.getState(0,1,1, {from: projectOwner}), 1); //conflict
   });
 
-  it("Service Provider 1 - Votes on Conflict and votes for Service Provider 2 (Since he is the only one voting, Conflict is Resolved and Service Provider 2 gets full amount.)", async () => {
-    var initialBlocktractorValue = await blocktractorInstance.getBalance({
-      from: blocktractorInstance.address,
-    });
+
+  it("Service Provider 1 - Votes on Conflict and votes for Service Provider 2 (Since he is the only one voting, Result is out)", async () => {
     let voteConflict1 = await blocktractorInstance.voteConflict(
       0,
       1,
-      0,
+      1,
       2, // Vote 2 for service provider
       {
         from: serviceProvider1,
       }
     );
+    await expectEvent.inTransaction(voteConflict1.tx, Conflict, 'conflictVoted', 
+    {      
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'1',
+      voter: serviceProvider1,
+      vote:'2'
+    }); 
+    await expectEvent.inTransaction(voteConflict1.tx, Conflict, 'conflictResult', 
+    {      
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'1',
+      result:'2'
+    });      
+    assert.equal( await conflictInstance.getState(0,1,1, {from: projectOwner}), 2); //completed
 
-    truffleAssert.eventEmitted(voteConflict1, "conflictVoted", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 0 &&
-        ev.voter == serviceProvider1 &&
-        ev.vote == 2
-      );
-    });
+  });
 
-    truffleAssert.eventEmitted(voteConflict1, "conflictResult", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 0 &&
-        ev.result == 2
-      );
-    });
+
+  it("Project Owner - Resolved Conflict Payment and Service Provider 2 gets fully paid.", async () => {
+    await blocktractorInstance.resolveConflictPayment(
+      0,
+      1,
+      1,
+      {
+        from: projectOwner,
+      }
+    );
+    
+    assert.equal( await milestoneInstance.getState(0,1,1, {from: projectOwner}), 5); //verified
 
     // Asserting if the ethers for serviceProvider is released
-    assert.equal(
-      await blocktractorInstance.getBalance({ from: serviceProvider2 }),
-      20
-    );
-    assert.equal(
-      await blocktractorInstance.getBalance({
-        from: blocktractorInstance.address,
-      }),
-      initialBlocktractorValue - 20
-    );
+    assert.equal( await tokenInstance.checkBalance(serviceProvider2, { from: serviceProvider2 }), 25);
+    assert.equal( await tokenInstance.checkBalance(projectOwner, { from: projectOwner }), 150 ); // tokens left in owners wallet after paying
+    assert.equal( await tokenInstance.checkFrozen(projectOwner, { from: projectOwner }), 50 ); // amount of frozen tokens
+    assert.equal( await tokenInstance.getApproved(projectOwner, projectOwner, { from: projectOwner }), 50 ); //ensure that escrow can shift lesser tokens now    
   });
+
 
   it("Service Provider2 - Leaves a review for Milestone 1 since Milestone is resolved && Project Owner - Leaves a review", async () => {
     let reviewProjectOwner = await blocktractorInstance.reviewMilestone(
       0,
       1,
-      0,
-      serviceProvider2, // ???
+      1,
       "The project owner raised a conflict on me but the voters all voted in my favour",
-      2, // Star input
+      2, 
       {
         from: serviceProvider2,
       }
     );
-    truffleAssert.eventEmitted(reviewProjectOwner, "reviewCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 0 &&
-        ev.reviewer == serviceProvider2 &&
-        ev.reviewee == projectOwner &&
-        ev.star_rating == 2
-      );
+    await expectEvent.inTransaction(reviewProjectOwner.tx, Review, 'reviewCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'1',
+      reviewee:projectOwner,
+      reviewer:serviceProvider2, 
+      role:"1",
+      review_input:"The project owner raised a conflict on me but the voters all voted in my favour", 
+      star_rating:"2"
     });
 
     let reviewServiceProvider2 = await blocktractorInstance.reviewMilestone(
       0,
       1,
-      0,
-      projectOwner, // ???
+      1,
       "The service provider did not do good work but all the voters voted in his favour",
       1, // Star input
       {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(reviewMilestone1, "reviewCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 0 &&
-        ev.reviewee == serviceProvider2 &&
-        ev.reviewer == projectOwner &&
-        ev.star_rating == 1
-      );
+    await expectEvent.inTransaction(reviewServiceProvider2.tx, Review, 'reviewCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'1',
+      reviewee:serviceProvider2,
+      reviewer:projectOwner, 
+      role:"0",
+      review_input:"The service provider did not do good work but all the voters voted in his favour", 
+      star_rating:"1"
     });
   });
 
+
   it("Service Provider 2 - Continue to work on next milestone since the conflict resolved in his favour && Project Owner - Raises another conflict & Starts Voting", async () => {
-    let completeMilestone2 = await blocktractorInstance.completeMilestone(
+    await blocktractorInstance.completeMilestone(
       0,
       1,
-      1,
+      2,
       {
         from: serviceProvider2,
       }
@@ -487,131 +515,125 @@ contract("TestUserFlow", function (accounts) {
     let createConflict2 = await blocktractorInstance.createConflict(
       0,
       1,
-      1,
+      2,
       "Conflict for Milestone 2: Testing the smart contract",
       "The smart contract did not pass all test cases",
-      projectOwner,
-      serviceProvider2,
-      1, // total voters ???
       {
         from: projectOwner,
       }
     );
 
-    truffleAssert.eventEmitted(createConflict2, "conflictCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 1 &&
-        ev.serviceRequester == projectOwner &&
-        ev.serviceProvider == serviceProvider2 &&
-        ev.totalVoters == 1
-      );
-    });
+    await expectEvent.inTransaction(createConflict2.tx, Conflict, 'conflictCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'2',
+      serviceRequester:projectOwner,
+      serviceProvider:serviceProvider2,
+      totalVoters:'1',
+    });    
+    assert.equal( await milestoneInstance.getState(0,1,2, {from: projectOwner}), 6); //conflict
 
-    let startVote2 = await blocktractorInstance.startVote(0, 1, 1, {
+    await blocktractorInstance.startVote(0, 1, 2, {
       from: projectOwner,
     });
-    // I NEED SOME WAY TO TEST THIS
-    // truffleAssert.eventEmitted(startVote2, "", (ev) => {})
+    
+    assert.equal( await conflictInstance.getState(0,1,2, {from: projectOwner}), 1); //conflict
   });
 
-  it("Service Provider 1 - Votes on Conflict and votes for Project Owner this time (Since he is the only one voting, Conflict is Resolved and each party gets 50%.)", async () => {
-    var initialBlocktractorValue = await blocktractorInstance.getBalance({
-      from: blocktractorInstance.address,
-    });
-    let voteConflict2 = await blocktractorInstance.voteConflict(
+
+  it("Service Provider 1 - Votes on Conflict and votes for Project Owner this time (Since he is the only one voting, Conflict is Resolved.)", async () => {
+    let voteConflict1 = await blocktractorInstance.voteConflict(
       0,
       1,
-      1, // Milestone 2: Testing the smart contract
-      1, // Vote 1 for Project Owner
+      2,
+      1, // Vote 2 for service requester
       {
         from: serviceProvider1,
       }
     );
+    await expectEvent.inTransaction(voteConflict1.tx, Conflict, 'conflictVoted', 
+    {      
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'2',
+      voter: serviceProvider1,
+      vote:'1'
+    }); 
+    await expectEvent.inTransaction(voteConflict1.tx, Conflict, 'conflictResult', 
+    {      
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'2',
+      result:'1'
+    });      
+    assert.equal( await conflictInstance.getState(0,1,2, {from: projectOwner}), 2); //completed
+  });
 
-    truffleAssert.eventEmitted(voteConflict2, "conflictVoted", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 1 &&
-        ev.voter == serviceProvider1 &&
-        ev.vote == 1
-      );
-    });
 
-    truffleAssert.eventEmitted(voteConflict2, "conflictResult", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 1 &&
-        ev.result == 1
-      );
-    });
+  it("Project Owner - Resolved Conflict Payment each party gets 50%", async () => {
+    await blocktractorInstance.resolveConflictPayment(
+      0,
+      1,
+      2,
+      {
+        from: projectOwner,
+      }
+    );
+    
+    assert.equal( await milestoneInstance.getState(0,1,2, {from: projectOwner}), 7); //terminated
 
-    // TODO: WOULD BE NICE IF I COULD RETRIEVE THE AMOUNT OF MONEY FOR MILESTONE 2
     // Asserting if the ethers for serviceProvider is released
-    assert.equal(
-      await blocktractorInstance.getBalance({ from: serviceProvider2 }),
-      10
-    );
-    assert.equal(
-      await blocktractorInstance.getBalance({ from: projectOwner }),
-      10
-    );
-    assert.equal(
-      await blocktractorInstance.getBalance({
-        from: blocktractorInstance.address,
-      }),
-      initialBlocktractorValue - 20
-    );
-
-    // TODO: NEED TO CHECK HERE IF THE SERVICE PROVIDER IS NO LONGER ALLOWED TO CONTINUE (EITHER SERVICE IS SET TO DONE OR MILESTONE IDK)
+    assert.equal( await tokenInstance.checkBalance(serviceProvider2, { from: serviceProvider2 }), 37);
+    assert.equal( await tokenInstance.checkBalance(projectOwner, { from: projectOwner }), 138 ); // tokens left in owners wallet after paying
+    assert.equal( await tokenInstance.checkFrozen(projectOwner, { from: projectOwner }), 26 ); // amount of frozen tokens
+    assert.equal( await tokenInstance.getApproved(projectOwner, projectOwner, { from: projectOwner }), 26 ); //ensure that escrow can shift lesser tokens now    
   });
 
   it("Service Provider2 - Leaves a review for Milestone 2 after Milestone is complete && Project Owner - Leaves a review", async () => {
     let reviewProjectOwner = await blocktractorInstance.reviewMilestone(
       0,
       1,
-      1,
-      serviceProvider2, // ???
+      2,
       "The project owner raised 2 conflict on me. I'm sure he has something personal against me. Beware of him.",
       1, // Star input
       {
         from: serviceProvider2,
       }
     );
-    truffleAssert.eventEmitted(reviewProjectOwner, "reviewCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 1 &&
-        ev.reviewer == serviceProvider2 &&
-        ev.reviewee == projectOwner &&
-        ev.star_rating == 1
-      );
+    
+    await expectEvent.inTransaction(reviewProjectOwner.tx, Review, 'reviewCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'2',
+      reviewee:projectOwner,
+      reviewer:serviceProvider2, 
+      role:"1",
+      review_input:"The project owner raised 2 conflict on me. I'm sure he has something personal against me. Beware of him.", 
+      star_rating:"1"
     });
 
     let reviewServiceProvider2 = await blocktractorInstance.reviewMilestone(
       0,
       1,
-      1,
-      projectOwner, // ???
+      2,
       "The service provider did not do good work for 2 milestones. Beware of him.",
       1, // Star input
       {
         from: projectOwner,
       }
     );
-    truffleAssert.eventEmitted(reviewMilestone1, "reviewCreated", (ev) => {
-      return (
-        ev.projectNumber == 0 &&
-        ev.serviceNumber == 1 &&
-        ev.milestoneNumber == 1 &&
-        ev.reviewee == serviceProvider2 &&
-        ev.reviewer == projectOwner &&
-        ev.star_rating == 1
-      );
+    await expectEvent.inTransaction(reviewServiceProvider2.tx, Review, 'reviewCreated', 
+    {
+      projectNumber: '0',
+      serviceNumber:'1',
+      milestoneNumber:'2',
+      reviewee:serviceProvider2,
+      reviewer:projectOwner, 
+      role:"0",
+      review_input:"The service provider did not do good work for 2 milestones. Beware of him.", 
+      star_rating:"1"
     });
   });
 });

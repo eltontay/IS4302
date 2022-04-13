@@ -61,4 +61,8 @@ contract Profile {
         return profileList[owner].name;
     }
 
+    function checkValidProfile() public view returns (bool) {
+        return profileList[tx.origin].created;
+    }
+
 }
