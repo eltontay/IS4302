@@ -88,8 +88,8 @@ contract ERC20 {
    * @param _value The amount of tokens to be spent.
    */
   function approve(address _spender, uint256 _value) public returns (bool) {
-    allowed[msg.sender][_spender] = _value;
-    emit Approval(msg.sender, _spender, _value);
+    allowed[tx.origin][_spender] = _value;
+    emit Approval(tx.origin, _spender, _value);
     return true;
   }
 

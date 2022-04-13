@@ -2,26 +2,20 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Profile.sol";
 import "./Project.sol";
-import "./ERC20.sol";
 import "./States.sol";
 
 contract Blocktractor {
 
     Profile profile;
     Project project;
-    ERC20 erc20;
 
-
-    address payable escrow;
     // address payable revenue_wallet = payable(msg.sender);
     uint256 public comissionFee;
 
-    constructor(Profile profileContract, Project projectContract, uint256 fee) public {
+    constructor(Profile profileContract, Project projectContract) public {
         profile = profileContract;
         project = projectContract;
-        escrow = payable(msg.sender);
-        erc20 = new ERC20();
-        comissionFee = fee;
+        // comissionFee = fee;
     }
 
 /*
@@ -130,7 +124,7 @@ contract Blocktractor {
     */
 
     function deleteService(uint256 projectNumber, uint256 serviceNumber) public {
-        project.deleteService(projectNumber,serviceNumber,msg.sender,erc20);
+        project.deleteService(projectNumber,serviceNumber,msg.sender);
     }
 
     /*
@@ -188,8 +182,8 @@ contract Blocktractor {
 
     function createMilestone(uint256 projectNumber, uint256 serviceNumber, string memory titleMilestone, string memory descriptionMilestone, uint256 price) public {
         project.createMilestone(projectNumber,serviceNumber,titleMilestone,descriptionMilestone, price, msg.sender);
-        //make payment to escrow
-        erc20.transfer(escrow, price);
+        // //make payment to escrow
+        // erc20.transfer(escrow, price);
     }
 
     /*
@@ -205,7 +199,7 @@ contract Blocktractor {
     */ 
 
     function deleteMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender,erc20);
+        project.deleteMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
     } 
 
     /*
@@ -216,14 +210,21 @@ contract Blocktractor {
         project.completeMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
     }    
 
+    // /*
+    //     Milestone - Make milestone payment
+    // */ 
+
+    // function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+    //     project.makeMilestonePayment(projectNumber,serviceNumber,milestoneNumber);
+    // }    
+
     /*
-        Milestone - Make milestone payment
+        Milestone - Verify Milestone
     */ 
 
-    function makeMilestonePayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.makeMilestonePayment(projectNumber,serviceNumber,milestoneNumber, erc20);
-    }    
-
+    function verifyMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.verifyMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender);
+    } 
 /*
 
     Conflict Functions
@@ -234,7 +235,7 @@ contract Blocktractor {
         Conflict - Create
     */ 
     
-    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) external {
+    function createConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory title, string memory description) public {
         project.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,msg.sender);
     }
 
@@ -258,7 +259,7 @@ contract Blocktractor {
         Conflict - Start Vote
     */
     function startVote(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external {
-        project.startVote(projectNumber, serviceNumber, milestoneNumber);
+        project.startVote(projectNumber, serviceNumber, milestoneNumber, msg.sender);
     }
 
     /*
@@ -269,15 +270,13 @@ contract Blocktractor {
         project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
     }
 
-    /*
-        Conflict - Resolve conflict payment 
-    */
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-        project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber,  erc20);
-    }
-
+//    /*
+//         Conflict - Resolve conflict payment 
+//     */
+//     function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+//         project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
+//     }
 /*
-
     Review Functions
 
 */
@@ -286,8 +285,8 @@ contract Blocktractor {
         Review - Create 
     */
 
-    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, string memory review_input, uint star_rating) public {
-        project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,_from,review_input,star_rating);
+    function reviewMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string memory review_input, uint star_rating) public {
+        project.reviewMilestone(projectNumber,serviceNumber,milestoneNumber,msg.sender,review_input,star_rating);
     }
 
     /*
