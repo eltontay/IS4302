@@ -297,7 +297,7 @@ contract Milestone {
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
     {   
-        require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
+        // require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
         conflict.startVote(projectNumber, serviceNumber, milestoneNumber);
     }
     
@@ -310,17 +310,17 @@ contract Milestone {
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
     {
-        require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
+        // require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
         bool flag_resolve = conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
 
-        if (flag_resolve) {resolveConflictPayment(projectNumber, serviceNumber, milestoneNumber);}
+        // if (flag_resolve) {resolveConflictPayment(projectNumber, serviceNumber, milestoneNumber);}
     }
 
     /*
         Conflict - Resolve payments
     */
 
-    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) internal
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) external
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
     {
         uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);

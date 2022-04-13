@@ -270,12 +270,12 @@ contract Blocktractor {
         project.voteConflict(projectNumber,serviceNumber,milestoneNumber,msg.sender,vote);
     }
 
-//    /*
-//         Conflict - Resolve conflict payment 
-//     */
-//     function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-//         project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
-//     }
+   /*
+        Conflict - Resolve conflict payment 
+    */
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        project.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
+    }
 /*
     Review Functions
 

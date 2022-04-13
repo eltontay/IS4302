@@ -377,10 +377,10 @@ contract Service {
     // /*
     //     Conflict - Resolve conflict payment 
     // */
-    // function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
-    //     milestone.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
-    //     setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);
-    // }
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        milestone.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
+        setState(projectNumber, serviceNumber, States.ServiceStatus.accepted);
+    }
 
 
     // Star Rating getters

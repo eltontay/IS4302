@@ -341,6 +341,12 @@ contract Project {
         service.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
     }
 
+    /*
+         Conflict - Resolve conflict payment 
+     */
+    function resolveConflictPayment(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public {
+        service.resolveConflictPayment( projectNumber,  serviceNumber,  milestoneNumber);
+    }
 /*
 
     Review functions

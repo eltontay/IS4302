@@ -92,9 +92,9 @@ contract Conflict {
 
         emit conflictCreated(projectNumber, serviceNumber, milestoneNumber, serviceRequester, serviceProvider, totalVoters);
 
-        if (newConflict.voters == 0) {
+        // if (newConflict.voters == 0) {
 
-        }
+        // }
 
     }
 
