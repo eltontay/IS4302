@@ -41,7 +41,7 @@ contract Conflict {
     }
 
     modifier atState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.ConflictStatus state){
-        require(conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus == state, "Cannot carry out this operation!");
+        require(conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus == state, "Cannot carry out this operation! -Conflict");
         _;
     }
 
@@ -63,6 +63,10 @@ contract Conflict {
 
     function setState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.ConflictStatus state) internal {
         conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus = state;
+    }
+
+    function getState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint) {
+        return uint(conflicts[projectNumber][serviceNumber][milestoneNumber].conflictStatus);
     }
 
     /*
@@ -92,9 +96,6 @@ contract Conflict {
 
         emit conflictCreated(projectNumber, serviceNumber, milestoneNumber, serviceRequester, serviceProvider, totalVoters);
 
-        // if (newConflict.voters == 0) {
-
-        // }
 
     }
 
@@ -131,6 +132,15 @@ contract Conflict {
         atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.created)
     {
         setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.voting);
+        conflict storage currConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
+
+        if (currConflict.voters == 0) {
+            currConflict.result = 1;
+
+            setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.completed);
+
+            emit conflictResult(projectNumber, serviceNumber, milestoneNumber, currConflict.result);
+        }
     }
 
     /*
@@ -140,7 +150,7 @@ contract Conflict {
     function voteConflict(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address _from, uint8 vote) public 
         isValidConflict(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber,States.ConflictStatus.voting)
-    returns (bool) {
+    {
         conflict storage currConflict = conflicts[projectNumber][serviceNumber][milestoneNumber];
         require(currConflict.serviceRequester != _from , "You raised this conflict. You cannot vote on it.");
         require(currConflict.serviceProvider != _from, "You are involved in this conflict. You cannot vote on it.");
@@ -154,18 +164,19 @@ contract Conflict {
         if (vote == 2) { currConflict.providerVotes++; }
         currConflict.votesCollected++;
 
-        emit conflictVoted(projectNumber, serviceNumber, milestoneNumber, msg.sender, vote);
+        emit conflictVoted(projectNumber, serviceNumber, milestoneNumber, _from, vote);
 
         if (currConflict.votesCollected == currConflict.voters) {
-        if (currConflict.providerVotes > currConflict.requesterVotes) {currConflict.result = 2; }
+            if (currConflict.providerVotes > currConflict.requesterVotes) {currConflict.result = 2; }
             else {currConflict.result = 1;} //if there is tie vote, service Requester will win the vote
+
             setState(projectNumber, serviceNumber, milestoneNumber, States.ConflictStatus.completed);
 
             emit conflictResult(projectNumber, serviceNumber, milestoneNumber, currConflict.result);
-            return true;
         }
-        return false;
     }     
+
+
 
 
 /*

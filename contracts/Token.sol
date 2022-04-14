@@ -33,8 +33,9 @@ contract Token {
 
     function approveContractFunds(uint256 _value) public {
         require(erc20Contract.balanceOf(tx.origin) - frozenToken[tx.origin] >= _value, "You do not have sufficient funds to make fund this project");
+        uint256 new_amt = getApproved(tx.origin, tx.origin) + _value;
 
-        erc20Contract.approve(tx.origin, _value);
+        erc20Contract.approve(tx.origin, new_amt);
     }
 
 

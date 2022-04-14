@@ -85,6 +85,10 @@ contract Service {
         projectServices[projectNumber][serviceNumber].status = state;
     }
 
+    function getState(uint256 projectNumber, uint256 serviceNumber) public view returns (uint) {
+        return uint(projectServices[projectNumber][serviceNumber].status);
+    }
+
 /*
     Service functions
 */
@@ -206,11 +210,15 @@ contract Service {
 
 
     function getServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
-        projectServices[projectNumber][serviceNumber].title;
+        return projectServices[projectNumber][serviceNumber].title;
     }
 
     function getServiceDescription(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
-        projectServices[projectNumber][serviceNumber].description;
+        return projectServices[projectNumber][serviceNumber].description;
+    }   
+
+    function getServiceProvider(uint256 projectNumber, uint256 serviceNumber) public view returns(address) {
+        return projectServices[projectNumber][serviceNumber].serviceProvider;
     }   
 
 /*
@@ -321,7 +329,7 @@ contract Service {
 
     {
         address requester = projectServices[projectNumber][serviceNumber].serviceRequester;
-        require(_from == requester, "You are not the requester of this service. You cannot verify.");
+        require(_from == requester, "You are not the requester of this service. You cannot create conflict.");
 
         milestone.createConflict(projectNumber,serviceNumber,milestoneNumber,title,description,totalVoters);
         setState(projectNumber, serviceNumber, States.ServiceStatus.conflict);

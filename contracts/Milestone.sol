@@ -53,7 +53,8 @@ contract Milestone {
         address serviceProvider; // defaults to address(0)
     }
 
-    mapping (uint256 => mapping(uint256 => mapping(uint256 => milestone))) servicesMilestones; // [projectNumber][serviceNumber][milestoneNumber]
+    mapping (uint256 => mapping(uint256 => mapping(uint256 => milestone))) servicesMilestones; // [projectNumber][serviceNumber][milestoneNumber]    
+    // mapping (uint256 => mapping(uint256 => uint256)) numMilestoneTracker; // track number of milestone for each project => service
 
     event milestoneCreated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string title, string description, uint256 price);
     event milestoneUpdated(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, string title, string description);
@@ -77,7 +78,7 @@ contract Milestone {
     }
 
     modifier atState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, States.MilestoneStatus state){
-        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == state, "Cannot carry out this operation!");
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == state, "Cannot carry out this operation!- Milestone");
         _;
     }
 
@@ -106,6 +107,10 @@ contract Milestone {
         servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status = state;
     }
 
+    function getState(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public view returns (uint) {
+        return uint(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status);
+    }
+
 /*
     CUD Milestones
 */
@@ -119,6 +124,7 @@ contract Milestone {
         requiredString(description)
     {
         require(token.checkBalance(_from) >= price , "You do not have enough tokens to create this milestone.");
+        // uint256 milestoneNum = numMilestoneTracker[projectNumber][serviceNumber];
         milestone storage newMilestone = servicesMilestones[projectNumber][serviceNumber][milestoneNum];
         newMilestone.projectNumber = projectNumber;
         newMilestone.serviceNumber = serviceNumber;
@@ -136,6 +142,7 @@ contract Milestone {
 
         milestoneTotal++;
         milestoneNum++;
+        // numMilestoneTracker[projectNumber][serviceNumber]++;
 
     }
 
@@ -186,7 +193,7 @@ contract Milestone {
     
     function acceptMilestone(uint256 projectNumber, uint256 serviceNumber, address provider) external
     {
-        
+        // uint256 milestoneNum = numMilestoneTracker[projectNumber][serviceNumber];
         // Accepts Service Contract, so all the Milestones are set to approved (locked in)
         for (uint i = 0; i < milestoneNum; i++){
             if(servicesMilestones[projectNumber][serviceNumber][i].status != States.MilestoneStatus.created ||
@@ -311,7 +318,7 @@ contract Milestone {
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.conflict)
     {
         // require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
-        bool flag_resolve = conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
+        conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
 
         // if (flag_resolve) {resolveConflictPayment(projectNumber, serviceNumber, milestoneNumber);}
     }
@@ -324,6 +331,7 @@ contract Milestone {
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
     {
         uint result = conflict.getResults(projectNumber, serviceNumber, milestoneNumber);
+        require( result == 1 || result == 2, "There is no result to this conflict");
         address  provider = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider;
         address  requester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester;
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
@@ -338,6 +346,7 @@ contract Milestone {
             token.transferFromEscrow(provider, split_price); 
             token.transferFromEscrow(requester, split_price);
             setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.terminated);
+            // what can we do about the rest of the tokens that are still in the escrow?
         }
     }
 
@@ -357,7 +366,7 @@ contract Milestone {
         address  milestoneServiceProvider = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider;
         address  milestoneServiceRequester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester;
         require(milestoneServiceProvider == _from || milestoneServiceRequester == _from , " Invalid");
-        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == States.MilestoneStatus.completed);
+        require(servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == States.MilestoneStatus.verified || servicesMilestones[projectNumber][serviceNumber][milestoneNumber].status == States.MilestoneStatus.terminated, "The milestone is not yet completed");
 
         if (milestoneServiceProvider == _from) {
             review.createReview(projectNumber,serviceNumber,milestoneNumber,_from,milestoneServiceRequester,review_input,States.Role.serviceRequester,star_rating);
