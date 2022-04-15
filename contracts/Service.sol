@@ -272,7 +272,7 @@ contract Service {
         atState(projectNumber, serviceNumber, States.ServiceStatus.accepted)
     {
         // To report the completion of the milestone
-        milestone.completeMilestone(projectNumber, serviceNumber, milestoneNumber, _from);
+        milestone.completeMilestone(projectNumber, serviceNumber, milestoneNumber);
     }
 
     // /*

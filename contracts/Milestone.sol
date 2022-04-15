@@ -184,7 +184,7 @@ contract Milestone {
         //transfer price back to requester 
         address  requester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester; 
 
-        token.transferFromEscrow(requester, price);
+        token.transferFromEscrow(requester, requester, price);
     }
 
     /*
@@ -244,10 +244,11 @@ contract Milestone {
         setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.verified);
 
         //MAKE PAYment of price from escrow wallet to service provider 
+        address requester = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceRequester;
         address provider = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].serviceProvider;
         uint256 price = servicesMilestones[projectNumber][serviceNumber][milestoneNumber].price; 
   
-        token.transferFromEscrow(provider, price);
+        token.transferFromEscrow(requester, provider, price);
     }
 
 /*
@@ -338,13 +339,13 @@ contract Milestone {
 
         if (result == 2) {
             //service provider wins
-            token.transferFromEscrow(provider, price);
+            token.transferFromEscrow(requester, provider, price);
             setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.verified);
         } else {
             //split 50-50
             uint256 split_price = price.div(2);
-            token.transferFromEscrow(provider, split_price); 
-            token.transferFromEscrow(requester, split_price);
+            token.transferFromEscrow(requester, provider, split_price); 
+            token.transferFromEscrow(requester, requester, split_price);
             setState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.terminated);
             // what can we do about the rest of the tokens that are still in the escrow?
         }

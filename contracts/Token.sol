@@ -6,16 +6,17 @@ import "./ERC20.sol";
 contract Token {
 
     ERC20 erc20Contract;
-    // uint256 supplyLimit;
+    uint256 supplyLimit;
     uint256 total_pool;
     address owner;
 
-    constructor() public {
+    constructor(uint256 supply_limit) public {
 
         ERC20 e = new ERC20();
         erc20Contract = e;
         owner = msg.sender;
         total_pool = 0;
+        supplyLimit = supply_limit;
     }
 
     mapping (address => uint256) frozenToken;
@@ -26,9 +27,11 @@ contract Token {
     // minting DT
     function getCredit() public payable {
         uint256 amt = msg.value / 10000000000000000; //conversion from wei to eth
+        require (amt <= supplyLimit, "We have reached the max pool of tokens minted.");
         erc20Contract.mint(tx.origin, amt);
         // erc20Contract.approve(tx.origin, amt);
         frozenToken[tx.origin] = 0;
+        supplyLimit -= amt; 
     }
 
     function approveContractFunds(uint256 _value) public {
@@ -48,13 +51,14 @@ contract Token {
     }
 
     // transfering DT from Escrow
-    function transferFromEscrow( address _to, uint256 _value) external {
-        require(frozenToken[tx.origin] >= _value, "Escrow has been breached. Please check");
-        erc20Contract.transferFrom(tx.origin, _to, _value);
-        frozenToken[tx.origin] -= _value;
+    function transferFromEscrow( address _from,  address _to, uint256 _value) external {
+        require(frozenToken[_from] >= _value, "Escrow has been breached. Please check");
+        erc20Contract.transferFrom(_from, _to, _value);
+        frozenToken[_from] -= _value;
         total_pool -= _value;
-        emit tokenReleased(tx.origin, _to, _value);
+        emit tokenReleased(_from, _to, _value);
     }
+
 
 
     // verify amount of DT
