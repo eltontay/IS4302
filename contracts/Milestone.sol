@@ -88,7 +88,7 @@ contract Milestone {
         _;
     }
 
-    function checkDAO(uint256 projectNumber, uint256 serviceNumber, uint256 numMilestones, address  _from) internal returns (bool) {
+    function checkDAO(uint256 projectNumber, uint256 serviceNumber, uint256 numMilestones, address  _from) internal view returns (bool) {
         mapping(uint256 => milestone) storage currService = servicesMilestones[projectNumber][serviceNumber];
         bool check = false;
         for (uint8 i = 0; i < numMilestones; i++) {
@@ -225,7 +225,7 @@ contract Milestone {
         Milestone - Complete
         -- service provider
     */
-    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber, address  _from) public
+    function completeMilestone(uint256 projectNumber, uint256 serviceNumber, uint256 milestoneNumber) public
         isValidMilestone(projectNumber, serviceNumber, milestoneNumber)
         atState(projectNumber, serviceNumber, milestoneNumber, States.MilestoneStatus.started) // Must work on milestone in order
     {
@@ -321,7 +321,6 @@ contract Milestone {
         // require(checkDAO(projectNumber,serviceNumber,numMilestones,_from),"Not a valid DAO Member");
         conflict.voteConflict(projectNumber,serviceNumber,milestoneNumber,_from,vote);
 
-        // if (flag_resolve) {resolveConflictPayment(projectNumber, serviceNumber, milestoneNumber);}
     }
 
     /*
