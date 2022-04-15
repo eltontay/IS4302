@@ -57,6 +57,7 @@ contract Token {
     }
 
 
+
     // verify amount of DT
     function checkBalance(address _sender) public view returns (uint256) {
         return erc20Contract.balanceOf(_sender);

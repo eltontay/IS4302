@@ -217,11 +217,11 @@ contract Project {
 
 
     function getServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
-        service.getServiceTitle(projectNumber,serviceNumber);
+        return service.getServiceTitle(projectNumber,serviceNumber);
     }
 
     function getServiceDescription(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
-        service.getServiceDescription(projectNumber,serviceNumber);
+        return service.getServiceDescription(projectNumber,serviceNumber);
     }   
 
 /*

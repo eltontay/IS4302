@@ -85,15 +85,15 @@ contract Blocktractor {
 
 
     function getProjectOwner(uint256 projectId) public view returns(address) {
-        project.getProjectOwner(projectId);
+        return project.getProjectOwner(projectId);
     }
 
     function getProjectTitle(uint256 projectId) public view returns(string memory) {
-        project.getProjectTitle(projectId);
+        return project.getProjectTitle(projectId);
     }
 
     function getProjectDescription(uint256 projectId) public view returns(string memory) {
-        project.getProjectDescription(projectId);
+        return project.getProjectDescription(projectId);
     }
 
 
@@ -163,11 +163,11 @@ contract Blocktractor {
     }
 
     function getServiceTitle(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
-        project.getServiceTitle(projectNumber,serviceNumber);
+        return project.getServiceTitle(projectNumber,serviceNumber);
     }
 
     function getServiceDescription(uint256 projectNumber, uint256 serviceNumber) public view returns(string memory) {
-        project.getServiceDescription(projectNumber,serviceNumber);
+        return project.getServiceDescription(projectNumber,serviceNumber);
     }   
 
 /*
