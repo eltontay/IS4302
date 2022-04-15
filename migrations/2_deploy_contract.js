@@ -11,7 +11,7 @@ module.exports = (deployer, network, accounts) => {
   deployer
     .deploy(Profile)
     .then(() => {
-      return deployer.deploy(Token);
+      return deployer.deploy(Token,  200000000000);
     })
     .then(() => {
       return deployer.deploy(Review);

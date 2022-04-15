@@ -6,16 +6,17 @@ import "./ERC20.sol";
 contract Token {
 
     ERC20 erc20Contract;
-    // uint256 supplyLimit;
+    uint256 supplyLimit;
     uint256 total_pool;
     address owner;
 
-    constructor() public {
+    constructor(uint256 supply_limit) public {
 
         ERC20 e = new ERC20();
         erc20Contract = e;
         owner = msg.sender;
         total_pool = 0;
+        supplyLimit = supply_limit;
     }
 
     mapping (address => uint256) frozenToken;
@@ -26,9 +27,11 @@ contract Token {
     // minting DT
     function getCredit() public payable {
         uint256 amt = msg.value / 10000000000000000; //conversion from wei to eth
+        require (amt <= supplyLimit, "We have reached the max pool of tokens minted.");
         erc20Contract.mint(tx.origin, amt);
         // erc20Contract.approve(tx.origin, amt);
         frozenToken[tx.origin] = 0;
+        supplyLimit -= amt; 
     }
 
     function approveContractFunds(uint256 _value) public {
