@@ -48,12 +48,12 @@ contract Token {
     }
 
     // transfering DT from Escrow
-    function transferFromEscrow( address _to, uint256 _value) external {
-        require(frozenToken[tx.origin] >= _value, "Escrow has been breached. Please check");
-        erc20Contract.transferFrom(tx.origin, _to, _value);
-        frozenToken[tx.origin] -= _value;
+    function transferFromEscrow( address _from,  address _to, uint256 _value) external {
+        require(frozenToken[_from] >= _value, "Escrow has been breached. Please check");
+        erc20Contract.transferFrom(_from, _to, _value);
+        frozenToken[_from] -= _value;
         total_pool -= _value;
-        emit tokenReleased(tx.origin, _to, _value);
+        emit tokenReleased(_from, _to, _value);
     }
 
 
